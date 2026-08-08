@@ -1,0 +1,85 @@
+{
+  "jobs": [
+    {
+      "id": "a3e17787460c",
+      "name": "portfolio-nightly-publish",
+      "prompt": "[unused when no_agent=true]",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "portfolio_nightly.sh",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 4 * * *",
+        "display": "0 4 * * *"
+      },
+      "schedule_display": "0 4 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-08-05T15:45:01.688602-03:00",
+      "next_run_at": "2026-08-08T04:00:00-03:00",
+      "last_run_at": "2026-08-07T04:00:41.152568-03:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "telegram",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "c17af8990abf",
+      "name": "quartz-nightly-publish",
+      "prompt": "[unused when no_agent=true]",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "quartz_nightly.sh",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "5 4 * * *",
+        "display": "5 4 * * *"
+      },
+      "schedule_display": "5 4 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-08-05T16:16:45.016074-03:00",
+      "next_run_at": "2026-08-08T04:05:00-03:00",
+      "last_run_at": "2026-08-07T04:09:03.590370-03:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "telegram",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    }
+  ],
+  "updated_at": "2026-08-07T04:09:03.592157-03:00"
+}
