@@ -1,0 +1,13 @@
+# CODEOWNERS — awesome-skills
+# Automatic review requests for PRs touching these paths.
+# In a single-maintainer repo this documents ownership; with extra
+# collaborators it triggers required code-owner reviews.
+
+*       @pedroiff0
+
+/skills/        @pedroiff0
+/templates/     @pedroiff0
+/docs/          @pedroiff0
+/tools/         @pedroiff0
+/packages/      @pedroiff0
+.github/        @pedroiff0
