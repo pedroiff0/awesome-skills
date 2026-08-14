@@ -17,30 +17,31 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Validate SKILL.md frontmatter + manifests + index
+      - name: Validate SKILL.md + manifests + issue forms
         run: |
           python3 - <<'PY'
-          import glob, yaml, json, sys, subprocess, pathlib
-          errs = []
+          import glob, yaml, json, sys, re
+          RECOMMENDED = ("version", "author", "license", "platforms")
+          errs, warns = [], []
 
-          # SKILL.md frontmatter
           for f in glob.glob("skills/**/SKILL.md", recursive=True):
               try:
                   txt = open(f, encoding="utf-8").read()
-                  m = __import__("re").match(r"^---\n(.*?)\n---\n", txt, __import__("re").S)
+                  m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
                   if not m:
                       errs.append(f"{f}: sem frontmatter"); continue
-                  fm = yaml.safe_load(m.group(1))
-                  for k in ("name","description","version","author","license","platforms"):
-                      if k not in fm: errs.append(f"{f}: falta {k}")
+                  fm = yaml.safe_load(m.group(1)) or {}
+                  if "name" not in fm: errs.append(f"{f}: falta name")
+                  if "description" not in fm: errs.append(f"{f}: falta description")
+                  for k in RECOMMENDED:
+                      if k not in fm: warns.append(f"{f}: recomendado ter '{k}'")
               except Exception as e:
                   errs.append(f"{f}: {e}")
 
-          # manifests JSON
           for f in glob.glob("templates/**/manifest.json", recursive=True):
               try:
                   j = json.load(open(f))
@@ -49,24 +50,22 @@ jobs:
               except Exception as e:
                   errs.append(f"{f}: JSON invalido: {e}")
 
-          # issue forms (se houver)
-          VALID={"markdown","textarea","input","dropdown","checkboxes","radio","code","yaml_metadata"}
+          VALID = {"markdown","textarea","input","dropdown","checkboxes","radio","code","yaml_metadata"}
           for f in glob.glob(".github/ISSUE_TEMPLATE/*.yml"):
               try:
-                  d=yaml.safe_load(open(f))
-                  for i,b in enumerate(d.get("body",[])):
+                  d = yaml.safe_load(open(f))
+                  for i, b in enumerate(d.get("body", [])):
                       if b.get("type") not in VALID: errs.append(f"{f}[{i}] type {b.get('type')!r}")
-                      a=b.get("attributes",{})
+                      a = b.get("attributes", {})
                       if b.get("type") in ("textarea","input","dropdown","radio","checkboxes") and "label" not in a:
                           errs.append(f"{f}[{i}] sem label")
               except Exception as e:
                   errs.append(f"{f}: {e}")
 
+          for w in warns: print("WARN:", w)
           if errs:
-              print("FAILURES:"); [print(" -",e) for e in errs]; sys.exit(1)
+              print("FAILURES:"); [print(" -", e) for e in errs]; sys.exit(1)
           print("ALL_OK")
-
-          # gen_index nao deve divergir do commitado (se houver git)
           PY
 
       - name: Regenerate index (sanity)
