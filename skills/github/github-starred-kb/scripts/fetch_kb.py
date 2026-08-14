@@ -15,7 +15,7 @@ import argparse, json, subprocess, sys, urllib.request, urllib.error
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-INDEX = HERE / "references" / "starred-index.md"
+INDEX = HERE.parent / "references" / "starred-index.md"
 
 # Heuristic domain classifier (mirrors SKILL.md).
 def domains(r: dict) -> list[str]:
