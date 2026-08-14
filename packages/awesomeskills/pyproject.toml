@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "awesomeskills"
+version = "0.1.0"
+description = "CLI tools for the awesome-skills catalog: generate the README index and the installed-skills catalog."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "pedroiff0" }]
+keywords = ["skills", "ai-agents", "catalog", "readme-generator"]
+dependencies = ["pyyaml>=6.0"]
+
+[project.urls]
+Homepage = "https://github.com/pedroiff0/awesome-skills"
+Repository = "https://github.com/pedroiff0/awesome-skills"
+
+[project.scripts]
+awesomeskills = "awesomeskills.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["awesomeskills"]

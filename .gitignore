@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# package build artefacts
+packages/*/dist/
+packages/*/build/
+packages/*/*.egg-info/
