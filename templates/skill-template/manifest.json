@@ -1,0 +1,14 @@
+{
+  "name": "my-skill",
+  "version": "0.1.0",
+  "description": "One-line description; mirrors SKILL.md.",
+  "author": "Your Name",
+  "license": "MIT",
+  "entry": "SKILL.md",
+  "compat": ["hermes", "claude", "cursor", "windsurf", "openclaw", "roo", "cline", "agy"],
+  "tags": ["category", "keyword"],
+  "triggers": ["do X", "help me with Y"],
+  "tools": ["bash", "read", "write"],
+  "references": ["references/extra.md"],
+  "scripts": ["scripts/helper.py"]
+}
