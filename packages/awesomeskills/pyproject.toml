@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "awesomeskills"
+name = "pedroiff0-awesomeskills"
 version = "0.1.0"
 description = "CLI tools for the awesome-skills catalog: generate the README index and the installed-skills catalog."
 readme = "README.md"
