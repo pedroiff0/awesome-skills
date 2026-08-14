@@ -4,7 +4,7 @@ Coleção pessoal de **skills** (memória procedural) usadas pelo agente [Hermes
 Cada skill é um diretório com `SKILL.md` (frontmatter YAML + instruções) e,
 opcionalmente, `references/`, `scripts/`, `templates/`, `assets/`.
 
-**104 skills** em 23 categorias.
+**105 skills** em 23 categorias.
 
 ## Instalação
 
@@ -119,6 +119,7 @@ Ou apenas uma categoria/skill: copie o diretório desejado para `~/.hermes/skill
 | [`github-profile-readme`](skills/github/github-profile-readme/SKILL.md) | Build or rewrite a GitHub profile README (the username/username special repo) with a personalized theme — animated SVG banner, stats cards, contribution snake, tech badges, project/research tables. Includes the git co... |
 | [`github-repo-management`](skills/github/github-repo-management/SKILL.md) | Clone/create/fork repos; manage remotes, releases. |
 | [`github-starred-kb`](skills/github/github-starred-kb/SKILL.md) | Personal GitHub knowledge base built from the user's starred repos (pedroiff0). Maps all 41 starred repositories into knowledge domains (free APIs, sysadmin/self-hosted, Python, AI/agents/RAG, algorithms, math/edu, as... |
+| [`hermes-installed-catalog`](skills/github/hermes-installed-catalog/SKILL.md) | Live catalog of skills, plugins, and agents actually installed on THIS Hermes server (pedroiff0). Lists the 233 installed skills grouped by domain, the 18 installed plugins, and confirms there are no custom agent defi... |
 
 ### latex
 
