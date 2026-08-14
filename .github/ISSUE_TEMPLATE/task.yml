@@ -1,0 +1,21 @@
+name: 📋 Task / Docs / Chore
+description: Maintenance, docs, refactor, or release task.
+title: "chore: <short summary>"
+labels: ["documentation"]
+assignees: ["pedroiff0"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Standard assignments (auto):**
+        - Assignee: pedroiff0 · Project: Awesome Skills — Roadmap · Milestone: Backlog
+  - type: textarea
+    id: desc
+    attributes:
+      label: Description
+      validations:
+        required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / Out of scope

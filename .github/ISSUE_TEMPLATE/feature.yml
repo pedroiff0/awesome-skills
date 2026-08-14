@@ -1,0 +1,50 @@
+name: 🚀 Feature / Skill Request
+description: Propose a new skill, agent, plugin, or improvement to the catalog/index.
+title: "feat: <short summary>"
+labels: ["enhancement"]
+assignees: ["pedroiff0"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Standard assignments (auto):**
+        - Assignee: pedroiff0
+        - Project: Awesome Skills — Roadmap
+        - Milestone: Backlog
+        - Reviewer: assigned on the delivery PR
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type
+      options:
+        - "new skill"
+        - "new agent template"
+        - "new plugin template"
+        - "index/tooling improvement"
+        - "docs/governance"
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / need
+      validations:
+        required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      validations:
+        required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: "- [ ] ..."
+      validations:
+        required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: "Follows templates/ (multi-tool compatible)"
+        - label: "Includes verification step"

@@ -1,0 +1,56 @@
+name: 🐞 Bug Report
+description: Report a defect, regression, or broken instruction in a skill/agent/plugin or the index.
+title: "fix: <short summary>"
+labels: ["bug"]
+assignees: ["pedroiff0"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Standard assignments (auto):**
+        - Assignee: pedroiff0
+        - Project: Awesome Skills — Roadmap
+        - Milestone: Backlog
+        - Reviewer: assigned on the fix PR
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - "skill (SKILL.md content)"
+        - "agent template"
+        - "plugin template"
+        - "index / README / gen_index.py"
+        - "docs / governance"
+      multiple: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      validations:
+        required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      validations:
+        required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. ... 2. ..."
+      validations:
+        required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "OS, tool version (Hermes/Claude/Cursor/...), skill name"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: "I searched open issues for duplicates"
+        - label: "I can reproduce on main"

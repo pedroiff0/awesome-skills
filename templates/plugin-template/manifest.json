@@ -1,0 +1,14 @@
+{
+  "name": "my-plugin",
+  "version": "0.1.0",
+  "type": "plugin",
+  "entry": "spec.md",
+  "compat": ["hermes", "claude", "cursor", "windsurf", "openclaw", "agy"],
+  "commands": [
+    { "name": "do-thing", "exec": "commands/do-thing.sh", "desc": "Runs the thing." }
+  ],
+  "hooks": [
+    { "event": "post-edit", "exec": "hooks/lint.sh" }
+  ],
+  "tools": ["bash", "web"]
+}
