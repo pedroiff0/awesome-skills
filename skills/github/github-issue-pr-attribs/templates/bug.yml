@@ -1,0 +1,72 @@
+name: 🐞 Bug (Relato de Defeito)
+description: Reporte um comportamento incorreto, quebra de segurança ou regressão.
+title: "fix: <resumo curto do defeito>"
+labels: ["bug"]
+assignees: ["pedroiff0"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Atribuições padrão desta issue (preenchidas automaticamente):**
+        - **Assignee:** pedroiff0
+        - **Project:** Financas App - Roadmap
+        - **Milestone:** Backlog (mover quando ganhar release alvo)
+        - **Reviewer:** definido no PR de correção
+  - type: dropdown
+    id: modulo
+    attributes:
+      label: Módulo afetado
+      description: Ajuda a rotular (modulo:financas / modulo:investimentos / modulo:moto).
+      options:
+        - "financas (MODULE_FINANCAS)"
+        - "investimentos (MODULE_INVESTIMENTOS)"
+        - "moto (MODULE_MOTO)"
+        - "core (auth, admin, infra, ui)"
+      multiple: true
+  - type: textarea
+    id: o_que_acontece
+    attributes:
+      label: O que acontece
+      description: Comportamento observado (o defeito).
+      placeholder: "Ao clicar em salvar, a página trava e nothing é gravado."
+    validations:
+      required: true
+  - type: textarea
+    id: o_que_esperado
+    attributes:
+      label: O que era esperado
+      description: Comportamento correto segundo a especificação/UX.
+      placeholder: "Deveria gravar e redirecionar para a listagem."
+    validations:
+      required: true
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Passos para reproduzir
+      description: Sequência mínima e determinística.
+      placeholder: |
+        1. Acessar /admin/usuarios
+        2. Clicar em "Editar" no usuário X
+        3. Alterar e-mail e salvar
+    validations:
+      required: true
+  - type: textarea
+    id: ambiente
+    attributes:
+      label: Ambiente
+      description: Branch, tag/versão, navegador, SO, dados sensíveis omitidos.
+      placeholder: "main @ 8f16abe · Chrome 128 · Linux"
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: Evidência
+      description: Logs (sem PII/senha/token), screenshot, link de teste no :6789.
+      placeholder: "console: Error 422 em /api/..."
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist pré-PR
+      options:
+        - label: "Reproduzi localmente (ou anexei evidência do :6789)"
+        - label: "Confirmei que não é duplicata (busquei issues abertas)"
+        - label: "Marquei o módulo correto acima"

@@ -4,7 +4,7 @@ Coleção pessoal de **skills** (memória procedural) usadas pelo agente [Hermes
 Cada skill é um diretório com `SKILL.md` (frontmatter YAML + instruções) e,
 opcionalmente, `references/`, `scripts/`, `templates/`, `assets/`.
 
-**102 skills** em 23 categorias.
+**103 skills** em 23 categorias.
 
 ## Instalação
 
@@ -113,6 +113,7 @@ Ou apenas uma categoria/skill: copie o diretório desejado para `~/.hermes/skill
 | [`codebase-inspection`](skills/github/codebase-inspection/SKILL.md) | Inspect codebases w/ pygount: LOC, languages, ratios. |
 | [`github-auth`](skills/github/github-auth/SKILL.md) | GitHub auth setup: HTTPS tokens, SSH keys, gh CLI login. |
 | [`github-code-review`](skills/github/github-code-review/SKILL.md) | Review PRs: diffs, inline comments via gh or REST. |
+| [`github-issue-pr-attribs`](skills/github/github-issue-pr-attribs/SKILL.md) | Standardize GitHub ISSUE and PR metadata (Assignee, Reviewer, Labels, Project, Milestone, Development, Relationship) and ship a strong, well-structured code-review template. Includes ready-to-use issue forms, PR templ... |
 | [`github-issues`](skills/github/github-issues/SKILL.md) | Create, triage, label, assign GitHub issues via gh or REST. |
 | [`github-pr-workflow`](skills/github/github-pr-workflow/SKILL.md) | GitHub PR lifecycle: branch, commit, open, CI, merge. |
 | [`github-profile-readme`](skills/github/github-profile-readme/SKILL.md) | Build or rewrite a GitHub profile README (the username/username special repo) with a personalized theme — animated SVG banner, stats cards, contribution snake, tech badges, project/research tables. Includes the git co... |

@@ -1,0 +1,59 @@
+name: 🚀 Feature (Nova Funcionalidade)
+description: Proponha um novo recurso de domínio, página ou módulo.
+title: "feat: <resumo curto da funcionalidade>"
+labels: ["enhancement"]
+assignees: ["pedroiff0"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Atribuições padrão desta issue (preenchidas automaticamente):**
+        - **Assignee:** pedroiff0
+        - **Project:** Financas App - Roadmap
+        - **Milestone:** Backlog (mover quando ganhar release alvo)
+        - **Reviewer:** definido no PR de entrega
+  - type: dropdown
+    id: modulo
+    attributes:
+      label: Módulo alvo
+      options:
+        - "financas (MODULE_FINANCAS)"
+        - "investimentos (MODULE_INVESTIMENTOS)"
+        - "moto (MODULE_MOTO)"
+        - "core (auth, admin, infra, ui)"
+      multiple: true
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema / Necessidade
+      description: Por que isso existe? Qual dor resolve?
+      placeholder: "Usuário não consegue ver o saldo consolidado por conta."
+    validations:
+      required: true
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Proposta de solução
+      description: Abordagem nas camadas Rota→Controller→Service→Model (ver AGENTS.md).
+      placeholder: "Novo service calcularSaldoConsolidado(userId) agregando lançamentos."
+    validations:
+      required: true
+  - type: textarea
+    id: aceitacao
+    attributes:
+      label: Critérios de aceitação
+      description: Quando posso considerar "pronto"?
+      placeholder: |
+        - [ ] Endpoint GET /api/financas/saldo retorna por conta
+        - [ ] Teste cobre feliz/422/401/403
+        - [ ] Documentado no DESIGN.md se mudou visual
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist pré-PR
+      options:
+        - label: "Respeita camadas (service tem a regra; controller só traduz)"
+        - label: "Zod em toda entrada; AppError em todo erro esperado"
+        - label: "Teste novo em app/tests/ + registro em endpoints.test.js"
