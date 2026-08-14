@@ -16,11 +16,15 @@ that must work across multiple runtimes from a single canonical `SKILL.md`.
    duplicate logic.
 2. **No secrets** — tokens, keys, passwords never in body or scripts. Use env /
    secret store. Fail closed (non-zero exit) on error.
-3. **Multi-tool compatible** — if it only works in one runtime, it does not
+3. **API purity** — anything touching `*API*` (specs, wrappers, clients) must be
+   **pure**: no leaked credentials (keys/tokens/secrets) and no proprietary or
+   closed-source code. Use only public specs, fictional examples, and stubs.
+   Never embed a real token, signed request, or internal endpoint.
+4. **Multi-tool compatible** — if it only works in one runtime, it does not
    belong here.
-4. **Idempotent scripts** — safe to run more than once.
-5. **Verifiable** — ship a check, or state the blocker explicitly.
-6. **KISS/DRY** — concise instructions, concrete examples, no noise.
+5. **Idempotent scripts** — safe to run more than once.
+6. **Verifiable** — ship a check, or state the blocker explicitly.
+7. **KISS/DRY** — concise instructions, concrete examples, no noise.
 
 ## Structure
 

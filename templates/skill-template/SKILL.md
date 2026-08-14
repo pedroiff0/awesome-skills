@@ -13,6 +13,10 @@ metadata:
 
 # My Skill
 
+> **Purity rules** (apply to every skill here): no secrets; anything touching
+> `*API*` must be **pure** — no leaked credentials (keys/tokens) and no
+> proprietary/closed-source code. Use public specs, fictional examples, stubs.
+
 Short paragraph: what problem this solves and for whom.
 
 ## When to Use

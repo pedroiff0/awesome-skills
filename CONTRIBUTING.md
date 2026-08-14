@@ -43,6 +43,9 @@ Templates live in `.github/ISSUE_TEMPLATE/` (bug / feature / task) and
 - **Frontmatter** with `name`, `description`, `version`, `author`, `license`,
   `platforms`, `metadata.hermes.tags`.
 - **No secrets** — tokens go in env / secret store, never in the body.
+- **API purity** — anything touching `*API*` (specs, wrappers, clients) must be
+  **pure**: no leaked credentials (keys/tokens) and no proprietary/closed-source
+  code. Use only public specs, fictional examples, and stubs.
 - **Idempotent** scripts; include a verification snippet.
 - **Explicit triggers** so the agent knows when to load it.
 - **KISS/DRY** — concise instructions, concrete examples, no noise.
