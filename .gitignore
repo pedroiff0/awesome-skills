@@ -6,3 +6,4 @@ __pycache__/
 packages/*/dist/
 packages/*/build/
 packages/*/*.egg-info/
+packages/awesomeskills/references/
