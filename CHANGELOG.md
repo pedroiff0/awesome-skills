@@ -7,20 +7,26 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 ## [Unreleased]
 
 ### Added
-- `CODEOWNERS` documenting ownership per area.
-- `.editorconfig` for consistent formatting.
-- `awesomeskills` package (`packages/awesomeskills`): CLI with `index` and
-  `catalog` commands, installable via `pip install ./packages/awesomeskills`.
-- Standard issue/PR governance (`.github/ISSUE_TEMPLATE`, `PULL_REQUEST_TEMPLATE`).
-- `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`.
-- `docs/CODE_REVIEW.md` review standard.
-- Discussions, Wiki (tab), Projects (V2), GitHub Pages enabled.
-- Security: secret scanning, push protection, Dependabot enabled.
-- `templates/` starter kits (skill / agent / plugin) for multi-tool use.
+- `readme-template` skill added to catalog (106 skills total).
 
 ### Changed
-- README rewritten as an enterprise-grade, multi-tool catalog landing page.
-- Branch protection on `main`: direct pushes blocked (PR required).
+- Star History URL fixed to `api.star-history.com` (working).
+- README footer translated to English.
+
+## [1.1.0] - 2026-08-16
+
+### Added
+- **RepoActivity** section with Star History chart + Author (GIF + badges) in README.
+- **Sponsor** button (`.github/FUNDING.yml` with GitHub Sponsors).
+- **Wiki** content (`docs/Wiki-Home.md`) — requires first web-UI edit to provision.
+- **Discussions** with labels: announcement, idea, qa, showcase, general.
+- **Issue templates** (bug, feature, task) with 7 standard assignments.
+- **PR template** with self-review checklist.
+- **Project V2**: "Awesome Skills — Roadmap" created.
+
+### Changed
+- README footer translated to English ("Made with ☕, code and ☄️").
+- Star History URL corrected (old `star-history.dera.page` returned 404).
 
 ## [1.0.0] - 2026-08-14
 
