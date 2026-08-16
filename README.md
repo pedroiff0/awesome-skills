@@ -3,7 +3,7 @@
 # awesome-skills
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Skills](https://img.shields.io/badge/skills-105-blue.svg)
+![Skills](https://img.shields.io/badge/skills-106-blue.svg)
 ![Categories](https://img.shields.io/badge/categories-23-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)
@@ -64,7 +64,7 @@ via the templates in `.github/`. Reviews follow
 
 ## Index
 
-> **105 skills** across **23 categories**.
+> **106 skills** across **23 categories**.
 
 ### apple
 
@@ -169,6 +169,7 @@ via the templates in `.github/`. Reviews follow
 | [`github-repo-management`](skills/github/github-repo-management/SKILL.md) | Clone/create/fork repos; manage remotes, releases. |
 | [`github-starred-kb`](skills/github/github-starred-kb/SKILL.md) | Personal GitHub knowledge base built from the user's starred repos (pedroiff0). Maps all 41 starred repositories into knowledge domains (free APIs, sysadmin/self-hosted, Python, AI/agents/RAG, algo... |
 | [`hermes-installed-catalog`](skills/github/hermes-installed-catalog/SKILL.md) | Live catalog of skills, plugins, and agents actually installed on THIS Hermes server (pedroiff0). Lists the 233 installed skills grouped by domain, the 18 installed plugins, and confirms there are... |
+| [`readme-template`](skills/github/readme-template/SKILL.md) | Standard README template for repos — professional structure with badges, overview, table of contents, features/modules, stack, installation, configuration, tests, security, structure, docs, roadmap... |
 
 ### latex
 
@@ -288,6 +289,34 @@ via the templates in `.github/`. Reviews follow
 
 ---
 
+## 📊 RepoActivity
+
+[![Star History Chart](https://star-history.dera.page/svg?repos=pedroiff0/awesome-skills&type=date&legend=top-left)](https://star-history.dera.page/#pedroiff0/awesome-skills&type=date&legend=top-left)
+
+---
+
+## 👨‍💻 Autor
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/pedroiff0/pedroiff0/main/assets/pedroiff0.gif" alt="pedroiff0" width="900"/>
+
+</div>
+
+<div align="center">
+
+**2026 Awesome Skills**
+
+Feito com ☕, código e ☄️ por **Pedro Henrique Rocha de Andrade**
+
+[![GitHub](https://img.shields.io/badge/GitHub-pedroiff0-181717?logo=github&logoColor=white)](https://github.com/pedroiff0)
+[![Site Oficial](https://img.shields.io/badge/Site-Oficial-22c55e?logo=googlechrome&logoColor=white)](https://phrandrade.com/)
+[![Portfólio](https://img.shields.io/badge/Portfólio-2563eb?logo=github&logoColor=white)](https://pedroiff0.github.io/webpage/)
+
+</div>
+
+---
+
 ## Contributing
 
 1. Branch from `main` (`feat/...`, `fix/...`, `docs/...`, `chore/...`).
@@ -299,4 +328,4 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md),
 and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 <sub>README generated automatically by `tools/gen_index.py` — do not hand-edit
-above the Index/Contributing sections.</sub>
+above the Contributing sections.</sub>

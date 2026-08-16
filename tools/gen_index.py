@@ -121,6 +121,38 @@ def main() -> int:
             out.append(f"| [`{name}`](skills/{rel}) | {desc} |")
         out.append("")
 
+    # ---- REPOACTIVITY ----
+    out += [
+        "---",
+        "",
+        "## 📊 RepoActivity",
+        "",
+        "[![Star History Chart](https://star-history.dera.page/svg?repos=pedroiff0/awesome-skills&type=date&legend=top-left)](https://star-history.dera.page/#pedroiff0/awesome-skills&type=date&legend=top-left)",
+        "",
+        "---",
+        "",
+        "## 👨‍💻 Autor",
+        "",
+        "<div align=\"center\">",
+        "",
+        "<img src=\"https://raw.githubusercontent.com/pedroiff0/pedroiff0/main/assets/pedroiff0.gif\" alt=\"pedroiff0\" width=\"900\"/>",
+        "",
+        "</div>",
+        "",
+        "<div align=\"center\">",
+        "",
+        "**2026 Awesome Skills**",
+        "",
+        "Feito com ☕, código e ☄️ por **Pedro Henrique Rocha de Andrade**",
+        "",
+        "[![GitHub](https://img.shields.io/badge/GitHub-pedroiff0-181717?logo=github&logoColor=white)](https://github.com/pedroiff0)",
+        "[![Site Oficial](https://img.shields.io/badge/Site-Oficial-22c55e?logo=googlechrome&logoColor=white)](https://phrandrade.com/)",
+        "[![Portfólio](https://img.shields.io/badge/Portfólio-2563eb?logo=github&logoColor=white)](https://pedroiff0.github.io/webpage/)",
+        "",
+        "</div>",
+        "",
+    ]
+
     # ---- CONTRIBUTING ----
     out += [
         "---",
@@ -136,7 +168,7 @@ def main() -> int:
         "and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).",
         "",
         "<sub>README generated automatically by `tools/gen_index.py` — do not hand-edit",
-        "above the Index/Contributing sections.</sub>",
+        "above the Contributing sections.</sub>",
         "",
     ]
 
