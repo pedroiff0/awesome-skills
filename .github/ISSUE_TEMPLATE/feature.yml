@@ -1,5 +1,5 @@
-name: 🚀 Feature / Skill Request
-description: Propose a new skill, agent, plugin, or improvement to the catalog/index.
+name: 🚀 Feature Request
+description: Propose a new skill, agent, plugin, or enhancement to the catalog.
 title: "feat: <short summary>"
 labels: ["enhancement"]
 assignees: ["pedroiff0"]
@@ -11,40 +11,42 @@ body:
         - Assignee: pedroiff0
         - Project: Awesome Skills — Roadmap
         - Milestone: Backlog
-        - Reviewer: assigned on the delivery PR
+        - Reviewer: assigned on the implementation PR
   - type: dropdown
-    id: kind
+    id: type
     attributes:
       label: Type
       options:
         - "new skill"
         - "new agent template"
         - "new plugin template"
-        - "index/tooling improvement"
-        - "docs/governance"
+        - "enhancement to existing skill"
+        - "index / README improvement"
+        - "docs / governance"
   - type: textarea
-    id: problem
+    id: summary
     attributes:
-      label: Problem / need
+      label: Summary
+      description: What do you want and why?
       validations:
         required: true
   - type: textarea
-    id: proposal
+    id: value
     attributes:
-      label: Proposed solution
+      label: Value
+      description: Who benefits and how?
       validations:
         required: true
   - type: textarea
-    id: acceptance
+    id: runtime
     attributes:
-      label: Acceptance criteria
-      placeholder: "- [ ] ..."
-      validations:
-        required: true
+      label: Target runtime(s)
+      placeholder: "Hermes / Claude / Cursor / Windsurf / OpenClaw / All"
   - type: checkboxes
     id: checks
     attributes:
       label: Checks
       options:
-        - label: "Follows templates/ (multi-tool compatible)"
-        - label: "Includes verification step"
+        - label: "I searched open issues for duplicates"
+        - label: "I checked the wiki and docs"
+        - label: "I'm willing to contribute the implementation"
