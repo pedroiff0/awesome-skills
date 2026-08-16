@@ -291,11 +291,11 @@ via the templates in `.github/`. Reviews follow
 
 ## 📊 RepoActivity
 
-[![Star History Chart](https://star-history.dera.page/svg?repos=pedroiff0/awesome-skills&type=date&legend=top-left)](https://star-history.dera.page/#pedroiff0/awesome-skills&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=pedroiff0/awesome-skills&type=Date)](https://www.star-history.com/#pedroiff0/awesome-skills&type=Date)
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
 <div align="center">
 
@@ -307,7 +307,7 @@ via the templates in `.github/`. Reviews follow
 
 **2026 Awesome Skills**
 
-Feito com ☕, código e ☄️ por **Pedro Henrique Rocha de Andrade**
+Made with ☕, code and ☄️ by **Pedro Henrique Rocha de Andrade**
 
 [![GitHub](https://img.shields.io/badge/GitHub-pedroiff0-181717?logo=github&logoColor=white)](https://github.com/pedroiff0)
 [![Site Oficial](https://img.shields.io/badge/Site-Oficial-22c55e?logo=googlechrome&logoColor=white)](https://phrandrade.com/)

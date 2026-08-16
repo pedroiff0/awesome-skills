@@ -54,3 +54,4 @@ body:
       options:
         - label: "I searched open issues for duplicates"
         - label: "I can reproduce on main"
+        - label: "I checked the wiki and docs"

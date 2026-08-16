@@ -26,6 +26,7 @@ Closes #
 - [ ] `python3 tools/gen_index.py` regenerates README without errors
 - [ ] No secrets, no hardcoded tokens
 - [ ] Docs updated (CONTRIBUTING / README if behavior changed)
+- [ ] Wiki updated if needed
 
 ## 🧩 Type
 

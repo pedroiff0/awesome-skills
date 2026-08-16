@@ -1,5 +1,5 @@
 name: 📋 Task / Docs / Chore
-description: Maintenance, docs, refactor, or release task.
+description: Maintenance, documentation, CI, or governance work.
 title: "chore: <short summary>"
 labels: ["documentation"]
 assignees: ["pedroiff0"]
@@ -8,14 +8,25 @@ body:
     attributes:
       value: |
         **Standard assignments (auto):**
-        - Assignee: pedroiff0 · Project: Awesome Skills — Roadmap · Milestone: Backlog
+        - Assignee: pedroiff0
+        - Project: Awesome Skills — Roadmap
+        - Milestone: Backlog
   - type: textarea
-    id: desc
+    id: what
     attributes:
-      label: Description
+      label: What
       validations:
         required: true
   - type: textarea
-    id: scope
+    id: why
     attributes:
-      label: Scope / Out of scope
+      label: Why
+      validations:
+        required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: "I searched open issues for duplicates"
+        - label: "I checked the wiki and docs"
