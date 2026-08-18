@@ -3,7 +3,7 @@
 # awesome-skills
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Skills](https://img.shields.io/badge/skills-106-blue.svg)
+![Skills](https://img.shields.io/badge/skills-107-blue.svg)
 ![Categories](https://img.shields.io/badge/categories-23-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)
@@ -64,7 +64,7 @@ via the templates in `.github/`. Reviews follow
 
 ## Index
 
-> **106 skills** across **23 categories**.
+> **107 skills** across **23 categories**.
 
 ### apple
 
@@ -242,6 +242,7 @@ via the templates in `.github/`. Reviews follow
 | [`arxiv`](skills/research/arxiv/SKILL.md) | Search arXiv papers by keyword, author, category, or ID. |
 | [`blogwatcher`](skills/research/blogwatcher/SKILL.md) | Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool. |
 | [`llm-wiki`](skills/research/llm-wiki/SKILL.md) | Karpathy's LLM Wiki: build/query interlinked markdown KB. |
+| [`nosignups-catalog`](skills/research/nosignups-catalog/SKILL.md) | Catálogo curado de ferramentas open source sem signup (NoSignups.net). 234 tools organizadas por categoria e relevância para DevOps/self-hosted/operations. Use para encontrar alternativas open sour... |
 | [`polymarket`](skills/research/polymarket/SKILL.md) | Query Polymarket: markets, prices, orderbooks, history. |
 | [`research-paper-writing`](skills/research/research-paper-writing/SKILL.md) | Write ML papers for NeurIPS/ICML/ICLR: design→submit. |
 
