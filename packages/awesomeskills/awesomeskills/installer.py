@@ -2,11 +2,13 @@
 """Universal Multi-Agent Skills Installer for awesome-skills (Cosmic Purple Dev Edition).
 
 Features:
+- Full Step-by-Step Back Navigation (press 'b', '←' Left Arrow, or 'Backspace' to go back and modify).
+- Preserves user selections when navigating backward and forward.
 - Aesthetic Purple, Astronomy & Developer Theme with Cosmic Coffee intro ☕ 🪐 🌌.
 - Step 0: Quick Install (with verification of agents & skills), Custom Manual Setup, Uninstall / Clean, Open-Source Hub, and Ollama Hub.
 - Strict selection validation: Users CANNOT proceed with 0 items selected (requires explicit [Space] check).
-- Uninstaller module: Safely scans, selects, and removes installed skills/rules across agents.
-- Robust key handling: Arrow keys never cancel; standalone ESC cancels immediately.
+- Uninstaller module: Safely scans, selects, and removes installed skills/rules across agents with Back support.
+- Robust key handling: Left arrow acts as Back; standalone ESC cancels immediately.
 - Live Skill-by-Skill browser with viewport scrolling, metadata, author credits, and GitHub links.
 - Multi-agent targeting: Google Antigravity, Hermes Agent, Claude Code, Cursor (.mdc), Windsurf, Roo/Cline, OpenCode.
 """
@@ -232,6 +234,7 @@ def getch() -> str:
             if ch2 == b"K": return "LEFT"
             if ch2 == b"M": return "RIGHT"
         if ch == b"\x1b": return "ESC"
+        if ch in (b"\x08",): return "BACKSPACE"
         if ch in (b"\r", b"\n"): return "ENTER"
         if ch == b" ": return "SPACE"
         if ch == b"\x03": raise KeyboardInterrupt
@@ -261,6 +264,8 @@ def getch() -> str:
             elif rest in ("[H", "[1~"): return "HOME"
             elif rest in ("[F", "[4~"): return "END"
             return "IGNORE"
+        elif ch in ("\x7f", "\x08"):
+            return "BACKSPACE"
         elif ch in ("\r", "\n"):
             return "ENTER"
         elif ch == " ":
@@ -322,8 +327,9 @@ def tui_single_select(
     title: str,
     options: list[tuple[str, str, str]],  # (key, label, subtitle)
     default_idx: int = 0,
+    allow_back: bool = False,
 ) -> str:
-    """Interactive single-choice menu with cosmic purple aesthetics."""
+    """Interactive single-choice menu with cosmic purple aesthetics and Back support."""
     if not sys.stdin.isatty():
         return options[default_idx][0]
 
@@ -355,7 +361,8 @@ def tui_single_select(
                 buf.append(f"  {ptr} {radio} {WHITE}{label}{RESET}{sub_text}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Enter: Engage | Esc/q: Abort]{RESET}"
+        back_hint = " | b/←: Back" if allow_back else ""
+        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Enter: Confirm{back_hint} | Esc/q: Abort]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -373,6 +380,9 @@ def tui_single_select(
                 cursor = (cursor + 1) % num_opts
             elif key in ("ENTER", "SPACE"):
                 break
+            elif allow_back and key in ("b", "B", "LEFT", "BACKSPACE"):
+                print()
+                return "__BACK__"
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
     finally:
@@ -388,8 +398,9 @@ def tui_multiselect(
     options: list[tuple[str, str, str]],  # (key, label, subtitle)
     default_selected: list[str] | None = None,
     allow_empty: bool = False,
-) -> list[str]:
-    """Interactive multi-select menu with STRICT selection validation & purple styling."""
+    allow_back: bool = False,
+) -> list[str] | str:
+    """Interactive multi-select menu with STRICT selection validation, Back support & purple styling."""
     if not sys.stdin.isatty():
         return [opt[0] for opt in options] if default_selected is None else default_selected
 
@@ -428,7 +439,8 @@ def tui_multiselect(
             buf.append(f"  {GOLD_STAR}⚠️  {warning_msg}{RESET}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | Enter: Confirm | Esc/q: Abort]{RESET}"
+        back_hint = " | b/←: Back" if allow_back else ""
+        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | Enter: Confirm{back_hint} | Esc/q: Abort]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -461,6 +473,9 @@ def tui_multiselect(
                     warning_msg = "Mission Check Required: Please select at least one item using [Space] before launching!"
                 elif selected or allow_empty:
                     break
+            elif allow_back and key in ("b", "B", "LEFT", "BACKSPACE"):
+                print()
+                return "__BACK__"
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
     finally:
@@ -471,8 +486,12 @@ def tui_multiselect(
     return [opt[0] for opt in options if opt[0] in selected]
 
 
-def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
-    """Interactive Skill-by-Skill browser with viewport scrolling, search, and observatory HUD."""
+def tui_skill_browser(
+    all_skills: list[dict],
+    default_selected_names: set[str] | None = None,
+    allow_back: bool = True,
+) -> list[tuple[str, str, Path]] | str:
+    """Interactive Skill-by-Skill browser with viewport scrolling, search, and Back support."""
     if not sys.stdin.isatty():
         return [(s["category"], s["name"], s["path"]) for s in all_skills]
 
@@ -500,7 +519,7 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
             return sorted(items, key=lambda x: (x["author"], x["name"]))
         return items
 
-    selected_names = set()
+    selected_names = set(default_selected_names if default_selected_names is not None else [])
     cursor = 0
     page_size = 10
     lines_rendered = 0
@@ -565,7 +584,8 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
             buf.append(f"{BOLD}{VIOLET}└────────────────────────────────────────────────────────────────────{RESET}{ESC}K\n")
             lines += 7
 
-            footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | /: Search | s: Sort | Enter: Confirm | Esc: Abort]{RESET}"
+            back_hint = " | b/←: Back" if allow_back else ""
+            footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | /: Search | s: Sort | Enter: Confirm{back_hint} | Esc: Abort]{RESET}"
             buf.append(f"{footer}{ESC}K\n")
             lines += 1
 
@@ -605,9 +625,12 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
                 sys.stdout.write(HIDE_CURSOR)
             elif key == "ENTER":
                 if not selected_names:
-                    warning_msg = "Please select at least one skill using [Space] before confirming!"
+                    warning_msg = "Please check at least one skill using [Space] before confirming!"
                 else:
                     break
+            elif allow_back and key in ("b", "B", "LEFT", "BACKSPACE"):
+                print()
+                return "__BACK__"
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
     finally:
@@ -619,79 +642,100 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
 
 
 def run_uninstaller():
-    """Interactive uninstaller to safely clean installed skills across agents."""
+    """Interactive uninstaller to safely clean installed skills across agents with Back navigation."""
     ensure_tty()
     print(f"\n{BOLD}{PURPLE}┌── 🗑️  Awesome Skills Uninstaller & De-Orbiter {RESET}")
     print(f"{DIM}Select which agent environments you want to inspect and clean:{RESET}\n")
 
-    agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
-    target_agents = tui_multiselect("Select Agent(s) to Clean", agent_opts, default_selected=["agy", "claude", "hermes", "cursor"])
+    step = 1
+    target_agents = ["agy", "claude", "hermes", "cursor"]
+    scope_choice = "global"
 
-    if not target_agents:
-        print(f"{GOLD_STAR}No agents selected for uninstallation.{RESET}")
-        return
-
-    scope_opts = [
-        ("global", "Global User Profile (~)", "Scans ~/.<agent>/skills/ and ~/.cursor/rules/"),
-        ("local", "Local Workspace Repository (.)", "Scans .agent/skills/, .cursor/rules/, .claude/skills/"),
-    ]
-    scope_choice = tui_single_select("Choose Uninstallation Scope", scope_opts, default_idx=0)
-
-    found_entries = []
-    for agent_key in target_agents:
-        agent_info = AGENTS[agent_key]
-        target_dir = agent_info["global_dir"] if scope_choice == "global" else agent_info["local_dir"]
-        if not target_dir.exists():
+    while True:
+        if step == 1:
+            agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
+            res = tui_multiselect("Select Agent(s) to Clean", agent_opts, default_selected=target_agents, allow_back=True)
+            if res == "__BACK__":
+                return
+            target_agents = res
+            step = 2
             continue
 
-        if agent_info["format"] == "cursor_mdc":
-            for mdc in target_dir.glob("*.mdc"):
-                found_entries.append((f"{agent_key}:{mdc.name}", f"{mdc.name} ({agent_info['name']})", str(mdc), agent_key, mdc))
-        elif agent_info["format"] == "categorized_dir":
-            for skill_dir in target_dir.glob("*/*"):
-                if skill_dir.is_dir() or skill_dir.is_symlink():
-                    found_entries.append((f"{agent_key}:{skill_dir.name}", f"{skill_dir.name} [{skill_dir.parent.name}] ({agent_info['name']})", str(skill_dir), agent_key, skill_dir))
-        else:
-            for skill_dir in target_dir.glob("*"):
-                if skill_dir.is_dir() or skill_dir.is_symlink():
-                    found_entries.append((f"{agent_key}:{skill_dir.name}", f"{skill_dir.name} ({agent_info['name']})", str(skill_dir), agent_key, skill_dir))
+        elif step == 2:
+            scope_opts = [
+                ("global", "Global User Profile (~)", "Scans ~/.<agent>/skills/ and ~/.cursor/rules/"),
+                ("local", "Local Workspace Repository (.)", "Scans .agent/skills/, .cursor/rules/, .claude/skills/"),
+            ]
+            res = tui_single_select("Choose Uninstallation Scope", scope_opts, default_idx=0 if scope_choice == "global" else 1, allow_back=True)
+            if res == "__BACK__":
+                step = 1
+                continue
+            scope_choice = res
+            step = 3
+            continue
 
-    if not found_entries:
-        print(f"\n{COSMIC_GREEN}✔ Clean orbit! No installed skills or rules found in the selected locations.{RESET}\n")
-        return
+        elif step == 3:
+            found_entries = []
+            for agent_key in target_agents:
+                agent_info = AGENTS[agent_key]
+                target_dir = agent_info["global_dir"] if scope_choice == "global" else agent_info["local_dir"]
+                if not target_dir.exists():
+                    continue
 
-    entry_opts = [(e[0], e[1], e[2]) for e in found_entries]
-    selected_keys = tui_multiselect(
-        f"Found {len(found_entries)} installed skill(s)/rule(s). Select items to REMOVE:",
-        entry_opts,
-        default_selected=[],
-    )
+                if agent_info["format"] == "cursor_mdc":
+                    for mdc in target_dir.glob("*.mdc"):
+                        found_entries.append((f"{agent_key}:{mdc.name}", f"{mdc.name} ({agent_info['name']})", str(mdc), agent_key, mdc))
+                elif agent_info["format"] == "categorized_dir":
+                    for skill_dir in target_dir.glob("*/*"):
+                        if skill_dir.is_dir() or skill_dir.is_symlink():
+                            found_entries.append((f"{agent_key}:{skill_dir.name}", f"{skill_dir.name} [{skill_dir.parent.name}] ({agent_info['name']})", str(skill_dir), agent_key, skill_dir))
+                else:
+                    for skill_dir in target_dir.glob("*"):
+                        if skill_dir.is_dir() or skill_dir.is_symlink():
+                            found_entries.append((f"{agent_key}:{skill_dir.name}", f"{skill_dir.name} ({agent_info['name']})", str(skill_dir), agent_key, skill_dir))
 
-    if not selected_keys:
-        print(f"{GOLD_STAR}No items selected for removal.{RESET}")
-        return
+            if not found_entries:
+                print(f"\n{COSMIC_GREEN}✔ Clean orbit! No installed skills or rules found in the selected locations.{RESET}\n")
+                return
 
-    print(f"\n{BOLD}{GOLD_STAR}⚠️  Removing {len(selected_keys)} item(s)...{RESET}\n")
-    removed_count = 0
-    for key in selected_keys:
-        for entry in found_entries:
-            if entry[0] == key:
-                path_obj: Path = entry[4]
-                try:
-                    if path_obj.is_symlink() or path_obj.is_file():
-                        path_obj.unlink()
-                    elif path_obj.is_dir():
-                        shutil.rmtree(path_obj)
-                    print(f"  {COSMIC_GREEN}✔ De-orbited:{RESET} {path_obj}")
-                    removed_count += 1
-                except Exception as e:
-                    print(f"  {GOLD_STAR}Error removing {path_obj}: {e}{RESET}")
+            entry_opts = [(e[0], e[1], e[2]) for e in found_entries]
+            res = tui_multiselect(
+                f"Found {len(found_entries)} installed skill(s)/rule(s). Select items to REMOVE:",
+                entry_opts,
+                default_selected=[],
+                allow_back=True,
+            )
+            if res == "__BACK__":
+                step = 2
+                continue
 
-    print(f"\n{COSMIC_GREEN}{BOLD}🎉 Uninstallation Complete! Removed {removed_count} skill(s)/rule(s).{RESET}\n")
+            selected_keys = res
+            if not selected_keys:
+                print(f"{GOLD_STAR}No items selected for removal.{RESET}")
+                return
+
+            print(f"\n{BOLD}{GOLD_STAR}⚠️  Removing {len(selected_keys)} item(s)...{RESET}\n")
+            removed_count = 0
+            for key in selected_keys:
+                for entry in found_entries:
+                    if entry[0] == key:
+                        path_obj: Path = entry[4]
+                        try:
+                            if path_obj.is_symlink() or path_obj.is_file():
+                                path_obj.unlink()
+                            elif path_obj.is_dir():
+                                shutil.rmtree(path_obj)
+                            print(f"  {COSMIC_GREEN}✔ De-orbited:{RESET} {path_obj}")
+                            removed_count += 1
+                        except Exception as e:
+                            print(f"  {GOLD_STAR}Error removing {path_obj}: {e}{RESET}")
+
+            print(f"\n{COSMIC_GREEN}{BOLD}🎉 Uninstallation Complete! Removed {removed_count} skill(s)/rule(s).{RESET}\n")
+            return
 
 
 def run_open_source_cloner():
-    """Interactive Open Source Repositories Cloner Hub."""
+    """Interactive Open Source Repositories Cloner Hub with Back support."""
     ensure_tty()
     print(f"\n{BOLD}{PURPLE}┌── 🌐 Open Source Repositories Hub (Curated via OpenCurious & GitHub Stars) {RESET}")
     print(f"{DIM}Select repositories to clone locally to your workspace:{RESET}\n")
@@ -700,16 +744,18 @@ def run_open_source_cloner():
         (r["repo"], f"{r['repo']:<35} ⭐ {r['stars']:<7} [{r['cat']}]", r["desc"])
         for r in OPEN_SOURCE_REPOS
     ]
-    selected_repos = tui_multiselect("Select Open Source Repositories to Clone", repo_opts, default_selected=[repo_opts[0][0]])
+    selected_repos = tui_multiselect("Select Open Source Repositories to Clone", repo_opts, default_selected=[repo_opts[0][0]], allow_back=True)
 
-    if not selected_repos:
-        print(f"{GOLD_STAR}No repositories selected.{RESET}")
+    if selected_repos == "__BACK__" or not selected_repos:
         return
 
     try:
-        dest_dir_input = input(f"{GOLD_STAR}Target destination directory [default: ./open-source]: {RESET}").strip()
+        dest_dir_input = input(f"{GOLD_STAR}Target destination directory [default: ./open-source] (b to back): {RESET}").strip()
     except (EOFError, KeyboardInterrupt):
         cancel_and_exit()
+
+    if dest_dir_input.lower() in ("b", "back"):
+        return run_open_source_cloner()
 
     dest_base = Path(dest_dir_input if dest_dir_input else "./open-source").resolve()
     dest_base.mkdir(parents=True, exist_ok=True)
@@ -730,7 +776,7 @@ def run_open_source_cloner():
 
 
 def run_ollama_manager():
-    """Interactive Ollama Open Source Models Manager."""
+    """Interactive Ollama Open Source Models Manager with Back support."""
     ensure_tty()
     print(f"\n{BOLD}{PURPLE}┌── 🦙 Ollama Open Source Models Catalog (Lightweight to Heavyweight) {RESET}")
     print(f"{DIM}High-performance local LLMs for coding, refactoring, and deep reasoning:{RESET}\n")
@@ -739,10 +785,9 @@ def run_ollama_manager():
         (m["tag"], f"{m['tag']:<24} {m['tier']:<16} ({m['size']}, VRAM {m['vram']})", m["desc"])
         for m in OLLAMA_MODELS
     ]
-    selected_models = tui_multiselect("Select Ollama Models to Download / Pull", model_opts, default_selected=["qwen2.5-coder:7b", "deepseek-r1:1.5b"])
+    selected_models = tui_multiselect("Select Ollama Models to Download / Pull", model_opts, default_selected=["qwen2.5-coder:7b", "deepseek-r1:1.5b"], allow_back=True)
 
-    if not selected_models:
-        print(f"{GOLD_STAR}No models selected.{RESET}")
+    if selected_models == "__BACK__" or not selected_models:
         return
 
     has_ollama = shutil.which("ollama") is not None
@@ -760,6 +805,68 @@ def run_ollama_manager():
         for tag in selected_models:
             print(f"  {NEBULA}ollama run {tag}{RESET}")
         print()
+
+
+def run_quick_install_flow(catalog: dict, all_skills_flat: list[dict], agents_dict: dict) -> str | None:
+    """Quick Install workflow with full step-by-step verification and Back navigation."""
+    step = 1
+    selected_agents = ["agy", "claude", "hermes", "cursor"]
+    elite_items = [s for s in all_skills_flat if s["name"] in ELITE_SKILLS]
+    selected_skill_names = [s["name"] for s in elite_items]
+
+    while True:
+        if step == 1:
+            agent_opts = [(k, v["name"], v["desc"]) for k, v in agents_dict.items()]
+            res = tui_multiselect(
+                "Quick Install - Step 1/2: Verify Target Agent(s) to Equip",
+                agent_opts,
+                default_selected=selected_agents,
+                allow_back=True,
+            )
+            if res == "__BACK__":
+                return "__BACK__"
+            selected_agents = res
+            step = 2
+            continue
+
+        elif step == 2:
+            elite_opts = [(s["name"], f"{s['name']:<30} [{s['category']}]", f"by {s['author']}") for s in elite_items]
+            res = tui_multiselect(
+                "Quick Install - Step 2/2: Verify Elite Skills to Install",
+                elite_opts,
+                default_selected=selected_skill_names,
+                allow_back=True,
+            )
+            if res == "__BACK__":
+                step = 1
+                continue
+            selected_skill_names = res
+            break
+
+    skills_to_install = []
+    for s in elite_items:
+        if s["name"] in selected_skill_names:
+            skills_to_install.append((s["category"], s["name"], s["path"]))
+
+    print(f"\n{BOLD}{PURPLE}🚀 Launching Quick Install: {len(skills_to_install)} skill(s) into {len(selected_agents)} agent(s)...{RESET}\n")
+
+    for agent_key in selected_agents:
+        if agent_key not in agents_dict:
+            continue
+        agent_info = agents_dict[agent_key]
+        target_dir = agent_info["global_dir"]
+        print(f"  {BOLD}Configuring {agent_info['name']}{RESET} -> {DIM}{target_dir}{RESET}")
+        installed_count = 0
+        for cat, name, path in skills_to_install:
+            if install_skill_to_target(path, cat, name, agent_key, target_dir, use_symlink=True):
+                installed_count += 1
+        print(f"  {COSMIC_GREEN}✔ Installed {installed_count} skill(s) into {agent_info['name']}{RESET}\n")
+
+    print(f"{PURPLE}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}")
+    print(f"  {COSMIC_GREEN}{BOLD}🎉 Orbit Achieved! Quick Install Completed Successfully!{RESET}")
+    print(f"  {WHITE}Skills are active and ready for prompt triggers in your AI agents.{RESET}")
+    print(f"{PURPLE}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}\n")
+    return None
 
 
 def convert_skill_to_cursor_mdc(skill_path: Path, target_dir: Path, skill_name: str):
@@ -849,119 +956,158 @@ def run_interactive():
 
     print(f"  {BOLD}Active Constellation:{RESET} {COSMIC_GREEN}{total_skills} skills{RESET} in {PURPLE}{total_cats} categories{RESET} • {MAGENTA}2 plugins{RESET} • {GOLD_STAR}4 MCP servers{RESET}.\n")
 
-    # =========================================================================
-    # STEP 0: Workflow Selection
-    # =========================================================================
-    step0_opts = [
-        ("quick", "🚀 Quick Install (Curated Elite Pack)", "Verify and install top 13 starred essential skills & MCPs for selected agents"),
-        ("manual", "⚙️  Custom / Manual Setup (Interactive Wizard)", "Choose agents, scope, skill-by-skill, categories, plugins & packs"),
-        ("uninstall", "🗑️  Uninstall / Clean Installed Skills", "Scan and safely remove installed skills/rules across agents"),
-        ("open_source", "🌐 Explore & Clone Open-Source Repositories", "Curated top-starred GitHub repos via OpenCurious"),
-        ("ollama", "🦙 Open-Source Models for Ollama", "Local models from ultra-lightweight (1.5B) to heavy reasoning (70B+)"),
-    ]
-    step0_choice = tui_single_select("Step 0: Choose Installation Workflow", step0_opts, default_idx=0)
-
-    if step0_choice == "uninstall":
-        run_uninstaller()
-        return
-
-    if step0_choice == "open_source":
-        run_open_source_cloner()
-        return
-
-    if step0_choice == "ollama":
-        run_ollama_manager()
-        return
-
+    # State variables for Back navigation
+    step = 0
+    step0_idx = 0
+    selected_agents = ["agy", "claude", "hermes"]
+    selected_scope = "global"
+    selected_mode = "skill_by_skill"
+    selected_cats = []
+    selected_skill_names_set = set()
+    selected_method = "symlink"
     skills_to_install: list[tuple[str, str, Path]] = []
 
-    # =========================================================================
-    # QUICK INSTALL (WITH VERIFICATION)
-    # =========================================================================
-    if step0_choice == "quick":
-        print(f"\n{BOLD}{PURPLE}⭐ Quick Install Verification{RESET}")
-        print(f"{DIM}Please verify the target agents and skills you want to install:{RESET}\n")
+    while True:
+        # =====================================================================
+        # STEP 0: Workflow Selection
+        # =====================================================================
+        if step == 0:
+            step0_opts = [
+                ("quick", "🚀 Quick Install (Curated Elite Pack)", "Verify and install top 13 starred essential skills & MCPs for selected agents"),
+                ("manual", "⚙️  Custom / Manual Setup (Interactive Wizard)", "Choose agents, scope, skill-by-skill, categories, plugins & packs"),
+                ("uninstall", "🗑️  Uninstall / Clean Installed Skills", "Scan and safely remove installed skills/rules across agents"),
+                ("open_source", "🌐 Explore & Clone Open-Source Repositories", "Curated top-starred GitHub repos via OpenCurious"),
+                ("ollama", "🦙 Open-Source Models for Ollama", "Local models from ultra-lightweight (1.5B) to heavy reasoning (70B+)"),
+            ]
+            step0_choice = tui_single_select("Step 0: Choose Installation Workflow", step0_opts, default_idx=step0_idx, allow_back=False)
+            step0_idx = [opt[0] for opt in step0_opts].index(step0_choice)
 
-        agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
-        selected_agents = tui_multiselect(
-            "Quick Install - Step 1/2: Verify Target Agent(s) to Equip",
-            agent_opts,
-            default_selected=["agy", "claude", "hermes", "cursor"],
-        )
+            if step0_choice == "uninstall":
+                run_uninstaller()
+                continue
+            elif step0_choice == "open_source":
+                run_open_source_cloner()
+                continue
+            elif step0_choice == "ollama":
+                run_ollama_manager()
+                continue
+            elif step0_choice == "quick":
+                res = run_quick_install_flow(catalog, all_skills_flat, AGENTS)
+                if res == "__BACK__":
+                    continue
+                return
+            elif step0_choice == "manual":
+                step = 1
+                continue
 
-        elite_items = [s for s in all_skills_flat if s["name"] in ELITE_SKILLS]
-        elite_opts = [(s["name"], f"{s['name']:<30} [{s['category']}]", f"by {s['author']}") for s in elite_items]
-        selected_skill_names = tui_multiselect(
-            "Quick Install - Step 2/2: Verify Elite Skills to Install",
-            elite_opts,
-            default_selected=[s["name"] for s in elite_items],
-        )
+        # =====================================================================
+        # STEP 1: Target Agents
+        # =====================================================================
+        elif step == 1:
+            agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
+            res = tui_multiselect(
+                "Step 1: Select Target Agent(s) to Equip",
+                agent_opts,
+                default_selected=selected_agents,
+                allow_back=True,
+            )
+            if res == "__BACK__":
+                step = 0
+                continue
+            selected_agents = res
+            step = 2
+            continue
 
-        for s in elite_items:
-            if s["name"] in selected_skill_names:
-                skills_to_install.append((s["category"], s["name"], s["path"]))
+        # =====================================================================
+        # STEP 2: Installation Scope
+        # =====================================================================
+        elif step == 2:
+            scope_opts = [
+                ("global", "Global User Profile", "Installed in ~/.<agent> — available across all projects"),
+                ("local", "Local Workspace Repository", "Installed in .agent/ or .cursor/ — scoped to current project"),
+            ]
+            default_scope_idx = 0 if selected_scope == "global" else 1
+            res = tui_single_select("Step 2: Choose Installation Scope", scope_opts, default_idx=default_scope_idx, allow_back=True)
+            if res == "__BACK__":
+                step = 1
+                continue
+            selected_scope = res
+            step = 3
+            continue
 
-        selected_scope = "global"
-        use_symlink = True
+        # =====================================================================
+        # STEP 3: Which Skills
+        # =====================================================================
+        elif step == 3:
+            mode_opts = [
+                ("skill_by_skill", "🎯 Browse & Select Skill by Skill (Full Catalog)", "Inspect metadata, author, GitHub link, stars, and pick individually"),
+                ("pack_fullstack", PACKS["fullstack"]["title"], PACKS["fullstack"]["description"]),
+                ("pack_devops", PACKS["devops"]["title"], PACKS["devops"]["description"]),
+                ("pack_ai", PACKS["ai"]["title"], PACKS["ai"]["description"]),
+                ("pack_academic", PACKS["academic"]["title"], PACKS["academic"]["description"]),
+                ("pack_creative", PACKS["creative"]["title"], PACKS["creative"]["description"]),
+                ("pack_all", PACKS["all"]["title"], f"All {total_skills} skills across {total_cats} categories"),
+                ("categories", "🗂️  Select by Category", "Choose entire categories from a list"),
+            ]
+            mode_keys = [m[0] for m in mode_opts]
+            default_mode_idx = mode_keys.index(selected_mode) if selected_mode in mode_keys else 0
+            res = tui_single_select("Step 3: Which Skills would you like to install?", mode_opts, default_idx=default_mode_idx, allow_back=True)
+            if res == "__BACK__":
+                step = 2
+                continue
+            selected_mode = res
 
-    # =========================================================================
-    # MANUAL WIZARD
-    # =========================================================================
-    else:
-        agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
-        selected_agents = tui_multiselect(
-            "Step 1: Select Target Agent(s) to Equip",
-            agent_opts,
-            default_selected=["agy", "claude", "hermes"],
-        )
+            if selected_mode == "skill_by_skill":
+                browser_res = tui_skill_browser(all_skills_flat, default_selected_names=selected_skill_names_set, allow_back=True)
+                if browser_res == "__BACK__":
+                    continue
+                skills_to_install = browser_res
+                selected_skill_names_set = set(s[1] for s in skills_to_install)
 
-        scope_opts = [
-            ("global", "Global User Profile", "Installed in ~/.<agent> — available across all projects"),
-            ("local", "Local Workspace Repository", "Installed in .agent/ or .cursor/ — scoped to current project"),
-        ]
-        selected_scope = tui_single_select("Step 2: Choose Installation Scope", scope_opts, default_idx=0)
-
-        mode_opts = [
-            ("skill_by_skill", "🎯 Browse & Select Skill by Skill (Full Catalog)", "Inspect metadata, author, GitHub link, stars, and pick individually"),
-            ("pack_fullstack", PACKS["fullstack"]["title"], PACKS["fullstack"]["description"]),
-            ("pack_devops", PACKS["devops"]["title"], PACKS["devops"]["description"]),
-            ("pack_ai", PACKS["ai"]["title"], PACKS["ai"]["description"]),
-            ("pack_academic", PACKS["academic"]["title"], PACKS["academic"]["description"]),
-            ("pack_creative", PACKS["creative"]["title"], PACKS["creative"]["description"]),
-            ("pack_all", PACKS["all"]["title"], f"All {total_skills} skills across {total_cats} categories"),
-            ("categories", "🗂️  Select by Category", "Choose entire categories from a list"),
-        ]
-        selected_mode = tui_single_select("Step 3: Which Skills would you like to install?", mode_opts, default_idx=0)
-
-        if selected_mode == "skill_by_skill":
-            skills_to_install = tui_skill_browser(all_skills_flat)
-
-        elif selected_mode.startswith("pack_"):
-            pack_key = selected_mode.replace("pack_", "")
-            pack_cats = PACKS[pack_key]["categories"]
-            if pack_cats == "ALL":
-                for cat, sks in catalog.items():
-                    for name, path in sks.items():
-                        skills_to_install.append((cat, name, path))
-            else:
-                for cat in pack_cats:
-                    if cat in catalog:
-                        for name, path in catalog[cat].items():
+            elif selected_mode.startswith("pack_"):
+                pack_key = selected_mode.replace("pack_", "")
+                pack_cats = PACKS[pack_key]["categories"]
+                skills_to_install = []
+                if pack_cats == "ALL":
+                    for cat, sks in catalog.items():
+                        for name, path in sks.items():
                             skills_to_install.append((cat, name, path))
+                else:
+                    for cat in pack_cats:
+                        if cat in catalog:
+                            for name, path in catalog[cat].items():
+                                skills_to_install.append((cat, name, path))
 
-        elif selected_mode == "categories":
-            cat_opts = [(cat, cat, f"{len(sks)} skills") for cat, sks in sorted(catalog.items())]
-            chosen_cats = tui_multiselect("Select Desired Categories", cat_opts, default_selected=[cat_opts[0][0]])
-            for cat in chosen_cats:
-                for name, path in catalog[cat].items():
-                    skills_to_install.append((cat, name, path))
+            elif selected_mode == "categories":
+                cat_opts = [(cat, cat, f"{len(sks)} skills") for cat, sks in sorted(catalog.items())]
+                chosen_cats = tui_multiselect("Select Desired Categories", cat_opts, default_selected=selected_cats or [cat_opts[0][0]], allow_back=True)
+                if chosen_cats == "__BACK__":
+                    continue
+                selected_cats = chosen_cats
+                skills_to_install = []
+                for cat in selected_cats:
+                    for name, path in catalog[cat].items():
+                        skills_to_install.append((cat, name, path))
 
-        method_opts = [
-            ("symlink", "Symlink (Dynamic Link)", "Auto-updates dynamically on git pull"),
-            ("copy", "Direct File Copy", "Independent snapshot clone"),
-        ]
-        selected_method = tui_single_select("Step 4: Choose Installation Method", method_opts, default_idx=0)
-        use_symlink = selected_method == "symlink"
+            step = 4
+            continue
+
+        # =====================================================================
+        # STEP 4: Method & Execution
+        # =====================================================================
+        elif step == 4:
+            method_opts = [
+                ("symlink", "Symlink (Dynamic Link)", "Auto-updates dynamically on git pull"),
+                ("copy", "Direct File Copy", "Independent snapshot clone"),
+            ]
+            default_method_idx = 0 if selected_method == "symlink" else 1
+            res = tui_single_select("Step 4: Choose Installation Method", method_opts, default_idx=default_method_idx, allow_back=True)
+            if res == "__BACK__":
+                step = 3
+                continue
+            selected_method = res
+            use_symlink = selected_method == "symlink"
+            break
 
     if not skills_to_install:
         print(f"\n{GOLD_STAR}No skills selected for installation.{RESET}")
