@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Universal Multi-Agent Skills Installer for awesome-skills (English Interface).
+"""Universal Multi-Agent Skills Installer for awesome-skills (Cosmic Purple Dev Edition).
 
 Features:
+- Aesthetic Purple, Astronomy & Developer Theme with Cosmic Coffee intro ☕ 🪐 🌌.
 - Step 0: Quick Install (with verification of agents & skills), Custom Manual Setup, Uninstall / Clean, Open-Source Hub, and Ollama Hub.
 - Strict selection validation: Users CANNOT proceed with 0 items selected (requires explicit [Space] check).
 - Uninstaller module: Safely scans, selects, and removes installed skills/rules across agents.
@@ -34,49 +35,49 @@ GITHUB_BASE_URL = "https://github.com/pedroiff0/awesome-skills/tree/main/skills"
 # Supported Agents & Target Paths
 AGENTS = {
     "agy": {
-        "name": "Google Antigravity (AGY)",
+        "name": "🪐 Google Antigravity (AGY)",
         "desc": "~/.gemini/antigravity-cli/skills/",
         "global_dir": Path.home() / ".gemini" / "antigravity-cli" / "skills",
         "local_dir": Path(".agent") / "skills",
         "format": "skill_dir",
     },
     "hermes": {
-        "name": "Hermes Agent (Nous)",
+        "name": "🏛️  Hermes Agent (Nous)",
         "desc": "~/.hermes/skills/",
         "global_dir": Path.home() / ".hermes" / "skills",
         "local_dir": Path(".hermes") / "skills",
         "format": "categorized_dir",
     },
     "claude": {
-        "name": "Claude Code (Anthropic)",
+        "name": "⚡ Claude Code (Anthropic)",
         "desc": "~/.claude/skills/",
         "global_dir": Path.home() / ".claude" / "skills",
         "local_dir": Path(".claude") / "skills",
         "format": "skill_dir",
     },
     "cursor": {
-        "name": "Cursor IDE Rules (.mdc)",
+        "name": "🎯 Cursor IDE Rules (.mdc)",
         "desc": ".cursor/rules/*.mdc",
         "global_dir": Path.home() / ".cursor" / "rules",
         "local_dir": Path(".cursor") / "rules",
         "format": "cursor_mdc",
     },
     "windsurf": {
-        "name": "Windsurf (Codeium)",
+        "name": "🌊 Windsurf (Codeium)",
         "desc": ".windsurf/skills/ or memories",
         "global_dir": Path.home() / ".codeium" / "windsurf" / "memories",
         "local_dir": Path(".windsurf") / "skills",
         "format": "skill_dir",
     },
     "roo": {
-        "name": "Roo Code / Cline",
+        "name": "🦘 Roo Code / Cline",
         "desc": "~/.roo/skills/",
         "global_dir": Path.home() / ".roo" / "skills",
         "local_dir": Path(".roo") / "skills",
         "format": "skill_dir",
     },
     "opencode": {
-        "name": "OpenCode / Codex",
+        "name": "💻 OpenCode / Codex",
         "desc": "~/.config/opencode/skills/",
         "global_dir": Path.home() / ".config" / "opencode" / "skills",
         "local_dir": Path(".codex") / "rules",
@@ -129,7 +130,7 @@ PACKS = {
         "categories": ["creative", "media", "desktop"],
     },
     "all": {
-        "title": "📦 Complete Catalog",
+        "title": "📦 Complete Cosmic Catalog",
         "description": "Install every skill in the awesome-skills repository",
         "categories": "ALL",
     },
@@ -174,20 +175,21 @@ OLLAMA_MODELS = [
     {"tag": "qwen2.5:72b", "size": "72B", "tier": "🧠 Heavyweight", "vram": "~44.0 GB", "desc": "Maximum performance in global benchmarks"},
 ]
 
-# ANSI Styling
+# ANSI Styling (Purple / Cosmic Astronomy & Dev Theme)
 ESC = "\033["
 RESET = f"{ESC}0m"
 BOLD = f"{ESC}1m"
 DIM = f"{ESC}2m"
-CYAN = f"{ESC}36m"
-BRIGHT_CYAN = f"{ESC}96m"
-GREEN = f"{ESC}32m"
-BRIGHT_GREEN = f"{ESC}92m"
-YELLOW = f"{ESC}33m"
-BRIGHT_YELLOW = f"{ESC}93m"
-BLUE = f"{ESC}34m"
-BRIGHT_BLUE = f"{ESC}94m"
-MAGENTA = f"{ESC}35m"
+
+# Cosmic Purple Palette
+PURPLE = "\033[38;5;141m"       # Soft Lavender Purple
+VIOLET = "\033[38;5;99m"        # Deep Space Violet
+NEBULA = "\033[38;5;183m"       # Light Nebula
+MAGENTA = "\033[38;5;201m"      # Cyber Magenta
+STARLIGHT = "\033[38;5;159m"    # Ice-blue Star Glow
+COSMIC_GREEN = "\033[38;5;120m" # Aurora Green
+GOLD_STAR = "\033[38;5;220m"    # Cosmic Gold / Coffee Crema
+CYAN_DEV = "\033[38;5;87m"      # Hacker Cyan
 WHITE = f"{ESC}37m"
 HIDE_CURSOR = f"{ESC}?25l"
 SHOW_CURSOR = f"{ESC}?25h"
@@ -206,7 +208,7 @@ atexit.register(restore_cursor)
 
 def cancel_and_exit():
     restore_cursor()
-    print(f"\n{BRIGHT_YELLOW}🟡 Operation cancelled by user (ESC/Ctrl+C).{RESET}\n")
+    print(f"\n{GOLD_STAR}🟡 Cosmic Mission Aborted by User (ESC/Ctrl+C).{RESET}\n")
     sys.exit(0)
 
 
@@ -273,17 +275,21 @@ def getch() -> str:
 
 
 def print_banner():
-    banner = f"""{BRIGHT_CYAN}{BOLD}
-  ╔══════════════════════════════════════════════════════════════════════╗
-  ║   █████╗ ██╗    ██╗███████╗███████╗ ██████╗ ███╗   ███╗███████╗      ║
-  ║  ██╔══██╗██║    ██║██╔════╝██╔════╝██╔═══██╗████╗ ████║██╔════╝      ║
-  ║  ███████║██║ █╗ ██║█████╗  ███████╗██║   ██║██╔████╔██║█████╗        ║
-  ║  ██╔══██║██║███╗██║██╔══╝  ╚════██║██║   ██║██║╚██╔╝██║██╔══╝        ║
-  ║  ██║  ██║╚███╔███╔╝███████╗███████║╚██████╔╝██║ ╚═╝ ██║███████╗      ║
-  ║                                                                      ║
-  ║   AWESOME SKILLS — Universal Multi-Agent Installer v2.1              ║
-  ║   Skills • Plugins • MCP Servers • Open-Source Repos • Ollama Hub    ║
-  ╚══════════════════════════════════════════════════════════════════════╝{RESET}
+    banner = f"""{PURPLE}{BOLD}
+          .      *       .     (  )   (   )  )       *       .      .
+    *        .       .          ) (   )  (  (     .       .      *
+       .         *       .     ( )  (    ) )        .        .
+   .       *   ┌───────────────────────────────┐     *      .       *
+             * │   ☕  C O S M I C   B R E W   │ *       .       .
+     *         └───────────────────────────────┘            *
+  🪐  █████╗ ██╗    ██╗███████╗███████╗ ██████╗ ███╗   ███╗███████╗  🌌
+     ██╔══██╗██║    ██║██╔════╝██╔════╝██╔═══██╗████╗ ████║██╔════╝
+     ███████║██║ █╗ ██║█████╗  ███████╗██║   ██║██╔████╔██║█████╗   ⟨/⟩
+     ██╔══██║██║███╗██║██╔══╝  ╚════██║██║   ██║██║╚██╔╝██║██╔══╝    λ
+     ██║  ██║╚███╔███╔╝███████╗███████║╚██████╔╝██║ ╚═╝ ██║███████╗  ☄️
+{NEBULA}  ══════════════════════════════════════════════════════════════════════
+  ✨ UNIVERSAL MULTI-AGENT CATALOG • SKILLS • MCP • PLUGINS • OLLAMA ✨
+{PURPLE}  ══════════════════════════════════════════════════════════════════════{RESET}
 """
     print(banner)
 
@@ -317,7 +323,7 @@ def tui_single_select(
     options: list[tuple[str, str, str]],  # (key, label, subtitle)
     default_idx: int = 0,
 ) -> str:
-    """Interactive single-choice menu with arrow keys and ESC support."""
+    """Interactive single-choice menu with cosmic purple aesthetics."""
     if not sys.stdin.isatty():
         return options[default_idx][0]
 
@@ -334,22 +340,22 @@ def tui_single_select(
         if lines_rendered > 0:
             buf.append(f"{ESC}{lines_rendered}F")
 
-        buf.append(f"{BOLD}{WHITE}┌── {title} {RESET}\n")
+        buf.append(f"{BOLD}{PURPLE}┌── 🪐 {title} {RESET}\n")
         lines = 1
 
         for idx, (key, label, sub) in enumerate(options):
             is_active = idx == cursor
-            radio = f"{BRIGHT_CYAN}(•){RESET}" if is_active else f"{DIM}( ){RESET}"
-            ptr = f"{BRIGHT_CYAN}❯{RESET}" if is_active else " "
+            radio = f"{MAGENTA}(•){RESET}" if is_active else f"{DIM}( ){RESET}"
+            ptr = f"{MAGENTA}❯{RESET}" if is_active else " "
             sub_text = f" {DIM}— {sub}{RESET}" if sub else ""
 
             if is_active:
-                buf.append(f"  {ptr} {radio} {BOLD}{BRIGHT_CYAN}{label}{RESET}{sub_text}{ESC}K\n")
+                buf.append(f"  {ptr} {radio} {BOLD}{NEBULA}{label}{RESET}{sub_text}{ESC}K\n")
             else:
-                buf.append(f"  {ptr} {radio} {label}{sub_text}{ESC}K\n")
+                buf.append(f"  {ptr} {radio} {WHITE}{label}{RESET}{sub_text}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Navigate | Enter: Confirm | Esc/q: Cancel]{RESET}"
+        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Enter: Engage | Esc/q: Abort]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -383,7 +389,7 @@ def tui_multiselect(
     default_selected: list[str] | None = None,
     allow_empty: bool = False,
 ) -> list[str]:
-    """Interactive multi-select menu with STRICT selection validation."""
+    """Interactive multi-select menu with STRICT selection validation & purple styling."""
     if not sys.stdin.isatty():
         return [opt[0] for opt in options] if default_selected is None else default_selected
 
@@ -402,27 +408,27 @@ def tui_multiselect(
         if lines_rendered > 0:
             buf.append(f"{ESC}{lines_rendered}F")
 
-        buf.append(f"{BOLD}{WHITE}┌── {title} {RESET}\n")
+        buf.append(f"{BOLD}{PURPLE}┌── 🌌 {title} {RESET}\n")
         lines = 1
 
         for idx, (key, label, sub) in enumerate(options):
             is_active = idx == cursor
             is_checked = key in selected
-            box = f"{BRIGHT_GREEN}[✔]{RESET}" if is_checked else f"{DIM}[ ]{RESET}"
-            ptr = f"{BRIGHT_CYAN}❯{RESET}" if is_active else " "
+            box = f"{COSMIC_GREEN}[✔]{RESET}" if is_checked else f"{DIM}[ ]{RESET}"
+            ptr = f"{MAGENTA}❯{RESET}" if is_active else " "
 
             sub_text = f" {DIM}({sub}){RESET}" if sub else ""
             if is_active:
-                buf.append(f"  {ptr} {box} {BOLD}{BRIGHT_CYAN}{label}{RESET}{sub_text}{ESC}K\n")
+                buf.append(f"  {ptr} {box} {BOLD}{NEBULA}{label}{RESET}{sub_text}{ESC}K\n")
             else:
-                buf.append(f"  {ptr} {box} {label}{sub_text}{ESC}K\n")
+                buf.append(f"  {ptr} {box} {WHITE}{label}{RESET}{sub_text}{ESC}K\n")
             lines += 1
 
         if warning_msg:
-            buf.append(f"  {BRIGHT_YELLOW}⚠️  {warning_msg}{RESET}{ESC}K\n")
+            buf.append(f"  {GOLD_STAR}⚠️  {warning_msg}{RESET}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Navigate | Space: Toggle | a: Toggle All | Enter: Confirm | Esc/q: Cancel]{RESET}"
+        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | Enter: Confirm | Esc/q: Abort]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -452,7 +458,7 @@ def tui_multiselect(
                     selected = set(opt[0] for opt in options)
             elif key == "ENTER":
                 if not selected and not allow_empty:
-                    warning_msg = "Selection Required: Please check at least one option using [Space] before pressing [Enter]!"
+                    warning_msg = "Mission Check Required: Please select at least one item using [Space] before launching!"
                 elif selected or allow_empty:
                     break
             elif key in ("ESC", "q", "Q", "EOF"):
@@ -466,7 +472,7 @@ def tui_multiselect(
 
 
 def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
-    """Interactive Skill-by-Skill browser with viewport scrolling, search, and strict selection."""
+    """Interactive Skill-by-Skill browser with viewport scrolling, search, and observatory HUD."""
     if not sys.stdin.isatty():
         return [(s["category"], s["name"], s["path"]) for s in all_skills]
 
@@ -519,9 +525,9 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
             if lines_rendered > 0:
                 buf.append(f"{ESC}{lines_rendered}F")
 
-            header = f"{BOLD}{WHITE}┌── 🎯 Skill-by-Skill Selection [Selected: {len(selected_names)}/{len(all_skills)}] {RESET}"
+            header = f"{BOLD}{PURPLE}┌── 🎯 Cosmic Skill Observatory [Selected: {len(selected_names)}/{len(all_skills)}] {RESET}"
             if search_query:
-                header += f" {BRIGHT_YELLOW}(Filter: '{search_query}'){RESET}"
+                header += f" {GOLD_STAR}(Filter: '{search_query}'){RESET}"
             buf.append(f"{header}{ESC}K\n")
             lines = 1
 
@@ -530,36 +536,36 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
                 is_active = abs_i == cursor
                 is_checked = item["name"] in selected_names
 
-                box = f"{BRIGHT_GREEN}[✔]{RESET}" if is_checked else f"{DIM}[ ]{RESET}"
-                ptr = f"{BRIGHT_CYAN}❯{RESET}" if is_active else " "
+                box = f"{COSMIC_GREEN}[✔]{RESET}" if is_checked else f"{DIM}[ ]{RESET}"
+                ptr = f"{MAGENTA}❯{RESET}" if is_active else " "
 
-                name_fmt = f"{BOLD}{BRIGHT_CYAN}{item['name']:<28}{RESET}" if is_active else f"{item['name']:<28}"
-                cat_fmt = f"{DIM}[{item['category']}]{RESET}"
+                name_fmt = f"{BOLD}{NEBULA}{item['name']:<28}{RESET}" if is_active else f"{WHITE}{item['name']:<28}{RESET}"
+                cat_fmt = f"{PURPLE}[{item['category']}]{RESET}"
                 author_fmt = f"{DIM}by {item['author'][:18]}{RESET}"
 
                 buf.append(f"  {ptr} {box} {name_fmt} {cat_fmt:<32} {author_fmt}{ESC}K\n")
                 lines += 1
 
             sort_label = f"Sort: {sort_modes[sort_idx].capitalize()}"
-            scroll_info = f"Showing {start_idx+1}-{end_idx} of {num_items} skills [{sort_label}]"
+            scroll_info = f"Observing {start_idx+1}-{end_idx} of {num_items} skills [{sort_label}]"
             buf.append(f"  {DIM}── {scroll_info} ──{RESET}{ESC}K\n")
             lines += 1
 
             if warning_msg:
-                buf.append(f"  {BRIGHT_YELLOW}⚠️  {warning_msg}{RESET}{ESC}K\n")
+                buf.append(f"  {GOLD_STAR}⚠️  {warning_msg}{RESET}{ESC}K\n")
                 lines += 1
 
             desc_wrapped = focused["desc"][:160] + "..." if len(focused["desc"]) > 160 else focused["desc"]
-            buf.append(f"{BOLD}{WHITE}┌─ 🔍 Selected Skill Details ────────────────────────────────────────{RESET}{ESC}K\n")
-            buf.append(f"│ {BOLD}Name:{RESET}        {BRIGHT_CYAN}{focused['name']}{RESET} ({focused['category']}){ESC}K\n")
-            buf.append(f"│ {BOLD}Author:{RESET}      {WHITE}{focused['author']}{RESET}{ESC}K\n")
-            buf.append(f"│ {BOLD}Description:{RESET} {DIM}{desc_wrapped}{RESET}{ESC}K\n")
-            buf.append(f"│ {BOLD}GitHub URL:{RESET}  {BLUE}{focused['github_url']}{RESET}{ESC}K\n")
-            buf.append(f"│ {BOLD}Repository:{RESET}  ⭐ {BRIGHT_YELLOW}pedroiff0/awesome-skills{RESET} | MIT License{ESC}K\n")
-            buf.append(f"{BOLD}{WHITE}└────────────────────────────────────────────────────────────────────{RESET}{ESC}K\n")
+            buf.append(f"{BOLD}{VIOLET}┌─ 🔭 Skill Astrophysics & Telemetry ────────────────────────────────{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Orbit/Name:{RESET}        {NEBULA}{focused['name']}{RESET} ({CYAN_DEV}{focused['category']}{RESET}){ESC}K\n")
+            buf.append(f"│ {BOLD}Astronomer/Author:{RESET} {WHITE}{focused['author']}{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Blueprint/Desc:{RESET}    {DIM}{desc_wrapped}{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Telemetry/URL:{RESET}     {STARLIGHT}{focused['github_url']}{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Constellation:{RESET}     ⭐ {GOLD_STAR}pedroiff0/awesome-skills{RESET} | MIT License{ESC}K\n")
+            buf.append(f"{BOLD}{VIOLET}└────────────────────────────────────────────────────────────────────{RESET}{ESC}K\n")
             lines += 7
 
-            footer = f"{DIM}└── [↑/↓/j/k: Navigate | Space: Toggle | a: All | /: Search | s: Sort | Enter: Confirm | Esc: Cancel]{RESET}"
+            footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | /: Search | s: Sort | Enter: Confirm | Esc: Abort]{RESET}"
             buf.append(f"{footer}{ESC}K\n")
             lines += 1
 
@@ -588,7 +594,7 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
                 sort_idx = (sort_idx + 1) % len(sort_modes)
             elif key == "/":
                 restore_cursor()
-                sys.stdout.write(f"\n{BOLD}{BRIGHT_YELLOW}Filter skills by keyword (Enter to clear): {RESET}")
+                sys.stdout.write(f"\n{BOLD}{GOLD_STAR}Filter skills by keyword (Enter to clear): {RESET}")
                 sys.stdout.flush()
                 try:
                     search_query = input().strip()
@@ -599,7 +605,7 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
                 sys.stdout.write(HIDE_CURSOR)
             elif key == "ENTER":
                 if not selected_names:
-                    warning_msg = "Please check at least one skill using [Space] before confirming!"
+                    warning_msg = "Please select at least one skill using [Space] before confirming!"
                 else:
                     break
             elif key in ("ESC", "q", "Q", "EOF"):
@@ -615,14 +621,14 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
 def run_uninstaller():
     """Interactive uninstaller to safely clean installed skills across agents."""
     ensure_tty()
-    print(f"\n{BOLD}{WHITE}┌── 🗑️  Awesome Skills Uninstaller / Cleaner {RESET}")
+    print(f"\n{BOLD}{PURPLE}┌── 🗑️  Awesome Skills Uninstaller & De-Orbiter {RESET}")
     print(f"{DIM}Select which agent environments you want to inspect and clean:{RESET}\n")
 
     agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
     target_agents = tui_multiselect("Select Agent(s) to Clean", agent_opts, default_selected=["agy", "claude", "hermes", "cursor"])
 
     if not target_agents:
-        print(f"{YELLOW}No agents selected for uninstallation.{RESET}")
+        print(f"{GOLD_STAR}No agents selected for uninstallation.{RESET}")
         return
 
     scope_opts = [
@@ -631,7 +637,6 @@ def run_uninstaller():
     ]
     scope_choice = tui_single_select("Choose Uninstallation Scope", scope_opts, default_idx=0)
 
-    # Scan for installed skills/rules
     found_entries = []
     for agent_key in target_agents:
         agent_info = AGENTS[agent_key]
@@ -652,7 +657,7 @@ def run_uninstaller():
                     found_entries.append((f"{agent_key}:{skill_dir.name}", f"{skill_dir.name} ({agent_info['name']})", str(skill_dir), agent_key, skill_dir))
 
     if not found_entries:
-        print(f"\n{BRIGHT_GREEN}✔ No installed skills or rules found in the selected locations.{RESET}\n")
+        print(f"\n{COSMIC_GREEN}✔ Clean orbit! No installed skills or rules found in the selected locations.{RESET}\n")
         return
 
     entry_opts = [(e[0], e[1], e[2]) for e in found_entries]
@@ -663,10 +668,10 @@ def run_uninstaller():
     )
 
     if not selected_keys:
-        print(f"{YELLOW}No items selected for removal.{RESET}")
+        print(f"{GOLD_STAR}No items selected for removal.{RESET}")
         return
 
-    print(f"\n{BOLD}{BRIGHT_YELLOW}⚠️  Removing {len(selected_keys)} item(s)...{RESET}\n")
+    print(f"\n{BOLD}{GOLD_STAR}⚠️  Removing {len(selected_keys)} item(s)...{RESET}\n")
     removed_count = 0
     for key in selected_keys:
         for entry in found_entries:
@@ -677,19 +682,19 @@ def run_uninstaller():
                         path_obj.unlink()
                     elif path_obj.is_dir():
                         shutil.rmtree(path_obj)
-                    print(f"  {BRIGHT_GREEN}✔ Removed:{RESET} {path_obj}")
+                    print(f"  {COSMIC_GREEN}✔ De-orbited:{RESET} {path_obj}")
                     removed_count += 1
                 except Exception as e:
-                    print(f"  {YELLOW}Error removing {path_obj}: {e}{RESET}")
+                    print(f"  {GOLD_STAR}Error removing {path_obj}: {e}{RESET}")
 
-    print(f"\n{BRIGHT_GREEN}{BOLD}🎉 Uninstallation Complete! Removed {removed_count} skill(s)/rule(s).{RESET}\n")
+    print(f"\n{COSMIC_GREEN}{BOLD}🎉 Uninstallation Complete! Removed {removed_count} skill(s)/rule(s).{RESET}\n")
 
 
 def run_open_source_cloner():
     """Interactive Open Source Repositories Cloner Hub."""
     ensure_tty()
-    print(f"\n{BOLD}{WHITE}┌── 🌐 Open Source Repositories Hub (Curated via OpenCurious & GitHub Stars) {RESET}")
-    print(f"{DIM}Select repositories to clone locally to your machine:{RESET}\n")
+    print(f"\n{BOLD}{PURPLE}┌── 🌐 Open Source Repositories Hub (Curated via OpenCurious & GitHub Stars) {RESET}")
+    print(f"{DIM}Select repositories to clone locally to your workspace:{RESET}\n")
 
     repo_opts = [
         (r["repo"], f"{r['repo']:<35} ⭐ {r['stars']:<7} [{r['cat']}]", r["desc"])
@@ -698,36 +703,36 @@ def run_open_source_cloner():
     selected_repos = tui_multiselect("Select Open Source Repositories to Clone", repo_opts, default_selected=[repo_opts[0][0]])
 
     if not selected_repos:
-        print(f"{YELLOW}No repositories selected.{RESET}")
+        print(f"{GOLD_STAR}No repositories selected.{RESET}")
         return
 
     try:
-        dest_dir_input = input(f"{BRIGHT_YELLOW}Target destination directory [default: ./open-source]: {RESET}").strip()
+        dest_dir_input = input(f"{GOLD_STAR}Target destination directory [default: ./open-source]: {RESET}").strip()
     except (EOFError, KeyboardInterrupt):
         cancel_and_exit()
 
     dest_base = Path(dest_dir_input if dest_dir_input else "./open-source").resolve()
     dest_base.mkdir(parents=True, exist_ok=True)
 
-    print(f"\n{BOLD}{BRIGHT_CYAN}Cloning {len(selected_repos)} repository(ies) to {dest_base}...{RESET}\n")
+    print(f"\n{BOLD}{PURPLE}Cloning {len(selected_repos)} repository(ies) to {dest_base}...{RESET}\n")
     for r in selected_repos:
         repo_name = r.split("/")[1]
         target_path = dest_base / repo_name
         if target_path.exists():
-            print(f"  {YELLOW}• {r} already exists at {target_path}. Updating via git pull...{RESET}")
+            print(f"  {GOLD_STAR}• {r} already exists at {target_path}. Updating via git pull...{RESET}")
             subprocess.run(["git", "-C", str(target_path), "pull", "--ff-only"], capture_output=True)
         else:
-            print(f"  {BRIGHT_CYAN}• Cloning https://github.com/{r}.git...{RESET}")
+            print(f"  {NEBULA}• Cloning https://github.com/{r}.git...{RESET}")
             subprocess.run(["git", "clone", "--depth", "1", f"https://github.com/{r}.git", str(target_path)])
-        print(f"  {BRIGHT_GREEN}✔ Ready: {r}{RESET}\n")
+        print(f"  {COSMIC_GREEN}✔ Ready: {r}{RESET}\n")
 
-    print(f"{BRIGHT_GREEN}{BOLD}🎉 Open source repositories cloned successfully!{RESET}\n")
+    print(f"{COSMIC_GREEN}{BOLD}🎉 Open source repositories cloned successfully!{RESET}\n")
 
 
 def run_ollama_manager():
     """Interactive Ollama Open Source Models Manager."""
     ensure_tty()
-    print(f"\n{BOLD}{WHITE}┌── 🦙 Ollama Open Source Models Catalog (Lightweight to Heavyweight) {RESET}")
+    print(f"\n{BOLD}{PURPLE}┌── 🦙 Ollama Open Source Models Catalog (Lightweight to Heavyweight) {RESET}")
     print(f"{DIM}High-performance local LLMs for coding, refactoring, and deep reasoning:{RESET}\n")
 
     model_opts = [
@@ -737,23 +742,23 @@ def run_ollama_manager():
     selected_models = tui_multiselect("Select Ollama Models to Download / Pull", model_opts, default_selected=["qwen2.5-coder:7b", "deepseek-r1:1.5b"])
 
     if not selected_models:
-        print(f"{YELLOW}No models selected.{RESET}")
+        print(f"{GOLD_STAR}No models selected.{RESET}")
         return
 
     has_ollama = shutil.which("ollama") is not None
 
     if has_ollama:
-        print(f"\n{BOLD}{BRIGHT_CYAN}🚀 Pulling {len(selected_models)} model(s) via Ollama...{RESET}\n")
+        print(f"\n{BOLD}{PURPLE}🚀 Pulling {len(selected_models)} model(s) via Ollama...{RESET}\n")
         for tag in selected_models:
-            print(f"  {BOLD}Running:{RESET} {BRIGHT_YELLOW}ollama pull {tag}{RESET}")
+            print(f"  {BOLD}Running:{RESET} {GOLD_STAR}ollama pull {tag}{RESET}")
             subprocess.run(["ollama", "pull", tag])
-            print(f"  {BRIGHT_GREEN}✔ Model {tag} is ready for local inference!{RESET}\n")
+            print(f"  {COSMIC_GREEN}✔ Model {tag} is ready for local inference!{RESET}\n")
     else:
-        print(f"\n{YELLOW}{BOLD}Notice:{RESET} 'ollama' command was not found in your system PATH.")
-        print(f"To install Ollama, visit: {BRIGHT_CYAN}https://ollama.com/{RESET}\n")
+        print(f"\n{GOLD_STAR}{BOLD}Notice:{RESET} 'ollama' command was not found in your system PATH.")
+        print(f"To install Ollama, visit: {NEBULA}https://ollama.com/{RESET}\n")
         print(f"{BOLD}Commands to run once Ollama is installed:{RESET}")
         for tag in selected_models:
-            print(f"  {BRIGHT_CYAN}ollama run {tag}{RESET}")
+            print(f"  {NEBULA}ollama run {tag}{RESET}")
         print()
 
 
@@ -815,7 +820,7 @@ def install_skill_to_target(
             shutil.copytree(skill_path, dest_skill)
         return True
     except Exception as e:
-        print(f"{YELLOW}Warning installing {skill_name} to {agent_key}: {e}{RESET}")
+        print(f"{GOLD_STAR}Warning installing {skill_name} to {agent_key}: {e}{RESET}")
         return False
 
 
@@ -842,7 +847,7 @@ def run_interactive():
                 "github_url": f"{GITHUB_BASE_URL}/{cat}/{name}",
             })
 
-    print(f"  {BOLD}Active Catalog:{RESET} {BRIGHT_GREEN}{total_skills} skills{RESET} in {BRIGHT_CYAN}{total_cats} categories{RESET} • {MAGENTA}2 plugins{RESET} • {YELLOW}4 MCP servers{RESET}.\n")
+    print(f"  {BOLD}Active Constellation:{RESET} {COSMIC_GREEN}{total_skills} skills{RESET} in {PURPLE}{total_cats} categories{RESET} • {MAGENTA}2 plugins{RESET} • {GOLD_STAR}4 MCP servers{RESET}.\n")
 
     # =========================================================================
     # STEP 0: Workflow Selection
@@ -874,7 +879,7 @@ def run_interactive():
     # QUICK INSTALL (WITH VERIFICATION)
     # =========================================================================
     if step0_choice == "quick":
-        print(f"\n{BOLD}{BRIGHT_CYAN}⭐ Quick Install Verification{RESET}")
+        print(f"\n{BOLD}{PURPLE}⭐ Quick Install Verification{RESET}")
         print(f"{DIM}Please verify the target agents and skills you want to install:{RESET}\n")
 
         agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
@@ -959,34 +964,34 @@ def run_interactive():
         use_symlink = selected_method == "symlink"
 
     if not skills_to_install:
-        print(f"\n{YELLOW}No skills selected for installation.{RESET}")
+        print(f"\n{GOLD_STAR}No skills selected for installation.{RESET}")
         return
 
     # Execute
-    print(f"\n{BOLD}{BRIGHT_CYAN}🚀 Installing {len(skills_to_install)} skill(s) into {len(selected_agents)} agent(s)...{RESET}\n")
+    print(f"\n{BOLD}{PURPLE}🚀 Launching payload: {len(skills_to_install)} skill(s) into {len(selected_agents)} agent(s)...{RESET}\n")
 
     for agent_key in selected_agents:
         if agent_key not in AGENTS:
             continue
         agent_info = AGENTS[agent_key]
         target_dir = agent_info["global_dir"] if selected_scope == "global" else agent_info["local_dir"]
-        print(f"  {BOLD}Installing to {agent_info['name']}{RESET} -> {DIM}{target_dir}{RESET}")
+        print(f"  {BOLD}Configuring {agent_info['name']}{RESET} -> {DIM}{target_dir}{RESET}")
         installed_count = 0
         for cat, name, path in skills_to_install:
             if install_skill_to_target(path, cat, name, agent_key, target_dir, use_symlink=use_symlink):
                 installed_count += 1
-        print(f"  {BRIGHT_GREEN}✔ Installed {installed_count} skill(s) into {agent_info['name']}{RESET}\n")
+        print(f"  {COSMIC_GREEN}✔ Installed {installed_count} skill(s) into {agent_info['name']}{RESET}\n")
 
-    print(f"{BRIGHT_GREEN}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}")
-    print(f"  {BRIGHT_GREEN}{BOLD}🎉 Installation Completed Successfully!{RESET}")
+    print(f"{PURPLE}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}")
+    print(f"  {COSMIC_GREEN}{BOLD}🎉 Orbit Achieved! Installation Completed Successfully!{RESET}")
     print(f"  {WHITE}Skills are active and ready for prompt triggers in your AI agents.{RESET}")
-    print(f"{BRIGHT_GREEN}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}\n")
+    print(f"{PURPLE}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}\n")
 
 
 def main():
     parser = argparse.ArgumentParser(
         prog="awesome-skills installer",
-        description="Universal Multi-Agent Skill Installer for awesome-skills",
+        description="Universal Multi-Agent Skill Installer for awesome-skills (Cosmic Purple Dev Edition)",
     )
     parser.add_argument(
         "--quick",
@@ -1057,14 +1062,14 @@ def main():
 
     if args.repos:
         print_banner()
-        print(f"{BOLD}{WHITE}=== Featured Open Source Repositories (via OpenCurious & GitHub Stars) ==={RESET}\n")
+        print(f"{BOLD}{PURPLE}=== Featured Open Source Repositories (via OpenCurious & GitHub Stars) ==={RESET}\n")
         for r in OPEN_SOURCE_REPOS:
             print(f"  • {BOLD}{r['repo']:<35}{RESET} ⭐ {r['stars']:<7} [{r['cat']}] — {r['desc']}")
         return
 
     if args.ollama:
         print_banner()
-        print(f"{BOLD}{WHITE}=== Open Source Ollama Models Catalog (Lightweight to Heavyweight) ==={RESET}\n")
+        print(f"{BOLD}{PURPLE}=== Open Source Ollama Models Catalog (Lightweight to Heavyweight) ==={RESET}\n")
         for m in OLLAMA_MODELS:
             print(f"  • {BOLD}{m['tag']:<24}{RESET} {m['tier']:<16} ({m['size']}, VRAM {m['vram']}) — {m['desc']}")
         return
@@ -1072,7 +1077,7 @@ def main():
     if args.list:
         print_banner()
         for cat, sks in sorted(catalog.items()):
-            print(f"\n{BOLD}{BRIGHT_CYAN}=== {cat} ({len(sks)} skills) ==={RESET}")
+            print(f"\n{BOLD}{PURPLE}=== {cat} ({len(sks)} skills) ==={RESET}")
             for name, path in sorted(sks.items()):
                 fm = parse_frontmatter(path / "SKILL.md")
                 author = fm.get("author", "Pedro Henrique Rocha de Andrade")
