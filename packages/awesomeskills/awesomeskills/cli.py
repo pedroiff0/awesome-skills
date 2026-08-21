@@ -18,6 +18,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     p_inst = sub.add_parser("install", help="Interactive multi-agent skill installer")
+    p_inst.add_argument("--quick", action="store_true", help="Quick install elite pack")
     p_inst.add_argument("--agent", help="Target agent(s) comma-separated (agy, hermes, claude, cursor, windsurf, roo, opencode, all)")
     p_inst.add_argument("--scope", choices=["global", "local"], default="global", help="Installation scope")
     p_inst.add_argument("--pack", choices=["fullstack", "devops", "ai", "academic", "creative", "all"], help="Install curated pack")
@@ -26,6 +27,8 @@ def main(argv: list[str] | None = None) -> int:
     p_inst.add_argument("--symlink", action="store_true", default=True, help="Use symlinks (default)")
     p_inst.add_argument("--copy", action="store_true", help="Copy files instead of symlinks")
     p_inst.add_argument("--list", action="store_true", help="List all available skills")
+    p_inst.add_argument("--repos", action="store_true", help="List curated open source repositories")
+    p_inst.add_argument("--ollama", action="store_true", help="List curated Ollama models")
 
     pi = sub.add_parser("index", help="Generate README.md from skills/**/SKILL.md")
     pi.add_argument("--root", default=".", help="Repo root (default: cwd)")
