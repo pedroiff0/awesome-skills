@@ -1,0 +1,8 @@
+{
+  "name": "puppeteer-browser",
+  "description": "Headless browser automation, web page rendering, and interactive DOM inspection",
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
+  "attribution": "Model Context Protocol (Anthropic & Community)",
+  "license": "MIT"
+}

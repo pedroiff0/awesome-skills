@@ -1,0 +1,8 @@
+{
+  "name": "filesystem-pro",
+  "description": "Secure scoped local file read, write, and directory inspection server",
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/dir"],
+  "attribution": "Model Context Protocol (Anthropic & Community)",
+  "license": "MIT"
+}

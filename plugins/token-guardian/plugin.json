@@ -1,0 +1,7 @@
+{
+  "name": "token-guardian",
+  "description": "Real-time context window usage monitoring and token burn alert plugin",
+  "version": "1.0.0",
+  "author": "Pedro Henrique Rocha de Andrade",
+  "license": "MIT"
+}

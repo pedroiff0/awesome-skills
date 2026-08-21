@@ -1,0 +1,8 @@
+{
+  "name": "sqlite-explorer",
+  "description": "Direct read/write SQLite database querying and schema inspection via MCP",
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-sqlite"],
+  "attribution": "Model Context Protocol (Anthropic & Community)",
+  "license": "MIT"
+}

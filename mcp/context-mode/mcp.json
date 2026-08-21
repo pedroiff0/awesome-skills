@@ -1,0 +1,9 @@
+{
+  "name": "context-mode",
+  "description": "Context compression, indexed AST searches, and token optimization MCP server",
+  "command": "node",
+  "args": ["/home/pedro/.gemini/config/plugins/context-mode/dist/index.js"],
+  "env": {},
+  "attribution": "Pedro Henrique Rocha de Andrade & Antigravity Community",
+  "license": "MIT"
+}

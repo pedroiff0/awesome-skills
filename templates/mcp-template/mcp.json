@@ -1,0 +1,9 @@
+{
+  "name": "my-mcp-server",
+  "description": "Description of the MCP server tools and capabilities",
+  "command": "npx",
+  "args": ["-y", "my-mcp-package"],
+  "env": {},
+  "attribution": "Original Author Name",
+  "license": "MIT"
+}
