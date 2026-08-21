@@ -15,22 +15,25 @@ fi
 # Detect repository location
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
 
-# If running directly from git clone
 if [ -d "$SCRIPT_DIR/skills" ] && [ -f "$SCRIPT_DIR/tools/installer.py" ]; then
     REPO_DIR="$SCRIPT_DIR"
 else
-    # Running via curl / piped bash: clone or update temporary/cache directory
     CACHE_DIR="${HOME}/.cache/awesome-skills"
     if [ ! -d "$CACHE_DIR/.git" ]; then
         echo "Cloning awesome-skills repository to $CACHE_DIR..."
         mkdir -p "$CACHE_DIR"
         git clone --depth 1 https://github.com/pedroiff0/awesome-skills.git "$CACHE_DIR"
     else
-        echo "Updating awesome-skills cache in $CACHE_DIR..."
-        git -C "$CACHE_DIR" pull --ff-only || true
+        git -C "$CACHE_DIR" pull --ff-only 2>/dev/null || true
     fi
     REPO_DIR="$CACHE_DIR"
 fi
 
-# Execute installer python engine
-exec python3 "$REPO_DIR/tools/installer.py" "$@"
+# If stdin is not a terminal (e.g. piped via curl | bash), re-attach to /dev/tty if available
+if [ -t 0 ]; then
+    exec python3 "$REPO_DIR/tools/installer.py" "$@"
+elif [ -r /dev/tty ]; then
+    exec python3 "$REPO_DIR/tools/installer.py" "$@" </dev/tty
+else
+    exec python3 "$REPO_DIR/tools/installer.py" "$@"
+fi
