@@ -468,37 +468,42 @@ def getch() -> str:
     old_settings = termios.tcgetattr(fd)
     try:
         tty.setraw(fd)
-        ch = sys.stdin.read(1)
-        if ch == "\x1b":
-            old_flags = fcntl.fcntl(fd, fcntl.F_GETFL)
-            fcntl.fcntl(fd, fcntl.F_SETFL, old_flags | os.O_NONBLOCK)
-            try:
-                rest = sys.stdin.read(10)
-            except (IOError, TypeError):
-                rest = ""
-            finally:
-                fcntl.fcntl(fd, fcntl.F_SETFL, old_flags)
-
-            if not rest:
-                return "ESC"
-            if rest in ("[A", "OA") or rest.endswith("A"): return "UP"
-            elif rest in ("[B", "OB") or rest.endswith("B"): return "DOWN"
-            elif rest in ("[C", "OC") or rest.endswith("C"): return "RIGHT"
-            elif rest in ("[D", "OD") or rest.endswith("D"): return "LEFT"
-            elif rest in ("[H", "[1~"): return "HOME"
-            elif rest in ("[F", "[4~"): return "END"
-            return "IGNORE"
-        elif ch in ("\x7f", "\x08"):
-            return "BACKSPACE"
-        elif ch in ("\r", "\n"):
-            return "ENTER"
-        elif ch == " ":
-            return "SPACE"
-        elif ch == "\x03":
-            raise KeyboardInterrupt
-        elif ch == "\x04":
+        raw = os.read(fd, 32)
+        if not raw:
             return "EOF"
-        return ch
+
+        if raw == b"\x1b":
+            return "ESC"
+        elif raw in (b"\x1b[A", b"\x1bOA"):
+            return "UP"
+        elif raw in (b"\x1b[B", b"\x1bOB"):
+            return "DOWN"
+        elif raw in (b"\x1b[C", b"\x1bOC"):
+            return "RIGHT"
+        elif raw in (b"\x1b[D", b"\x1bOD"):
+            return "LEFT"
+        elif raw in (b"\x1b[H", b"\x1b[1~"):
+            return "HOME"
+        elif raw in (b"\x1b[F", b"\x1b[4~"):
+            return "END"
+        elif raw in (b"\r", b"\n"):
+            return "ENTER"
+        elif raw == b" ":
+            return "SPACE"
+        elif raw in (b"\x7f", b"\x08"):
+            return "BACKSPACE"
+        elif raw == b"\x03":
+            raise KeyboardInterrupt
+        elif raw == b"\x04":
+            return "EOF"
+        elif raw.startswith(b"\x1b"):
+            if raw.endswith(b"A"): return "UP"
+            elif raw.endswith(b"B"): return "DOWN"
+            elif raw.endswith(b"C"): return "RIGHT"
+            elif raw.endswith(b"D"): return "LEFT"
+            return "IGNORE"
+
+        return raw.decode("utf-8", errors="ignore")
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
