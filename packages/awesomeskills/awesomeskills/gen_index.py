@@ -1,171 +1,130 @@
 #!/usr/bin/env python3
-"""Generate a professional README.md from skills/**/SKILL.md, plugins/, and mcp/.
+"""Regenerate README.md with an automated catalog index of skills, plugins, and MCP servers.
 
-Produces: hero (badges + tagline), why-multi-tool table, interactive installer guide,
-per-agent installation commands, master skill guide, plugins & MCP catalog, curated packs,
-repo structure, and a per-category index with strict author attribution.
+Supports:
+- OS Compatibility Matrix with Auto-Detection status.
+- Sponsor and Support section.
+- Open Contributions guideline.
+- Open Source repository author attribution.
+- Enriched categorization and statistics.
 """
+from __future__ import annotations
+
+import re
+import sys
+from collections import defaultdict
 from pathlib import Path
-import json, re, sys
-
-ROOT = Path(__file__).resolve().parents[1]
-SKILLS = ROOT / "skills"
-PLUGINS = ROOT / "plugins"
-MCP = ROOT / "mcp"
 
 
-def front_matter(path: Path) -> dict:
-    txt = path.read_text(encoding="utf-8", errors="replace")
-    m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
-    if not m:
+def parse_frontmatter(file_path: Path) -> dict[str, str]:
+    content = file_path.read_text(encoding="utf-8", errors="replace")
+    match = re.match(r"^---\n(.*?)\n---\n", content, re.S)
+    if not match:
         return {}
-    data = {}
-    for line in m.group(1).splitlines():
-        mm = re.match(r"^([a-zA-Z_]+):\s*(.*)$", line)
-        if mm:
-            data[mm.group(1)] = mm.group(2).strip().strip('"').strip("'")
-    return data
+    meta: dict[str, str] = {}
+    for line in match.group(1).splitlines():
+        m = re.match(r"^([a-zA-Z_]+):\s*(.*)$", line)
+        if m:
+            meta[m.group(1)] = m.group(2).strip().strip('"').strip("'")
+    return meta
 
 
-def main(root: Path = ROOT) -> int:
+def main() -> int:
+    root = Path(__file__).resolve().parent.parent
     skills_dir = root / "skills"
-    cats: dict[str, list[tuple[str, str, str, str]]] = {}
-    for skill in sorted(skills_dir.rglob("SKILL.md")):
-        rel = skill.relative_to(skills_dir)
-        if len(rel.parts) >= 2:
-            cat = rel.parts[0]
-            fm = front_matter(skill)
-            name = fm.get("name") or rel.parts[1]
-            author = fm.get("author") or "Open Source Community"
-            desc = fm.get("description", "").replace("|", "\\|").replace("\n", " ")
-            if len(desc) > 170:
-                desc = desc[:167].rstrip() + "..."
-            cats.setdefault(cat, []).append((name, desc, str(rel), author))
+    plugins_dir = root / "plugins"
+    mcp_dir = root / "mcp"
 
-    total_skills = sum(len(v) for v in cats.values())
+    cats: dict[str, list[tuple[str, str, str, str]]] = defaultdict(list)
+    total_skills = 0
 
-    # Count plugins & MCP
-    plugin_dirs = [p for p in (root / "plugins").iterdir() if p.is_dir() and not p.name.startswith(".")] if (root / "plugins").exists() else []
-    mcp_dirs = [m for m in (root / "mcp").iterdir() if m.is_dir() and not m.name.startswith(".")] if (root / "mcp").exists() else []
+    for skill_file in sorted(skills_dir.rglob("SKILL.md")):
+        rel = skill_file.relative_to(skills_dir)
+        if len(rel.parts) < 2:
+            continue
+        cat = rel.parts[0]
+        name = rel.parts[1]
+        fm = parse_frontmatter(skill_file)
+        desc = fm.get("description", "").strip()
+        if len(desc) > 170:
+            desc = desc[:167] + "..."
+        author = fm.get("author", "Open Source Community").strip()
+        cats[cat].append((name, desc, f"{cat}/{name}/SKILL.md", author))
+        total_skills += 1
 
-    out = []
-    # ---- HERO ----
-    out += [
-        "<div align=\"center\">",
+    # Plugins
+    plugin_dirs = [p for p in sorted(plugins_dir.glob("*")) if p.is_dir()] if plugins_dir.exists() else []
+    # MCP
+    mcp_dirs = [m for m in sorted(mcp_dir.glob("*")) if m.is_dir()] if mcp_dir.exists() else []
+
+    out = [
+        "# 🪐 awesome-skills",
         "",
-        "# awesome-skills",
+        '<div align="center">',
         "",
-        "![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)",
-        f"![Skills](https://img.shields.io/badge/skills-{total_skills}-blue.svg)",
-        f"![Plugins](https://img.shields.io/badge/plugins-{len(plugin_dirs)}-purple.svg)",
-        f"![MCP](https://img.shields.io/badge/mcp--servers-{len(mcp_dirs)}-orange.svg)",
-        f"![Categories](https://img.shields.io/badge/categories-{len(cats)}-blue.svg)",
-        "![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)",
+        "![Awesome Skills Banner](assets/banner.svg)",
         "",
-        "**The Universal Multi-Agent Catalog of Skills, Plugins & Model Context Protocol (MCP) Servers.**",
+        "**The Universal, Community-Maintained Catalog of Procedural AI Agent Skills, MCP Servers & Plugins.**",
         "",
-        "*Write once in `SKILL.md` — run on Google Antigravity, Claude Code, Hermes Agent, Cursor, Windsurf, Roo & Codex.*",
+        "*Write once in canonical `SKILL.md` — Equip instantly across Google Antigravity, Hermes Agent, Claude Code, Cursor, Windsurf, Roo/Cline & OpenCode.*",
+        "",
+        "[![CI](https://github.com/pedroiff0/awesome-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/awesome-skills/actions/workflows/ci.yml)",
+        f"![Skills Count](https://img.shields.io/badge/Skills-{total_skills}-blueviolet?style=flat-square&logo=speedtest&logoColor=white)",
+        f"![Plugins Count](https://img.shields.io/badge/Plugins-{len(plugin_dirs)}-purple?style=flat-square&logo=puzzle&logoColor=white)",
+        f"![MCP Servers](https://img.shields.io/badge/MCP_Servers-{len(mcp_dirs)}-indigo?style=flat-square&logo=server&logoColor=white)",
+        "![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-blue?style=flat-square&logo=linux&logoColor=white)",
+        "![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)",
+        "[![Sponsor](https://img.shields.io/badge/Sponsor-Open_for_Sponsors-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/pedroiff0)",
         "",
         "</div>",
         "",
         "---",
         "",
-        "## 🧭 Autonomous Agent Setup (No CLI Required)",
+        "## ☕ Quick Cosmic Install (One-Liner)",
         "",
-        "If you are an **AI Agent** (or asked an agent to clone this repository), activate the Master Skill:",
-        "",
-        "> 🤖 **[`awesome-skills-master`](skills/autonomous-ai-agents/awesome-skills-master/SKILL.md)** — Fully autonomous procedural guide for agents to auto-detect their host environment (AGY, Claude, Cursor, Hermes, Roo), adapt rules (`.cursor/rules/*.mdc`, `CLAUDE.md`), link skills, configure MCP servers, and preserve strict author attribution without user prompts.",
-        "",
-        "---",
-        "",
-        "## ⚡ Quick Start: Interactive Installer (Caveman-style)",
-        "",
-        "Install skills interactively with a terminal TUI menu, skill-by-skill live browser, author credits, and curated packs:",
+        "Equip your AI agents instantly using our interactive TUI installer:",
         "",
         "```bash",
-        "# Run directly via curl (Interactive Cosmic TUI)",
         "curl -fsSL https://raw.githubusercontent.com/pedroiff0/awesome-skills/main/install.sh | bash",
+        "```",
         "",
-        "# Or clone and run locally",
-        "git clone https://github.com/pedroiff0/awesome-skills.git",
-        "cd awesome-skills",
-        "./install.sh",
+        "Or install and manage via the dedicated Python CLI:",
+        "",
+        "```bash",
+        "pip install awesomeskills",
+        "awesomeskills install",
         "```",
         "",
         "---",
         "",
-        "## 🤖 Installation by Agent (Direct 1-Liners)",
+        "## 🖥️ Operating System Support & Auto-Detection",
         "",
-        "### 🪐 Google Antigravity (AGY)",
+        "The installer automatically detects your operating system and dynamically configures agent target directories, symlinks, and file copy strategies:",
         "",
-        "```bash",
-        "# Global User Skills",
-        "mkdir -p ~/.gemini/antigravity-cli/skills && cp -r skills/*/* ~/.gemini/antigravity-cli/skills/",
-        "# Workspace Local Skills",
-        "mkdir -p .agent/skills && cp -r skills/<category>/<skill> .agent/skills/",
-        "```",
-        "",
-        "### 🏛️ Hermes Agent (Nous Research)",
-        "",
-        "```bash",
-        "mkdir -p ~/.hermes/skills && cp -r skills/* ~/.hermes/skills/",
-        "```",
-        "",
-        "### ⚡ Claude Code (Anthropic CLI)",
-        "",
-        "```bash",
-        "mkdir -p ~/.claude/skills && cp -r skills/*/* ~/.claude/skills/",
-        "```",
-        "",
-        "### 🎯 Cursor IDE (.mdc Rules)",
-        "",
-        "```bash",
-        "./install.sh --agent cursor --scope local --pack fullstack",
-        "```",
-        "",
-        "### 🌊 Windsurf & Roo Code / Cline",
-        "",
-        "```bash",
-        "mkdir -p .windsurf/skills && cp -r skills/*/* .windsurf/skills/",
-        "mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/",
-        "```",
-        "",
-        "---",
-        "",
-        "## 🔌 Model Context Protocol (MCP) & Plugins",
-        "",
-        "| Component | Description | Config Location |",
-        "| :--- | :--- | :--- |",
-        "| **[`mcp/context-mode`](mcp/context-mode)** | AST indexed search & token compression server | `mcp/context-mode/mcp.json` |",
-        "| **[`mcp/sqlite-explorer`](mcp/sqlite-explorer)** | SQLite schema analysis & SQL executor | `mcp/sqlite-explorer/mcp.json` |",
-        "| **[`mcp/puppeteer-browser`](mcp/puppeteer-browser)** | Headless browser rendering & screenshots | `mcp/puppeteer-browser/mcp.json` |",
-        "| **[`mcp/filesystem-pro`](mcp/filesystem-pro)** | Granular scoped filesystem permissions | `mcp/filesystem-pro/mcp.json` |",
-        "| **[`plugins/auto-git-checkpoint`](plugins/auto-git-checkpoint)** | Pre/post task automatic git atomic commits | `plugins/auto-git-checkpoint/plugin.json` |",
-        "| **[`plugins/token-guardian`](plugins/token-guardian)** | Turn-by-turn context burn monitor | `plugins/token-guardian/plugin.json` |",
-        "",
-        "---",
-        "",
-        "## 📦 Curated Packs",
-        "",
-        "| Pack | Focus | Key Categories | Install Command |",
+        "| Operating System | Tier / Support Status | Auto-Detection Mechanism | Target Paths Adapted |",
         "| :--- | :--- | :--- | :--- |",
-        "| **🚀 Full-Stack Dev** | Web, APIs, Testing, Refactoring | `software-development`, `web`, `github` | `./install.sh --pack fullstack` |",
-        "| **⚡ DevOps & Cloud** | Containers, Caddy, Cloudflare, CI/CD | `devops`, `github` | `./install.sh --pack devops` |",
-        "| **🧠 Autonomous AI & MLOps** | Multi-Agent topologies, RAG, Token ops | `autonomous-ai-agents`, `mlops` | `./install.sh --pack ai` |",
-        "| **📚 Academic & LaTeX** | Paper writing, LaTeX CVs, arXiv, i18n | `latex`, `research`, `content-i18n` | `./install.sh --pack academic` |",
-        "| **🎨 Creative & Media** | Architecture diagrams, ASCII, Audio | `creative`, `media`, `desktop` | `./install.sh --pack creative` |",
-        "| **📦 Complete Catalog** | All 124+ skills across 19 categories | All categories | `./install.sh --pack all` |",
+        "| 🐧 **Linux (Ubuntu, Debian, Arch, Fedora, etc.)** | 🟢 **Tier 1 (Primary & Fully Verified)** | Native POSIX & Linux syscalls | `~/.gemini`, `~/.claude`, `~/.hermes`, `~/.cursor` |",
+        "| 🍎 **macOS (Darwin / Apple Silicon & Intel)** | 🟡 **Supported (Paths Adapted)** | `platform.system() == 'Darwin'` | `~/Library/Application Support/...` + dotfiles |",
+        "| 🪟 **Windows (WSL / Native / PowerShell)** | 🟡 **Supported (Paths Adapted / WSL Recommended)** | Detects Windows/NT + `%APPDATA%` | `%USERPROFILE%\\...`, `%APPDATA%\\...` (copy fallback) |",
+        "",
+        "> **Note**: Linux is our primary verified development and testing platform. On macOS and Windows, paths and symlink fallbacks are auto-configured. For Windows users, running inside **WSL (Windows Subsystem for Linux)** is highly recommended.",
         "",
         "---",
         "",
-        "## 🗂️ Skills Catalog Index",
+        "## 🌐 Ecosystem Highlights",
         "",
-        f"> **{total_skills} skills** organized across **{len(cats)} categories** with strict attribution.",
+        "- 🎯 **[Explore Open-Source Repositories](references/open-source-repos.md)**: Curated top-starred GitHub projects (100k+ ⭐) enriched via [OpenCurious](https://www.opencurious.com/explore-open-source).",
+        "- 🦙 **[Local Ollama Models Catalog](references/ollama-models.md)**: 4 hardware tiers from lightweight (0.5B) to datacenter flagships (70B+) with direct library links.",
+        "- 🧩 **[Plugins Directory](plugins/)**: Reusable lifecycle hooks and agent extensions.",
+        "- 🔌 **[MCP Servers](mcp/)**: Model Context Protocol servers for enhanced database, filesystem, and context capabilities.",
+        "",
+        "---",
+        "",
+        "## 📚 Skills Catalog Index",
         "",
     ]
 
-    # ---- INDEX BY CATEGORY ----
-    for cat in sorted(cats):
+    for cat in sorted(cats.keys()):
         out.append(f"### {cat}")
         out.append("")
         out.append("| Skill | Description | Author / Credits |")
@@ -185,15 +144,44 @@ def main(root: Path = ROOT) -> int:
         "  ├── skills/<category>/<name>/   # Canonical SKILL.md + references/ + scripts/",
         "  ├── plugins/<name>/             # Reusable agent plugins & lifecycle hooks",
         "  ├── mcp/<name>/                 # Model Context Protocol (MCP) server definitions",
-        "  ├── install.sh                  # Universal interactive installer (Caveman-style)",
+        "  ├── install.sh                  # Universal interactive installer with OS detection",
         "  ├── tools/",
-        "  │   ├── installer.py            # TUI & CLI installation engine",
+        "  │   ├── installer.py            # TUI & CLI installation engine (with OS detector)",
         "  │   └── gen_index.py            # Regenerates README catalog index",
+        "  ├── references/                 # Open-Source repositories & Ollama models registries",
         "  ├── templates/                  # Starter kits: skill / agent / plugin / mcp",
         "  ├── packages/awesomeskills/     # Python package CLI (`awesomeskills install`)",
         "  ├── docs/CODE_REVIEW.md         # Review standard",
         "  └── .github/                    # Issue & PR templates + CI workflow",
         "```",
+        "",
+        "---",
+        "",
+        "## 💖 Sponsor & Support",
+        "",
+        "Maintaining and expanding the largest universal multi-agent skills catalog requires continuous testing across model APIs, local hardware benchmarks, and community curation.",
+        "",
+        "If **awesome-skills** helps accelerate your AI coding workflows, consider sponsoring the project:",
+        "",
+        "<div align=\"center\">",
+        "",
+        "[![GitHub Sponsors](https://img.shields.io/badge/Sponsor_on-GitHub_Sponsors-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/pedroiff0)",
+        "",
+        "*Your sponsorship helps fund open-weight model testing, server infrastructure, and daily catalog expansion.*",
+        "",
+        "</div>",
+        "",
+        "---",
+        "",
+        "## 🤝 Contributing & Submissions",
+        "",
+        "Contributions are warmly welcomed from the entire open-source community!",
+        "",
+        "- 💡 **Add New Skills**: Submit a PR following `templates/skill/SKILL.md`.",
+        "- 🔌 **Add Plugins / MCP**: Provide structured definitions in `plugins/` or `mcp/`.",
+        "- 🌐 **Translations & Fixes**: Enhance documentation, multi-OS support, and model catalogs.",
+        "",
+        "Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/CODE_REVIEW.md](docs/CODE_REVIEW.md) before submitting.",
         "",
         "---",
         "",

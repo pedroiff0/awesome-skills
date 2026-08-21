@@ -18,6 +18,7 @@ import argparse
 import atexit
 import fcntl
 import os
+import platform
 import re
 import shutil
 import subprocess
@@ -25,6 +26,23 @@ import sys
 import termios
 import tty
 from pathlib import Path
+
+# ------------------------------------------------------------------------------
+# Operating System Detection & Path Dispatcher
+# ------------------------------------------------------------------------------
+SYS_NAME = platform.system().lower()
+IS_LINUX = SYS_NAME == "linux"
+IS_MACOS = SYS_NAME == "darwin"
+IS_WINDOWS = SYS_NAME == "windows"
+
+if IS_LINUX:
+    OS_LABEL = "🐧 Linux (Tier 1 Primary Platform)"
+elif IS_MACOS:
+    OS_LABEL = f"🍎 macOS ({platform.mac_ver()[0] or 'Darwin'} - Paths Adapted)"
+elif IS_WINDOWS:
+    OS_LABEL = f"🪟 Windows (NT {platform.version()} - Paths & Copy Fallback Adapted)"
+else:
+    OS_LABEL = f"🌐 {platform.system()} (Paths Adapted)"
 
 # Paths
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -34,58 +52,171 @@ PLUGINS_DIR = REPO_ROOT / "plugins"
 MCP_DIR = REPO_ROOT / "mcp"
 GITHUB_BASE_URL = "https://github.com/pedroiff0/awesome-skills/tree/main/skills"
 
-# Supported Agents & Target Paths
-AGENTS = {
-    "agy": {
-        "name": "🪐 Google Antigravity (AGY)",
-        "desc": "~/.gemini/antigravity-cli/skills/",
-        "global_dir": Path.home() / ".gemini" / "antigravity-cli" / "skills",
-        "local_dir": Path(".agent") / "skills",
-        "format": "skill_dir",
-    },
-    "hermes": {
-        "name": "🏛️  Hermes Agent (Nous)",
-        "desc": "~/.hermes/skills/",
-        "global_dir": Path.home() / ".hermes" / "skills",
-        "local_dir": Path(".hermes") / "skills",
-        "format": "categorized_dir",
-    },
-    "claude": {
-        "name": "⚡ Claude Code (Anthropic)",
-        "desc": "~/.claude/skills/",
-        "global_dir": Path.home() / ".claude" / "skills",
-        "local_dir": Path(".claude") / "skills",
-        "format": "skill_dir",
-    },
-    "cursor": {
-        "name": "🎯 Cursor IDE Rules (.mdc)",
-        "desc": ".cursor/rules/*.mdc",
-        "global_dir": Path.home() / ".cursor" / "rules",
-        "local_dir": Path(".cursor") / "rules",
-        "format": "cursor_mdc",
-    },
-    "windsurf": {
-        "name": "🌊 Windsurf (Codeium)",
-        "desc": ".windsurf/skills/ or memories",
-        "global_dir": Path.home() / ".codeium" / "windsurf" / "memories",
-        "local_dir": Path(".windsurf") / "skills",
-        "format": "skill_dir",
-    },
-    "roo": {
-        "name": "🦘 Roo Code / Cline",
-        "desc": "~/.roo/skills/",
-        "global_dir": Path.home() / ".roo" / "skills",
-        "local_dir": Path(".roo") / "skills",
-        "format": "skill_dir",
-    },
-    "opencode": {
-        "name": "💻 OpenCode / Codex",
-        "desc": "~/.config/opencode/skills/",
-        "global_dir": Path.home() / ".config" / "opencode" / "skills",
-        "local_dir": Path(".codex") / "rules",
-        "format": "skill_dir",
-    },
-}
+
+def get_agent_definitions() -> dict[str, dict]:
+    """Dynamically resolve target agent paths based on detected operating system."""
+    home = Path.home()
+
+    if IS_MACOS:
+        return {
+            "agy": {
+                "name": "🪐 Google Antigravity (AGY)",
+                "desc": "~/.gemini/antigravity-cli/skills/",
+                "global_dir": home / ".gemini" / "antigravity-cli" / "skills",
+                "local_dir": Path(".agent") / "skills",
+                "format": "skill_dir",
+            },
+            "hermes": {
+                "name": "🏛️  Hermes Agent (Nous)",
+                "desc": "~/.hermes/skills/",
+                "global_dir": home / ".hermes" / "skills",
+                "local_dir": Path(".hermes") / "skills",
+                "format": "categorized_dir",
+            },
+            "claude": {
+                "name": "⚡ Claude Code (Anthropic)",
+                "desc": "~/.claude/skills/",
+                "global_dir": home / ".claude" / "skills",
+                "local_dir": Path(".claude") / "skills",
+                "format": "skill_dir",
+            },
+            "cursor": {
+                "name": "🎯 Cursor IDE Rules (.mdc)",
+                "desc": "~/.cursor/rules or .cursor/rules/*.mdc",
+                "global_dir": home / ".cursor" / "rules",
+                "local_dir": Path(".cursor") / "rules",
+                "format": "cursor_mdc",
+            },
+            "windsurf": {
+                "name": "🌊 Windsurf (Codeium)",
+                "desc": "~/Library/Application Support/Codeium/windsurf/memories",
+                "global_dir": home / "Library" / "Application Support" / "Codeium" / "windsurf" / "memories",
+                "local_dir": Path(".windsurf") / "skills",
+                "format": "skill_dir",
+            },
+            "roo": {
+                "name": "🦘 Roo Code / Cline",
+                "desc": "~/Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/skills",
+                "global_dir": home / "Library" / "Application Support" / "Code" / "User" / "globalStorage" / "rooveterinaryinc.roo-cline" / "skills",
+                "local_dir": Path(".roo") / "skills",
+                "format": "skill_dir",
+            },
+            "opencode": {
+                "name": "💻 OpenCode / Codex",
+                "desc": "~/.config/opencode/skills/",
+                "global_dir": home / ".config" / "opencode" / "skills",
+                "local_dir": Path(".codex") / "rules",
+                "format": "skill_dir",
+            },
+        }
+    elif IS_WINDOWS:
+        appdata = Path(os.environ.get("APPDATA", home / "AppData" / "Roaming"))
+        return {
+            "agy": {
+                "name": "🪐 Google Antigravity (AGY)",
+                "desc": "%USERPROFILE%\\.gemini\\antigravity-cli\\skills",
+                "global_dir": home / ".gemini" / "antigravity-cli" / "skills",
+                "local_dir": Path(".agent") / "skills",
+                "format": "skill_dir",
+            },
+            "hermes": {
+                "name": "🏛️  Hermes Agent (Nous)",
+                "desc": "%USERPROFILE%\\.hermes\\skills",
+                "global_dir": home / ".hermes" / "skills",
+                "local_dir": Path(".hermes") / "skills",
+                "format": "categorized_dir",
+            },
+            "claude": {
+                "name": "⚡ Claude Code (Anthropic)",
+                "desc": "%USERPROFILE%\\.claude\\skills",
+                "global_dir": home / ".claude" / "skills",
+                "local_dir": Path(".claude") / "skills",
+                "format": "skill_dir",
+            },
+            "cursor": {
+                "name": "🎯 Cursor IDE Rules (.mdc)",
+                "desc": "%USERPROFILE%\\.cursor\\rules",
+                "global_dir": home / ".cursor" / "rules",
+                "local_dir": Path(".cursor") / "rules",
+                "format": "cursor_mdc",
+            },
+            "windsurf": {
+                "name": "🌊 Windsurf (Codeium)",
+                "desc": "%APPDATA%\\Codeium\\windsurf\\memories",
+                "global_dir": appdata / "Codeium" / "windsurf" / "memories",
+                "local_dir": Path(".windsurf") / "skills",
+                "format": "skill_dir",
+            },
+            "roo": {
+                "name": "🦘 Roo Code / Cline",
+                "desc": "%APPDATA%\\Code\\User\\globalStorage\\rooveterinaryinc.roo-cline\\skills",
+                "global_dir": appdata / "Code" / "User" / "globalStorage" / "rooveterinaryinc.roo-cline" / "skills",
+                "local_dir": Path(".roo") / "skills",
+                "format": "skill_dir",
+            },
+            "opencode": {
+                "name": "💻 OpenCode / Codex",
+                "desc": "%USERPROFILE%\\.config\\opencode\\skills",
+                "global_dir": home / ".config" / "opencode" / "skills",
+                "local_dir": Path(".codex") / "rules",
+                "format": "skill_dir",
+            },
+        }
+    else:  # Linux (Primary tested platform)
+        return {
+            "agy": {
+                "name": "🪐 Google Antigravity (AGY)",
+                "desc": "~/.gemini/antigravity-cli/skills/",
+                "global_dir": home / ".gemini" / "antigravity-cli" / "skills",
+                "local_dir": Path(".agent") / "skills",
+                "format": "skill_dir",
+            },
+            "hermes": {
+                "name": "🏛️  Hermes Agent (Nous)",
+                "desc": "~/.hermes/skills/",
+                "global_dir": home / ".hermes" / "skills",
+                "local_dir": Path(".hermes") / "skills",
+                "format": "categorized_dir",
+            },
+            "claude": {
+                "name": "⚡ Claude Code (Anthropic)",
+                "desc": "~/.claude/skills/",
+                "global_dir": home / ".claude" / "skills",
+                "local_dir": Path(".claude") / "skills",
+                "format": "skill_dir",
+            },
+            "cursor": {
+                "name": "🎯 Cursor IDE Rules (.mdc)",
+                "desc": ".cursor/rules/*.mdc",
+                "global_dir": home / ".cursor" / "rules",
+                "local_dir": Path(".cursor") / "rules",
+                "format": "cursor_mdc",
+            },
+            "windsurf": {
+                "name": "🌊 Windsurf (Codeium)",
+                "desc": ".windsurf/skills/ or memories",
+                "global_dir": home / ".codeium" / "windsurf" / "memories",
+                "local_dir": Path(".windsurf") / "skills",
+                "format": "skill_dir",
+            },
+            "roo": {
+                "name": "🦘 Roo Code / Cline",
+                "desc": "~/.roo/skills/",
+                "global_dir": home / ".roo" / "skills",
+                "local_dir": Path(".roo") / "skills",
+                "format": "skill_dir",
+            },
+            "opencode": {
+                "name": "💻 OpenCode / Codex",
+                "desc": "~/.config/opencode/skills/",
+                "global_dir": home / ".config" / "opencode" / "skills",
+                "local_dir": Path(".codex") / "rules",
+                "format": "skill_dir",
+            },
+        }
+
+
+AGENTS = get_agent_definitions()
 
 # Elite Quick-Install Skills (Most Starred & Essential)
 ELITE_SKILLS = [
@@ -389,7 +520,7 @@ def print_banner():
      ██║  ██║╚███╔███╔╝███████╗███████║╚██████╔╝██║ ╚═╝ ██║███████╗  ☄️
 {NEBULA}  ══════════════════════════════════════════════════════════════════════
   ✨ UNIVERSAL MULTI-AGENT CATALOG • SKILLS • MCP • PLUGINS • OLLAMA ✨
-  🌌 Powered by {catalog_link} & Open-Source Community
+  🛰️  OS Detection: {CYAN_DEV}{OS_LABEL}{NEBULA} • Powered by {catalog_link}
 {PURPLE}  ══════════════════════════════════════════════════════════════════════{RESET}
 """
     print(banner)
@@ -1013,7 +1144,11 @@ def install_skill_to_target(
                 shutil.rmtree(dest_skill)
 
         if use_symlink:
-            dest_skill.symlink_to(skill_path.resolve(), target_is_directory=True)
+            try:
+                dest_skill.symlink_to(skill_path.resolve(), target_is_directory=True)
+            except OSError:
+                # Windows Developer Mode / Permission fallback to direct recursive copy
+                shutil.copytree(skill_path, dest_skill)
         else:
             shutil.copytree(skill_path, dest_skill)
         return True

@@ -1,113 +1,66 @@
+# 🪐 awesome-skills
+
 <div align="center">
 
-# awesome-skills
+![Awesome Skills Banner](assets/banner.svg)
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Skills](https://img.shields.io/badge/skills-124-blue.svg)
-![Plugins](https://img.shields.io/badge/plugins-2-purple.svg)
-![MCP](https://img.shields.io/badge/mcp--servers-4-orange.svg)
-![Categories](https://img.shields.io/badge/categories-19-blue.svg)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+**The Universal, Community-Maintained Catalog of Procedural AI Agent Skills, MCP Servers & Plugins.**
 
-**The Universal Multi-Agent Catalog of Skills, Plugins & Model Context Protocol (MCP) Servers.**
+*Write once in canonical `SKILL.md` — Equip instantly across Google Antigravity, Hermes Agent, Claude Code, Cursor, Windsurf, Roo/Cline & OpenCode.*
 
-*Write once in `SKILL.md` — run on Google Antigravity, Claude Code, Hermes Agent, Cursor, Windsurf, Roo & Codex.*
+[![CI](https://github.com/pedroiff0/awesome-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/awesome-skills/actions/workflows/ci.yml)
+![Skills Count](https://img.shields.io/badge/Skills-124-blueviolet?style=flat-square&logo=speedtest&logoColor=white)
+![Plugins Count](https://img.shields.io/badge/Plugins-2-purple?style=flat-square&logo=puzzle&logoColor=white)
+![MCP Servers](https://img.shields.io/badge/MCP_Servers-4-indigo?style=flat-square&logo=server&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-blue?style=flat-square&logo=linux&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+[![Sponsor](https://img.shields.io/badge/Sponsor-Open_for_Sponsors-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/pedroiff0)
 
 </div>
 
 ---
 
-## 🧭 Autonomous Agent Setup (No CLI Required)
+## ☕ Quick Cosmic Install (One-Liner)
 
-If you are an **AI Agent** (or asked an agent to clone this repository), activate the Master Skill:
-
-> 🤖 **[`awesome-skills-master`](skills/autonomous-ai-agents/awesome-skills-master/SKILL.md)** — Fully autonomous procedural guide for agents to auto-detect their host environment (AGY, Claude, Cursor, Hermes, Roo), adapt rules (`.cursor/rules/*.mdc`, `CLAUDE.md`), link skills, configure MCP servers, and preserve strict author attribution without user prompts.
-
----
-
-## ⚡ Quick Start: Interactive Installer (Caveman-style)
-
-Install skills interactively with a terminal TUI menu, skill-by-skill live browser, author credits, and curated packs:
+Equip your AI agents instantly using our interactive TUI installer:
 
 ```bash
-# Run directly via curl (Interactive Cosmic TUI)
 curl -fsSL https://raw.githubusercontent.com/pedroiff0/awesome-skills/main/install.sh | bash
+```
 
-# Or clone and run locally
-git clone https://github.com/pedroiff0/awesome-skills.git
-cd awesome-skills
-./install.sh
+Or install and manage via the dedicated Python CLI:
+
+```bash
+pip install awesomeskills
+awesomeskills install
 ```
 
 ---
 
-## 🤖 Installation by Agent (Direct 1-Liners)
+## 🖥️ Operating System Support & Auto-Detection
 
-### 🪐 Google Antigravity (AGY)
+The installer automatically detects your operating system and dynamically configures agent target directories, symlinks, and file copy strategies:
 
-```bash
-# Global User Skills
-mkdir -p ~/.gemini/antigravity-cli/skills && cp -r skills/*/* ~/.gemini/antigravity-cli/skills/
-# Workspace Local Skills
-mkdir -p .agent/skills && cp -r skills/<category>/<skill> .agent/skills/
-```
-
-### 🏛️ Hermes Agent (Nous Research)
-
-```bash
-mkdir -p ~/.hermes/skills && cp -r skills/* ~/.hermes/skills/
-```
-
-### ⚡ Claude Code (Anthropic CLI)
-
-```bash
-mkdir -p ~/.claude/skills && cp -r skills/*/* ~/.claude/skills/
-```
-
-### 🎯 Cursor IDE (.mdc Rules)
-
-```bash
-./install.sh --agent cursor --scope local --pack fullstack
-```
-
-### 🌊 Windsurf & Roo Code / Cline
-
-```bash
-mkdir -p .windsurf/skills && cp -r skills/*/* .windsurf/skills/
-mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/
-```
-
----
-
-## 🔌 Model Context Protocol (MCP) & Plugins
-
-| Component | Description | Config Location |
-| :--- | :--- | :--- |
-| **[`mcp/context-mode`](mcp/context-mode)** | AST indexed search & token compression server | `mcp/context-mode/mcp.json` |
-| **[`mcp/sqlite-explorer`](mcp/sqlite-explorer)** | SQLite schema analysis & SQL executor | `mcp/sqlite-explorer/mcp.json` |
-| **[`mcp/puppeteer-browser`](mcp/puppeteer-browser)** | Headless browser rendering & screenshots | `mcp/puppeteer-browser/mcp.json` |
-| **[`mcp/filesystem-pro`](mcp/filesystem-pro)** | Granular scoped filesystem permissions | `mcp/filesystem-pro/mcp.json` |
-| **[`plugins/auto-git-checkpoint`](plugins/auto-git-checkpoint)** | Pre/post task automatic git atomic commits | `plugins/auto-git-checkpoint/plugin.json` |
-| **[`plugins/token-guardian`](plugins/token-guardian)** | Turn-by-turn context burn monitor | `plugins/token-guardian/plugin.json` |
-
----
-
-## 📦 Curated Packs
-
-| Pack | Focus | Key Categories | Install Command |
+| Operating System | Tier / Support Status | Auto-Detection Mechanism | Target Paths Adapted |
 | :--- | :--- | :--- | :--- |
-| **🚀 Full-Stack Dev** | Web, APIs, Testing, Refactoring | `software-development`, `web`, `github` | `./install.sh --pack fullstack` |
-| **⚡ DevOps & Cloud** | Containers, Caddy, Cloudflare, CI/CD | `devops`, `github` | `./install.sh --pack devops` |
-| **🧠 Autonomous AI & MLOps** | Multi-Agent topologies, RAG, Token ops | `autonomous-ai-agents`, `mlops` | `./install.sh --pack ai` |
-| **📚 Academic & LaTeX** | Paper writing, LaTeX CVs, arXiv, i18n | `latex`, `research`, `content-i18n` | `./install.sh --pack academic` |
-| **🎨 Creative & Media** | Architecture diagrams, ASCII, Audio | `creative`, `media`, `desktop` | `./install.sh --pack creative` |
-| **📦 Complete Catalog** | All 124+ skills across 19 categories | All categories | `./install.sh --pack all` |
+| 🐧 **Linux (Ubuntu, Debian, Arch, Fedora, etc.)** | 🟢 **Tier 1 (Primary & Fully Verified)** | Native POSIX & Linux syscalls | `~/.gemini`, `~/.claude`, `~/.hermes`, `~/.cursor` |
+| 🍎 **macOS (Darwin / Apple Silicon & Intel)** | 🟡 **Supported (Paths Adapted)** | `platform.system() == 'Darwin'` | `~/Library/Application Support/...` + dotfiles |
+| 🪟 **Windows (WSL / Native / PowerShell)** | 🟡 **Supported (Paths Adapted / WSL Recommended)** | Detects Windows/NT + `%APPDATA%` | `%USERPROFILE%\...`, `%APPDATA%\...` (copy fallback) |
+
+> **Note**: Linux is our primary verified development and testing platform. On macOS and Windows, paths and symlink fallbacks are auto-configured. For Windows users, running inside **WSL (Windows Subsystem for Linux)** is highly recommended.
 
 ---
 
-## 🗂️ Skills Catalog Index
+## 🌐 Ecosystem Highlights
 
-> **124 skills** organized across **19 categories** with strict attribution.
+- 🎯 **[Explore Open-Source Repositories](references/open-source-repos.md)**: Curated top-starred GitHub projects (100k+ ⭐) enriched via [OpenCurious](https://www.opencurious.com/explore-open-source).
+- 🦙 **[Local Ollama Models Catalog](references/ollama-models.md)**: 4 hardware tiers from lightweight (0.5B) to datacenter flagships (70B+) with direct library links.
+- 🧩 **[Plugins Directory](plugins/)**: Reusable lifecycle hooks and agent extensions.
+- 🔌 **[MCP Servers](mcp/)**: Model Context Protocol servers for enhanced database, filesystem, and context capabilities.
+
+---
+
+## 📚 Skills Catalog Index
 
 ### apple
 
@@ -127,7 +80,7 @@ mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/
 | [`awesome-skills-master`](skills/autonomous-ai-agents/awesome-skills-master/SKILL.md) | Master catalog orchestrator and autonomous installer for AI agents. Use when exploring, cloning, discovering, or installing skills, plugins, or MCP servers from awesom... | awesome-skills Community |
 | [`claude-code`](skills/autonomous-ai-agents/claude-code/SKILL.md) | Delegate coding to Claude Code CLI (features, PRs). | Hermes Agent + Teknium |
 | [`codex`](skills/autonomous-ai-agents/codex/SKILL.md) | Delegate coding to OpenAI Codex CLI (features, PRs). | Hermes Agent |
-| [`computer-use`](skills/autonomous-ai-agents/computer-use/SKILL.md) | \| | Anthropic / Open Source Community |
+| [`computer-use`](skills/autonomous-ai-agents/computer-use/SKILL.md) | | | Anthropic / Open Source Community |
 | [`context-mode`](skills/autonomous-ai-agents/context-mode/SKILL.md) | Context optimization and compression routing rules for AI agents exploring large codebases, reading massive logs, searching symbols, and batching tool executions. | Context-Mode Team |
 | [`dogfood`](skills/autonomous-ai-agents/dogfood/SKILL.md) | Exploratory QA of web apps: find bugs, evidence, reports. | Hermes Agent Community |
 | [`hermes-agent`](skills/autonomous-ai-agents/hermes-agent/SKILL.md) | Configure, extend, or contribute to Hermes Agent. | Hermes Agent + Teknium |
@@ -185,7 +138,7 @@ mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/
 | Skill | Description | Author / Credits |
 |---|---|---|
 | [`docker-single-port-multi-instance`](skills/devops/docker-single-port-multi-instance/SKILL.md) | Consolidate multiple Docker Compose app instances (production / test / demo) behind ONE host port using an nginx reverse proxy that routes by URL path prefix (e.g. /de... | Docker / DevOps Community |
-| [`hybrid-desktop-server-ops`](skills/devops/hybrid-desktop-server-ops/SKILL.md) | Comprehensive runbook and operational architecture for running a single Linux machine as both a daily development desktop and a 24/7 home/cloud server (Debian/Ubuntu,... | DevOps / Linux Community |
+| [`hybrid-desktop-server-ops`](skills/devops/hybrid-desktop-server-ops/SKILL.md) | Comprehensive runbook and operational architecture for running a single Linux machine as both a daily development desktop and a 24/7 home/cloud server (Debian/Ubuntu, ... | DevOps / Linux Community |
 
 ### email
 
@@ -230,13 +183,13 @@ mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/
 
 | Skill | Description | Author / Credits |
 |---|---|---|
-| [`audiocraft-audio-generation`](skills/mlops/audiocraft/SKILL.md) | AudioCraft: MusicGen text-to-music, AudioGen text-to-sound. | Orchestra Research |
-| [`evaluating-llms-harness`](skills/mlops/lm-evaluation-harness/SKILL.md) | lm-eval-harness: benchmark LLMs (MMLU, GSM8K, etc.). | Orchestra Research |
+| [`audiocraft`](skills/mlops/audiocraft/SKILL.md) | AudioCraft: MusicGen text-to-music, AudioGen text-to-sound. | Orchestra Research |
 | [`gpu-debian-setup`](skills/mlops/gpu-debian-setup/SKILL.md) | Install and verify NVIDIA proprietary GPU drivers on Debian (including trixie/13) so local LLM tools (Ollama, llama.cpp, vLLM) can use the GPU. Covers nouveau blacklis... | Debian / NVIDIA Community |
 | [`huggingface-hub`](skills/mlops/huggingface-hub/SKILL.md) | HuggingFace hf CLI: search/download/upload models, datasets. | Hugging Face |
 | [`llama-cpp`](skills/mlops/llama-cpp/SKILL.md) | llama.cpp local GGUF inference + HF Hub model discovery. | Orchestra Research |
-| [`segment-anything-model`](skills/mlops/segment-anything/SKILL.md) | SAM: zero-shot image segmentation via points, boxes, masks. | Orchestra Research |
-| [`serving-llms-vllm`](skills/mlops/vllm/SKILL.md) | vLLM: high-throughput LLM serving, OpenAI API, quantization. | Orchestra Research |
+| [`lm-evaluation-harness`](skills/mlops/lm-evaluation-harness/SKILL.md) | lm-eval-harness: benchmark LLMs (MMLU, GSM8K, etc.). | Orchestra Research |
+| [`segment-anything`](skills/mlops/segment-anything/SKILL.md) | SAM: zero-shot image segmentation via points, boxes, masks. | Orchestra Research |
+| [`vllm`](skills/mlops/vllm/SKILL.md) | vLLM: high-throughput LLM serving, OpenAI API, quantization. | Orchestra Research |
 | [`weights-and-biases`](skills/mlops/weights-and-biases/SKILL.md) | W&B: log ML experiments, sweeps, model registry, dashboards. | Orchestra Research |
 
 ### note-taking
@@ -291,10 +244,10 @@ mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/
 |---|---|---|
 | [`adhoc-verification`](skills/software-development/adhoc-verification/SKILL.md) | Produce fresh, focused, local verification evidence for a code change without relying on the full test suite. Use when a system reminder (or the user) demands ad-hoc v... | Hermes Agent Community |
 | [`docker-compose-app-recovery`](skills/software-development/docker-compose-app-recovery/SKILL.md) | Recover or reset credentials and directly operate the database of an app running under docker-compose (lost admin password, one-time seed password, locked out, read/wr... | DevOps Community |
-| [`document-exports`](skills/software-development/document-exports/SKILL.md) | Generate and TEST downloadable document exports (PDF/CSV) from a Node/Express backend — pdfkit streaming, CSV BOM, cents formatting, and the supertest/pdfkit pitfalls... | Pandoc / Document Tools Community |
+| [`document-exports`](skills/software-development/document-exports/SKILL.md) | Generate and TEST downloadable document exports (PDF/CSV) from a Node/Express backend — pdfkit streaming, CSV BOM, cents formatting, and the supertest/pdfkit pitfalls ... | Pandoc / Document Tools Community |
 | [`docx-analysis-conversion`](skills/software-development/docx-analysis-conversion/SKILL.md) | Extract, analyze, edit, and convert Microsoft Word (.docx) documents to structured Markdown, JSON, or clean text preserving tables, headers, and bullet lists. | Open Source Python Community |
 | [`financas-app`](skills/software-development/financas-app/SKILL.md) | Corrigir, estender e validar o app de finanças pessoais (Node/Express + EJS + MongoDB + Docker). Cobre a arquitetura de porta única 4460 com demo via /demo, o fluxo de... | Fullstack Community |
-| [`frontend-design-systems`](skills/software-development/frontend-design-systems/SKILL.md) | Architect and build production-grade web interfaces with modern design systems: Tailwind CSS v4, Shadcn UI primitives, Radix UI, dark mode tokens, and accessible WCAG... | Anthropic / skills.sh Community |
+| [`frontend-design-systems`](skills/software-development/frontend-design-systems/SKILL.md) | Architect and build production-grade web interfaces with modern design systems: Tailwind CSS v4, Shadcn UI primitives, Radix UI, dark mode tokens, and accessible WCAG ... | Anthropic / skills.sh Community |
 | [`grill-with-docs`](skills/software-development/grill-with-docs/SKILL.md) | Cross-examine codebase architecture against official library documentation and API specs. Identifies deprecations, anti-patterns, and suboptimal library usage. | Matt Pocock / skills.sh Community |
 | [`handoff-resume`](skills/software-development/handoff-resume/SKILL.md) | Resume in-progress coding work across sessions from a HANDOFF.md and a dirty git working tree. Use when a task says "continue from HANDOFF.md", "retomar o processament... | Hermes Agent Community |
 | [`hermes-agent-skill-authoring`](skills/software-development/hermes-agent-skill-authoring/SKILL.md) | Author in-repo SKILL.md: frontmatter, validator, structure, and writing-quality principles. | Hermes Agent |
@@ -311,7 +264,7 @@ mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/
 | [`spike`](skills/software-development/spike/SKILL.md) | Throwaway experiments to validate an idea before build. | Hermes Agent (adapted from gsd-build/get-shit-done) |
 | [`systematic-debugging`](skills/software-development/systematic-debugging/SKILL.md) | 4-phase root cause debugging: understand bugs before fixing. | Hermes Agent (adapted from obra/superpowers) |
 | [`test-driven-development`](skills/software-development/test-driven-development/SKILL.md) | TDD: enforce RED-GREEN-REFACTOR, tests before code. | Hermes Agent (adapted from obra/superpowers) |
-| [`web-fullstack-gotchas`](skills/software-development/web-fullstack-gotchas/SKILL.md) | Armadilhas recorrentes em apps fullstack Node/Express + EJS + CSS + jest + Docker (padrão do projeto financas-app, mas aplicável a qualquer stack similar). USE quando... | Fullstack Community |
+| [`web-fullstack-gotchas`](skills/software-development/web-fullstack-gotchas/SKILL.md) | Armadilhas recorrentes em apps fullstack Node/Express + EJS + CSS + jest + Docker (padrão do projeto financas-app, mas aplicável a qualquer stack similar). USE quando ... | Fullstack Community |
 | [`xlsx-data-wrangling`](skills/software-development/xlsx-data-wrangling/SKILL.md) | Query, validate, clean, and manipulate Excel (.xlsx/.xls) spreadsheets programmatically without GUI using pandas, openpyxl, and polars. | Open Source Python Community |
 
 ### web
@@ -326,7 +279,7 @@ mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/
 | [`markdown-static-site-source`](skills/web/markdown-static-site-source/SKILL.md) | Make a data-driven static site (content lives in a JS/JSON object consumed by a render script) editable from Markdown/Obsidian. Generate the data file from a YAML-fron... | Static Site Community |
 | [`nextjs-app-router-patterns`](skills/web/nextjs-app-router-patterns/SKILL.md) | Architect and implement modern Next.js App Router applications with Server Components (RSC), Server Actions, Parallel/Intercepting Routes, and Streaming SSR. | Vercel / Next.js Community |
 | [`quartz-multilang-site-maintenance`](skills/web/quartz-multilang-site-maintenance/SKILL.md) | Maintain and edit a Quartz static site (Quartz Syncer / quartz-site fork) that publishes to GitHub Pages — especially editing the 4-language home/index pages (pt-br/en... | Hermes Agent |
-| [`static-site-md-source`](skills/web/static-site-md-source/SKILL.md) | Turn an EXISTING static site (HTML/CSS/JS) into a Markdown-editable source WITHOUT changing its rendered output. Use when the user likes the current site ("muito bom,... | Static Site Community |
+| [`static-site-md-source`](skills/web/static-site-md-source/SKILL.md) | Turn an EXISTING static site (HTML/CSS/JS) into a Markdown-editable source WITHOUT changing its rendered output. Use when the user likes the current site ("muito bom, ... | Static Site Community |
 
 ---
 
@@ -337,15 +290,44 @@ awesome-skills/
   ├── skills/<category>/<name>/   # Canonical SKILL.md + references/ + scripts/
   ├── plugins/<name>/             # Reusable agent plugins & lifecycle hooks
   ├── mcp/<name>/                 # Model Context Protocol (MCP) server definitions
-  ├── install.sh                  # Universal interactive installer (Caveman-style)
+  ├── install.sh                  # Universal interactive installer with OS detection
   ├── tools/
-  │   ├── installer.py            # TUI & CLI installation engine
+  │   ├── installer.py            # TUI & CLI installation engine (with OS detector)
   │   └── gen_index.py            # Regenerates README catalog index
+  ├── references/                 # Open-Source repositories & Ollama models registries
   ├── templates/                  # Starter kits: skill / agent / plugin / mcp
   ├── packages/awesomeskills/     # Python package CLI (`awesomeskills install`)
   ├── docs/CODE_REVIEW.md         # Review standard
   └── .github/                    # Issue & PR templates + CI workflow
 ```
+
+---
+
+## 💖 Sponsor & Support
+
+Maintaining and expanding the largest universal multi-agent skills catalog requires continuous testing across model APIs, local hardware benchmarks, and community curation.
+
+If **awesome-skills** helps accelerate your AI coding workflows, consider sponsoring the project:
+
+<div align="center">
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor_on-GitHub_Sponsors-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/pedroiff0)
+
+*Your sponsorship helps fund open-weight model testing, server infrastructure, and daily catalog expansion.*
+
+</div>
+
+---
+
+## 🤝 Contributing & Submissions
+
+Contributions are warmly welcomed from the entire open-source community!
+
+- 💡 **Add New Skills**: Submit a PR following `templates/skill/SKILL.md`.
+- 🔌 **Add Plugins / MCP**: Provide structured definitions in `plugins/` or `mcp/`.
+- 🌐 **Translations & Fixes**: Enhance documentation, multi-OS support, and model catalogs.
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/CODE_REVIEW.md](docs/CODE_REVIEW.md) before submitting.
 
 ---
 
