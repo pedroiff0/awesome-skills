@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
-"""Interactive Multi-Agent Skills Installer for awesome-skills.
+"""Universal Multi-Agent Skills Installer for awesome-skills (English Interface).
 
 Features:
-- Step 0: Quick Install (1-Click curated elite pack) vs Custom Manual Wizard.
-- Open Source Repositories Hub (explore & clone high-impact repos with OpenCurious attribution).
-- Ollama Open-Source Models Manager (from lightweight 1.5B to heavy 70B reasoning models).
-- Skill-by-skill live browser with metadata, author credits, and GitHub links.
-- Instant ESC key cancellation at any step.
+- Robust key handling: Left/Right arrows do not cancel; standalone ESC cancels instantly.
+- Validation: Mandatory selection across all steps (cannot proceed with 0 items selected).
+- Step 0: Quick Install (1-Click elite pack) vs Custom Manual Setup vs Open-Source Hub vs Ollama Models.
+- Skill-by-skill live browser with viewport scrolling, metadata, author credits, and GitHub links.
+- Open Source Repositories Hub (curated with OpenCurious & GitHub stars).
+- Ollama Models Hub (tiered from lightweight 1.5B to heavyweight 70B reasoning).
 - Multi-agent targeting: Google Antigravity, Hermes Agent, Claude Code, Cursor (.mdc), Windsurf, Roo/Cline, OpenCode.
 """
 from __future__ import annotations
 
 import argparse
 import atexit
+import fcntl
 import os
 import re
-import select
 import shutil
 import subprocess
 import sys
+import termios
+import tty
 from pathlib import Path
 
 # Paths
@@ -152,28 +155,28 @@ OPEN_SOURCE_REPOS = [
 
 # Ollama Models Hub (Tiered from Lightweight to Heavyweight Reasoning)
 OLLAMA_MODELS = [
-    # Tier 1: Ultra-Leves (1B - 3B)
-    {"tag": "qwen2.5:1.5b", "size": "1.5B", "tier": "🪶 Ultra-Leve", "vram": "~1.5 GB", "desc": "Ultra-rápido, JSON parsing e agentes de fundo"},
-    {"tag": "deepseek-r1:1.5b", "size": "1.5B", "tier": "🪶 Ultra-Leve", "vram": "~1.8 GB", "desc": "Raciocínio lógico leve e matemática em CPU"},
-    {"tag": "llama3.2:1b", "size": "1.2B", "tier": "🪶 Ultra-Leve", "vram": "~1.3 GB", "desc": "Classificação de texto instantânea"},
-    {"tag": "llama3.2:3b", "size": "3.2B", "tier": "🪶 Ultra-Leve", "vram": "~2.8 GB", "desc": "Melhor equilíbrio leve para conversação diária"},
-    {"tag": "phi3.5:3.8b", "size": "3.8B", "tier": "🪶 Ultra-Leve", "vram": "~3.2 GB", "desc": "Microsoft Phi-3.5 Mini - alta precisão de instruções"},
-    # Tier 2: Equilibrados & Coding (7B - 9B)
-    {"tag": "qwen2.5-coder:7b", "size": "7.6B", "tier": "⚡ Equilibrado", "vram": "~5.5 GB", "desc": "🏆 Topo em geração de código e refatoração"},
-    {"tag": "deepseek-r1:7b", "size": "7.6B", "tier": "⚡ Equilibrado", "vram": "~6.0 GB", "desc": "Raciocínio passo a passo e resolução de bugs"},
-    {"tag": "llama3.1:8b", "size": "8.0B", "tier": "⚡ Equilibrado", "vram": "~6.2 GB", "desc": "Modelo geral robusto para tarefas do dia a dia"},
-    {"tag": "gemma2:9b", "size": "9.2B", "tier": "⚡ Equilibrado", "vram": "~7.5 GB", "desc": "Google Gemma 2 - alta qualidade de síntese"},
-    {"tag": "mistral:7b", "size": "7.2B", "tier": "⚡ Equilibrado", "vram": "~5.8 GB", "desc": "Rápido e direto para instruções estruturadas"},
-    # Tier 3: Avançados & Pro Coding (14B - 35B)
-    {"tag": "qwen2.5-coder:14b", "size": "14.7B", "tier": "🚀 Avançado", "vram": "~10.5 GB", "desc": "Qualidade comparável a modelos proprietários"},
-    {"tag": "deepseek-r1:14b", "size": "14.7B", "tier": "🚀 Avançado", "vram": "~11.0 GB", "desc": "Raciocínio matemático e algorítmico profundo"},
-    {"tag": "qwen2.5-coder:32b", "size": "32.5B", "tier": "🚀 Avançado", "vram": "~20.0 GB", "desc": "👑 State-of-the-art em engenharia de software"},
-    {"tag": "deepseek-r1:32b", "size": "32.5B", "tier": "🚀 Avançado", "vram": "~21.0 GB", "desc": "Raciocínio lógico extremo para problemas difíceis"},
-    {"tag": "command-r:35b", "size": "35.0B", "tier": "🚀 Avançado", "vram": "~22.0 GB", "desc": "Mestre em chamadas de ferramentas (Tool Use) e RAG"},
-    # Tier 4: Heavyweights & Servidores (70B+)
-    {"tag": "deepseek-r1:70b", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "🧠 Raciocínio topo absoluto em código e lógica"},
-    {"tag": "llama3.3:70b", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "Modelo open source flagship de uso geral"},
-    {"tag": "qwen2.5:72b", "size": "72B", "tier": "🧠 Heavyweight", "vram": "~44.0 GB", "desc": "Máxima performance em benchmarks globais"},
+    # Tier 1: Ultra-Lightweight (1B - 3B)
+    {"tag": "qwen2.5:1.5b", "size": "1.5B", "tier": "🪶 Ultra-Light", "vram": "~1.5 GB", "desc": "Ultra-fast, JSON parsing and background workers"},
+    {"tag": "deepseek-r1:1.5b", "size": "1.5B", "tier": "🪶 Ultra-Light", "vram": "~1.8 GB", "desc": "Lightweight reasoning and math on pure CPU"},
+    {"tag": "llama3.2:1b", "size": "1.2B", "tier": "🪶 Ultra-Light", "vram": "~1.3 GB", "desc": "Instant text classification and fast routing"},
+    {"tag": "llama3.2:3b", "size": "3.2B", "tier": "🪶 Ultra-Light", "vram": "~2.8 GB", "desc": "Best lightweight balance for daily chat"},
+    {"tag": "phi3.5:3.8b", "size": "3.8B", "tier": "🪶 Ultra-Light", "vram": "~3.2 GB", "desc": "Microsoft Phi-3.5 Mini - high instruction accuracy"},
+    # Tier 2: Balanced & Daily Coding (7B - 9B)
+    {"tag": "qwen2.5-coder:7b", "size": "7.6B", "tier": "⚡ Balanced", "vram": "~5.5 GB", "desc": "🏆 Top tier for code generation & refactoring"},
+    {"tag": "deepseek-r1:7b", "size": "7.6B", "tier": "⚡ Balanced", "vram": "~6.0 GB", "desc": "Step-by-step reasoning and debugging"},
+    {"tag": "llama3.1:8b", "size": "8.0B", "tier": "⚡ Balanced", "vram": "~6.2 GB", "desc": "Solid general model for diverse tasks"},
+    {"tag": "gemma2:9b", "size": "9.2B", "tier": "⚡ Balanced", "vram": "~7.5 GB", "desc": "Google Gemma 2 - high synthesis quality"},
+    {"tag": "mistral:7b", "size": "7.2B", "tier": "⚡ Balanced", "vram": "~5.8 GB", "desc": "Fast and direct for structured prompts"},
+    # Tier 3: Advanced & Pro Coding (14B - 35B)
+    {"tag": "qwen2.5-coder:14b", "size": "14.7B", "tier": "🚀 Advanced", "vram": "~10.5 GB", "desc": "Quality matching proprietary models"},
+    {"tag": "deepseek-r1:14b", "size": "14.7B", "tier": "🚀 Advanced", "vram": "~11.0 GB", "desc": "Deep mathematical & algorithmic reasoning"},
+    {"tag": "qwen2.5-coder:32b", "size": "32.5B", "tier": "🚀 Advanced", "vram": "~20.0 GB", "desc": "👑 State-of-the-art in software engineering"},
+    {"tag": "deepseek-r1:32b", "size": "32.5B", "tier": "🚀 Advanced", "vram": "~21.0 GB", "desc": "Extreme logical reasoning for complex bugs"},
+    {"tag": "command-r:35b", "size": "35.0B", "tier": "🚀 Advanced", "vram": "~22.0 GB", "desc": "Master in Tool Use function calling and RAG"},
+    # Tier 4: Heavyweights & Servers (70B+)
+    {"tag": "deepseek-r1:70b", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "🧠 Absolute top reasoning in code and logic"},
+    {"tag": "llama3.3:70b", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "Meta flagship general open source model"},
+    {"tag": "qwen2.5:72b", "size": "72B", "tier": "🧠 Heavyweight", "vram": "~44.0 GB", "desc": "Maximum performance in global benchmarks"},
 ]
 
 # ANSI Styling
@@ -208,7 +211,7 @@ atexit.register(restore_cursor)
 
 def cancel_and_exit():
     restore_cursor()
-    print(f"\n{BRIGHT_YELLOW}🟡 Operação cancelada pelo usuário (ESC/Ctrl+C).{RESET}\n")
+    print(f"\n{BRIGHT_YELLOW}🟡 Installation cancelled by user (ESC/Ctrl+C).{RESET}\n")
     sys.exit(0)
 
 
@@ -221,7 +224,7 @@ def ensure_tty():
 
 
 def getch() -> str:
-    """Read keypress with standalone ESC detection."""
+    """Read a single keypress or ANSI escape sequence reliably on POSIX/Windows."""
     if os.name == "nt":
         import msvcrt
         ch = msvcrt.getch()
@@ -232,32 +235,36 @@ def getch() -> str:
             if ch2 == b"K": return "LEFT"
             if ch2 == b"M": return "RIGHT"
         if ch == b"\x1b": return "ESC"
-        if ch == b"\r": return "ENTER"
+        if ch in (b"\r", b"\n"): return "ENTER"
         if ch == b" ": return "SPACE"
         if ch == b"\x03": raise KeyboardInterrupt
         return ch.decode("utf-8", errors="ignore")
 
-    import termios, tty
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     try:
         tty.setraw(fd)
         ch = sys.stdin.read(1)
         if ch == "\x1b":
-            r, _, _ = select.select([sys.stdin], [], [], 0.05)
-            if not r:
+            # Set non-blocking temporarily to drain trailing escape sequence bytes
+            old_flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+            fcntl.fcntl(fd, fcntl.F_SETFL, old_flags | os.O_NONBLOCK)
+            try:
+                rest = sys.stdin.read(10)
+            except (IOError, TypeError):
+                rest = ""
+            finally:
+                fcntl.fcntl(fd, fcntl.F_SETFL, old_flags)
+
+            if not rest:
                 return "ESC"
-            seq1 = sys.stdin.read(1)
-            if seq1 == "[":
-                r2, _, _ = select.select([sys.stdin], [], [], 0.05)
-                if not r2:
-                    return "ESC"
-                seq2 = sys.stdin.read(1)
-                if seq2 == "A": return "UP"
-                elif seq2 == "B": return "DOWN"
-                elif seq2 == "C": return "RIGHT"
-                elif seq2 == "D": return "LEFT"
-            return "ESC"
+            if rest in ("[A", "OA") or rest.endswith("A"): return "UP"
+            elif rest in ("[B", "OB") or rest.endswith("B"): return "DOWN"
+            elif rest in ("[C", "OC") or rest.endswith("C"): return "RIGHT"
+            elif rest in ("[D", "OD") or rest.endswith("D"): return "LEFT"
+            elif rest in ("[H", "[1~"): return "HOME"
+            elif rest in ("[F", "[4~"): return "END"
+            return "IGNORE"
         elif ch in ("\r", "\n"):
             return "ENTER"
         elif ch == " ":
@@ -348,7 +355,7 @@ def tui_single_select(
                 buf.append(f"  {ptr} {radio} {label}{sub_text}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Mover | Enter: Confirmar | Esc/q: Cancelar]{RESET}"
+        footer = f"{DIM}└── [↑/↓/j/k: Navigate | Enter: Confirm | Esc/q: Cancel]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -368,6 +375,7 @@ def tui_single_select(
                 break
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
+            # IGNORE, RIGHT, LEFT are safely ignored
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
@@ -380,8 +388,9 @@ def tui_multiselect(
     title: str,
     options: list[tuple[str, str, str]],  # (key, label, subtitle)
     default_selected: list[str] | None = None,
+    allow_empty: bool = False,
 ) -> list[str]:
-    """Interactive multi-select menu with arrow keys, spacebar, and ESC support."""
+    """Interactive multi-select menu with mandatory selection validation."""
     if not sys.stdin.isatty():
         return [opt[0] for opt in options] if default_selected is None else default_selected
 
@@ -392,6 +401,7 @@ def tui_multiselect(
     cursor = 0
     num_opts = len(options)
     lines_rendered = 0
+    warning_msg = ""
 
     def render():
         nonlocal lines_rendered
@@ -415,7 +425,11 @@ def tui_multiselect(
                 buf.append(f"  {ptr} {box} {label}{sub_text}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Mover | Espaço: Marcar | a: Todos | Enter: Confirmar | Esc/q: Cancelar]{RESET}"
+        if warning_msg:
+            buf.append(f"  {BRIGHT_YELLOW}⚠️  {warning_msg}{RESET}{ESC}K\n")
+            lines += 1
+
+        footer = f"{DIM}└── [↑/↓/j/k: Navigate | Space: Toggle | a: Toggle All | Enter: Confirm | Esc/q: Cancel]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -427,6 +441,7 @@ def tui_multiselect(
         while True:
             render()
             key = getch()
+            warning_msg = ""
             if key in ("UP", "k"):
                 cursor = (cursor - 1) % num_opts
             elif key in ("DOWN", "j"):
@@ -443,11 +458,16 @@ def tui_multiselect(
                 else:
                     selected = set(opt[0] for opt in options)
             elif key == "ENTER":
-                if not selected:
+                if not selected and not allow_empty:
+                    # Auto-select focused item or show warning
                     selected.add(options[cursor][0])
-                break
+                if selected or allow_empty:
+                    break
+                else:
+                    warning_msg = "Please select at least one option before proceeding."
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
+            # IGNORE, RIGHT, LEFT are safely ignored
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
@@ -457,7 +477,7 @@ def tui_multiselect(
 
 
 def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
-    """Interactive Skill-by-Skill browser with viewport scrolling and live details."""
+    """Interactive Skill-by-Skill browser with viewport scrolling, search, and details."""
     if not sys.stdin.isatty():
         return [(s["category"], s["name"], s["path"]) for s in all_skills]
 
@@ -509,9 +529,9 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
             if lines_rendered > 0:
                 buf.append(f"{ESC}{lines_rendered}F")
 
-            header = f"{BOLD}{WHITE}┌── 🎯 Seleção Skill por Skill [Selecionadas: {len(selected_names)}/{len(all_skills)}] {RESET}"
+            header = f"{BOLD}{WHITE}┌── 🎯 Skill-by-Skill Selection [Selected: {len(selected_names)}/{len(all_skills)}] {RESET}"
             if search_query:
-                header += f" {BRIGHT_YELLOW}(Filtro: '{search_query}'){RESET}"
+                header += f" {BRIGHT_YELLOW}(Filter: '{search_query}'){RESET}"
             buf.append(f"{header}{ESC}K\n")
             lines = 1
 
@@ -531,21 +551,21 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
                 lines += 1
 
             sort_label = f"Sort: {sort_modes[sort_idx].capitalize()}"
-            scroll_info = f"Exibindo {start_idx+1}-{end_idx} de {num_items} skills [{sort_label}]"
+            scroll_info = f"Showing {start_idx+1}-{end_idx} of {num_items} skills [{sort_label}]"
             buf.append(f"  {DIM}── {scroll_info} ──{RESET}{ESC}K\n")
             lines += 1
 
             desc_wrapped = focused["desc"][:160] + "..." if len(focused["desc"]) > 160 else focused["desc"]
-            buf.append(f"{BOLD}{WHITE}┌─ 🔍 Detalhes da Skill Selecionada ─────────────────────────────────{RESET}{ESC}K\n")
-            buf.append(f"│ {BOLD}Nome:{RESET}        {BRIGHT_CYAN}{focused['name']}{RESET} ({focused['category']}){ESC}K\n")
-            buf.append(f"│ {BOLD}Autor:{RESET}       {WHITE}{focused['author']}{RESET}{ESC}K\n")
-            buf.append(f"│ {BOLD}Descrição:{RESET}   {DIM}{desc_wrapped}{RESET}{ESC}K\n")
+            buf.append(f"{BOLD}{WHITE}┌─ 🔍 Selected Skill Details ────────────────────────────────────────{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Name:{RESET}        {BRIGHT_CYAN}{focused['name']}{RESET} ({focused['category']}){ESC}K\n")
+            buf.append(f"│ {BOLD}Author:{RESET}      {WHITE}{focused['author']}{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Description:{RESET} {DIM}{desc_wrapped}{RESET}{ESC}K\n")
             buf.append(f"│ {BOLD}GitHub URL:{RESET}  {BLUE}{focused['github_url']}{RESET}{ESC}K\n")
-            buf.append(f"│ {BOLD}Repositório:{RESET} ⭐ {BRIGHT_YELLOW}pedroiff0/awesome-skills{RESET} | MIT License{ESC}K\n")
+            buf.append(f"│ {BOLD}Repository:{RESET}  ⭐ {BRIGHT_YELLOW}pedroiff0/awesome-skills{RESET} | MIT License{ESC}K\n")
             buf.append(f"{BOLD}{WHITE}└────────────────────────────────────────────────────────────────────{RESET}{ESC}K\n")
             lines += 7
 
-            footer = f"{DIM}└── [↑/↓/j/k: Navegar | Espaço: Marcar | a: Todos | /: Filtrar | s: Ordenar | Enter: Confirmar | Esc: Cancelar]{RESET}"
+            footer = f"{DIM}└── [↑/↓/j/k: Navigate | Space: Toggle | a: All | /: Search | s: Sort | Enter: Confirm | Esc: Cancel]{RESET}"
             buf.append(f"{footer}{ESC}K\n")
             lines += 1
 
@@ -573,7 +593,7 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
                 sort_idx = (sort_idx + 1) % len(sort_modes)
             elif key == "/":
                 restore_cursor()
-                sys.stdout.write(f"\n{BOLD}{BRIGHT_YELLOW}Filtrar skills por texto: {RESET}")
+                sys.stdout.write(f"\n{BOLD}{BRIGHT_YELLOW}Filter skills by keyword (Enter to clear): {RESET}")
                 sys.stdout.flush()
                 try:
                     search_query = input().strip()
@@ -585,10 +605,11 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
             elif key == "ENTER":
                 if not selected_names and items:
                     selected_names.add(items[cursor]["name"])
-                break
+                if selected_names:
+                    break
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
-
+            # IGNORE, RIGHT, LEFT are safely ignored
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
@@ -601,65 +622,69 @@ def run_open_source_cloner():
     """Interactive Open Source Repositories Cloner Hub."""
     ensure_tty()
     print(f"\n{BOLD}{WHITE}┌── 🌐 Open Source Repositories Hub (Curated via OpenCurious & GitHub Stars) {RESET}")
-    print(f"{DIM}Selecione os repositórios que deseja clonar para sua máquina local:{RESET}\n")
+    print(f"{DIM}Select repositories to clone locally to your machine:{RESET}\n")
 
     repo_opts = [
         (r["repo"], f"{r['repo']:<35} ⭐ {r['stars']:<7} [{r['cat']}]", r["desc"])
         for r in OPEN_SOURCE_REPOS
     ]
-    selected_repos = tui_multiselect("Selecione os Repositórios Open Source para Clonar", repo_opts, default_selected=[])
+    selected_repos = tui_multiselect("Select Open Source Repositories to Clone", repo_opts, default_selected=[repo_opts[0][0]])
 
     if not selected_repos:
-        print(f"{YELLOW}Nenhum repositório selecionado para clonagem.{RESET}")
+        print(f"{YELLOW}No repositories selected.{RESET}")
         return
 
-    dest_dir_input = input(f"{BRIGHT_YELLOW}Diretório de destino [default: ./open-source]: {RESET}").strip()
+    try:
+        dest_dir_input = input(f"{BRIGHT_YELLOW}Target destination directory [default: ./open-source]: {RESET}").strip()
+    except (EOFError, KeyboardInterrupt):
+        cancel_and_exit()
+
     dest_base = Path(dest_dir_input if dest_dir_input else "./open-source").resolve()
     dest_base.mkdir(parents=True, exist_ok=True)
 
-    print(f"\n{BOLD}{BRIGHT_CYAN}Clonando {len(selected_repos)} repositório(s) em {dest_base}...{RESET}\n")
+    print(f"\n{BOLD}{BRIGHT_CYAN}Cloning {len(selected_repos)} repository(ies) to {dest_base}...{RESET}\n")
     for r in selected_repos:
         repo_name = r.split("/")[1]
         target_path = dest_base / repo_name
         if target_path.exists():
-            print(f"  {YELLOW}• {r} já existe em {target_path}. Atualizando via git pull...{RESET}")
+            print(f"  {YELLOW}• {r} already exists at {target_path}. Updating via git pull...{RESET}")
             subprocess.run(["git", "-C", str(target_path), "pull", "--ff-only"], capture_output=True)
         else:
-            print(f"  {BRIGHT_CYAN}• Clonando https://github.com/{r}.git...{RESET}")
+            print(f"  {BRIGHT_CYAN}• Cloning https://github.com/{r}.git...{RESET}")
             subprocess.run(["git", "clone", "--depth", "1", f"https://github.com/{r}.git", str(target_path)])
-        print(f"  {BRIGHT_GREEN}✔ Pronto: {r}{RESET}\n")
+        print(f"  {BRIGHT_GREEN}✔ Ready: {r}{RESET}\n")
 
-    print(f"{BRIGHT_GREEN}{BOLD}🎉 Repositórios Open Source clonados com sucesso!{RESET}\n")
+    print(f"{BRIGHT_GREEN}{BOLD}🎉 Open source repositories cloned successfully!{RESET}\n")
 
 
 def run_ollama_manager():
     """Interactive Ollama Open Source Models Manager."""
     ensure_tty()
-    print(f"\n{BOLD}{WHITE}┌── 🦙 Ollama Open Source Models Catalog (Leves a Pesados) {RESET}")
-    print(f"{DIM}Modelos locais de alta performance para desenvolvimento, coding e raciocínio:{RESET}\n")
+    print(f"\n{BOLD}{WHITE}┌── 🦙 Ollama Open Source Models Catalog (Lightweight to Heavyweight) {RESET}")
+    print(f"{DIM}High-performance local LLMs for coding, refactoring, and deep reasoning:{RESET}\n")
 
     model_opts = [
         (m["tag"], f"{m['tag']:<24} {m['tier']:<16} ({m['size']}, VRAM {m['vram']})", m["desc"])
         for m in OLLAMA_MODELS
     ]
-    selected_models = tui_multiselect("Selecione os Modelos Ollama para Baixar / Executar", model_opts, default_selected=["qwen2.5-coder:7b", "deepseek-r1:1.5b"])
+    selected_models = tui_multiselect("Select Ollama Models to Download / Pull", model_opts, default_selected=["qwen2.5-coder:7b", "deepseek-r1:1.5b"])
 
     if not selected_models:
-        print(f"{YELLOW}Nenhum modelo selecionado.{RESET}")
+        print(f"{YELLOW}No models selected.{RESET}")
         return
 
     has_ollama = shutil.which("ollama") is not None
 
     if has_ollama:
-        print(f"\n{BOLD}{BRIGHT_CYAN}🚀 Baixando {len(selected_models)} modelo(s) via Ollama...{RESET}\n")
+        print(f"\n{BOLD}{BRIGHT_CYAN}🚀 Pulling {len(selected_models)} model(s) via Ollama...{RESET}\n")
         for tag in selected_models:
-            print(f"  {BOLD}Executando:{RESET} {BRIGHT_YELLOW}ollama pull {tag}{RESET}")
+            print(f"  {BOLD}Running:{RESET} {BRIGHT_YELLOW}ollama pull {tag}{RESET}")
             subprocess.run(["ollama", "pull", tag])
-            print(f"  {BRIGHT_GREEN}✔ Modelo {tag} pronto para uso!{RESET}\n")
+            print(f"  {BRIGHT_GREEN}✔ Model {tag} is ready for local inference!{RESET}\n")
     else:
-        print(f"\n{YELLOW}{BOLD}Aviso:{RESET} O comando 'ollama' não foi encontrado no PATH do sistema.")
-        print(f"Para instalar o Ollama, acesse: {BRIGHT_CYAN}https://ollama.com/{RESET}\n")
-        print(f"{BOLD}Comandos para executar após instalar o Ollama:{RESET}")
+        print(f"\n{YELLOW}{BOLD}Notice:{RESET} 'ollama' command was not found in your system PATH.")
+        print(f"To install Ollama, visit: {BRIGHT_CYAN}https://ollama.com/{RESET}\n")
+        print(f"{BOLD}Commands to run once Ollama is installed:{RESET}")
         for tag in selected_models:
             print(f"  {BRIGHT_CYAN}ollama run {tag}{RESET}")
         print()
@@ -750,18 +775,18 @@ def run_interactive():
                 "github_url": f"{GITHUB_BASE_URL}/{cat}/{name}",
             })
 
-    print(f"  {BOLD}Catálogo Ativo:{RESET} {BRIGHT_GREEN}{total_skills} skills{RESET} em {BRIGHT_CYAN}{total_cats} categorias{RESET} • {MAGENTA}2 plugins{RESET} • {YELLOW}4 servidores MCP{RESET}.\n")
+    print(f"  {BOLD}Active Catalog:{RESET} {BRIGHT_GREEN}{total_skills} skills{RESET} in {BRIGHT_CYAN}{total_cats} categories{RESET} • {MAGENTA}2 plugins{RESET} • {YELLOW}4 MCP servers{RESET}.\n")
 
     # =========================================================================
-    # STEP 0: Quick Install vs Custom Manual Wizard vs Hubs
+    # STEP 0: Quick Install vs Custom Manual Setup vs Hubs
     # =========================================================================
     step0_opts = [
-        ("quick", "🚀 Instalação Rápida (Recomendado - 1 Clique)", "Instala automaticamente o pacote de elite com as melhores skills e MCPs"),
-        ("manual", "⚙️  Instalação Personalizada (Manual Wizard)", "Escolha agentes, escopo, skill-by-skill, categorias, plugins e packs"),
-        ("open_source", "🌐 Explorar & Clonar Repositórios Open Source", "Catálogo dos melhores repositórios GitHub via OpenCurious"),
-        ("ollama", "🦙 Modelos Open Source para Ollama", "Modelos locais do ultra-leve (1.5B) ao heavyweight de raciocínio (70B)"),
+        ("quick", "🚀 Quick Install (Recommended - 1-Click)", "Auto-installs top 13 starred essential skills & MCPs for all detected agents"),
+        ("manual", "⚙️  Custom / Manual Setup (Interactive Wizard)", "Choose agents, scope, skill-by-skill, categories, plugins & packs"),
+        ("open_source", "🌐 Explore & Clone Open-Source Repositories", "Curated top-starred GitHub repos via OpenCurious"),
+        ("ollama", "🦙 Open-Source Models for Ollama", "Local models from ultra-lightweight (1.5B) to heavy reasoning (70B+)"),
     ]
-    step0_choice = tui_single_select("Passo 0: Como você deseja prosseguir?", step0_opts, default_idx=0)
+    step0_choice = tui_single_select("Step 0: Choose Installation Workflow", step0_opts, default_idx=0)
 
     if step0_choice == "open_source":
         run_open_source_cloner()
@@ -777,8 +802,8 @@ def run_interactive():
     skills_to_install: list[tuple[str, str, Path]] = []
 
     if step0_choice == "quick":
-        print(f"\n{BOLD}{BRIGHT_CYAN}⭐ Modo Quick Install Ativado!{RESET}")
-        print(f"{DIM}Instalando as {len(ELITE_SKILLS)} skills de elite mais estreladas para todos os agentes principais...{RESET}\n")
+        print(f"\n{BOLD}{BRIGHT_CYAN}⭐ Quick Install Mode Activated!{RESET}")
+        print(f"{DIM}Installing the {len(ELITE_SKILLS)} elite essential skills for all primary agents...{RESET}\n")
         for cat, sks in catalog.items():
             for name, path in sks.items():
                 if name in ELITE_SKILLS:
@@ -791,30 +816,30 @@ def run_interactive():
         # Step 1: Target Agents
         agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
         selected_agents = tui_multiselect(
-            "Passo 1: Selecione os Agentes de IA Alvo",
+            "Step 1: Select Target Agent(s) to Equip",
             agent_opts,
             default_selected=["agy", "claude", "hermes"],
         )
 
         # Step 2: Scope
         scope_opts = [
-            ("global", "Perfil Global do Usuário", "Instalado em ~/.<agente> — disponível em todos os projetos"),
-            ("local", "Repositório Local (Workspace)", "Instalado em .agent/ ou .cursor/ — restrito a este projeto"),
+            ("global", "Global User Profile", "Installed in ~/.<agent> — available across all projects"),
+            ("local", "Local Workspace Repository", "Installed in .agent/ or .cursor/ — scoped to current project"),
         ]
-        selected_scope = tui_single_select("Passo 2: Escolha o Escopo de Instalação", scope_opts, default_idx=0)
+        selected_scope = tui_single_select("Step 2: Choose Installation Scope", scope_opts, default_idx=0)
 
         # Step 3: Selection Mode
         mode_opts = [
-            ("skill_by_skill", "🎯 Selecionar Skill por Skill (Navegação Completa)", "Ver detalhes, autor, GitHub, stars e escolher individualmente"),
+            ("skill_by_skill", "🎯 Browse & Select Skill by Skill (Full Catalog)", "Inspect metadata, author, GitHub link, stars, and pick individually"),
             ("pack_fullstack", PACKS["fullstack"]["title"], PACKS["fullstack"]["description"]),
             ("pack_devops", PACKS["devops"]["title"], PACKS["devops"]["description"]),
             ("pack_ai", PACKS["ai"]["title"], PACKS["ai"]["description"]),
             ("pack_academic", PACKS["academic"]["title"], PACKS["academic"]["description"]),
             ("pack_creative", PACKS["creative"]["title"], PACKS["creative"]["description"]),
-            ("pack_all", PACKS["all"]["title"], f"Todas as {total_skills} skills em {total_cats} categorias"),
-            ("categories", "🗂️  Selecionar por Categoria", "Escolha categorias completas da lista"),
+            ("pack_all", PACKS["all"]["title"], f"All {total_skills} skills across {total_cats} categories"),
+            ("categories", "🗂️  Select by Category", "Choose entire categories from a list"),
         ]
-        selected_mode = tui_single_select("Passo 3: Quais Skills você deseja instalar?", mode_opts, default_idx=0)
+        selected_mode = tui_single_select("Step 3: Which Skills would you like to install?", mode_opts, default_idx=0)
 
         if selected_mode == "skill_by_skill":
             skills_to_install = tui_skill_browser(all_skills_flat)
@@ -834,48 +859,48 @@ def run_interactive():
 
         elif selected_mode == "categories":
             cat_opts = [(cat, cat, f"{len(sks)} skills") for cat, sks in sorted(catalog.items())]
-            chosen_cats = tui_multiselect("Selecione as Categorias Desejadas", cat_opts, default_selected=[cat_opts[0][0]])
+            chosen_cats = tui_multiselect("Select Desired Categories", cat_opts, default_selected=[cat_opts[0][0]])
             for cat in chosen_cats:
                 for name, path in catalog[cat].items():
                     skills_to_install.append((cat, name, path))
 
         # Step 4: Method
         method_opts = [
-            ("symlink", "Link Simbólico (Symlink Dinâmico)", "Atualiza automaticamente ao rodar git pull"),
-            ("copy", "Cópia Direta de Arquivos", "Snapshot independente e isolado"),
+            ("symlink", "Symlink (Dynamic Link)", "Auto-updates dynamically on git pull"),
+            ("copy", "Direct File Copy", "Independent snapshot clone"),
         ]
-        selected_method = tui_single_select("Passo 4: Escolha o Modo de Instalação", method_opts, default_idx=0)
+        selected_method = tui_single_select("Step 4: Choose Installation Method", method_opts, default_idx=0)
         use_symlink = selected_method == "symlink"
 
     if not skills_to_install:
-        print(f"\n{YELLOW}Nenhuma skill selecionada para instalação.{RESET}")
+        print(f"\n{YELLOW}No skills selected for installation.{RESET}")
         return
 
     # Execute
-    print(f"\n{BOLD}{BRIGHT_CYAN}🚀 Instalando {len(skills_to_install)} skill(s) em {len(selected_agents)} agente(s)...{RESET}\n")
+    print(f"\n{BOLD}{BRIGHT_CYAN}🚀 Installing {len(skills_to_install)} skill(s) into {len(selected_agents)} agent(s)...{RESET}\n")
 
     for agent_key in selected_agents:
         if agent_key not in AGENTS:
             continue
         agent_info = AGENTS[agent_key]
         target_dir = agent_info["global_dir"] if selected_scope == "global" else agent_info["local_dir"]
-        print(f"  {BOLD}Instalando em {agent_info['name']}{RESET} -> {DIM}{target_dir}{RESET}")
+        print(f"  {BOLD}Installing to {agent_info['name']}{RESET} -> {DIM}{target_dir}{RESET}")
         installed_count = 0
         for cat, name, path in skills_to_install:
             if install_skill_to_target(path, cat, name, agent_key, target_dir, use_symlink=use_symlink):
                 installed_count += 1
-        print(f"  {BRIGHT_GREEN}✔ {installed_count} skill(s) instalada(s) em {agent_info['name']}{RESET}\n")
+        print(f"  {BRIGHT_GREEN}✔ Installed {installed_count} skill(s) into {agent_info['name']}{RESET}\n")
 
     print(f"{BRIGHT_GREEN}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}")
-    print(f"  {BRIGHT_GREEN}{BOLD}🎉 Instalação Concluída com Sucesso!{RESET}")
-    print(f"  {WHITE}As skills estão ativas e prontas nos seus agentes de IA.{RESET}")
+    print(f"  {BRIGHT_GREEN}{BOLD}🎉 Installation Completed Successfully!{RESET}")
+    print(f"  {WHITE}Skills are active and ready for prompt triggers in your AI agents.{RESET}")
     print(f"{BRIGHT_GREEN}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}\n")
 
 
 def main():
     parser = argparse.ArgumentParser(
         prog="awesome-skills installer",
-        description="Multi-Agent Skill Installer for awesome-skills",
+        description="Universal Multi-Agent Skill Installer for awesome-skills",
     )
     parser.add_argument(
         "--quick",
@@ -937,14 +962,14 @@ def main():
 
     if args.repos:
         print_banner()
-        print(f"{BOLD}{WHITE}=== Repositórios Open Source em Destaque (via OpenCurious & GitHub Stars) ==={RESET}\n")
+        print(f"{BOLD}{WHITE}=== Featured Open Source Repositories (via OpenCurious & GitHub Stars) ==={RESET}\n")
         for r in OPEN_SOURCE_REPOS:
             print(f"  • {BOLD}{r['repo']:<35}{RESET} ⭐ {r['stars']:<7} [{r['cat']}] — {r['desc']}")
         return
 
     if args.ollama:
         print_banner()
-        print(f"{BOLD}{WHITE}=== Catálogo de Modelos Open Source para Ollama (Leves a Pesados) ==={RESET}\n")
+        print(f"{BOLD}{WHITE}=== Open Source Ollama Models Catalog (Lightweight to Heavyweight) ==={RESET}\n")
         for m in OLLAMA_MODELS:
             print(f"  • {BOLD}{m['tag']:<24}{RESET} {m['tier']:<16} ({m['size']}, VRAM {m['vram']}) — {m['desc']}")
         return
