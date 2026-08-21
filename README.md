@@ -3,7 +3,7 @@
 # awesome-skills
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Skills](https://img.shields.io/badge/skills-118-blue.svg)
+![Skills](https://img.shields.io/badge/skills-119-blue.svg)
 ![Categories](https://img.shields.io/badge/categories-19-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![Multi-Agent](https://img.shields.io/badge/Multi--Agent-AGY%20|%20Claude%20|%20Hermes%20|%20Cursor-8a2be2.svg)
@@ -123,7 +123,7 @@ Every entry is a self-contained, versioned unit consumed — with thin adaptors 
 
 ## 🗂️ Skills Catalog Index
 
-> **118 skills** organized across **19 categories**.
+> **119 skills** organized across **19 categories**.
 
 ### apple
 
@@ -148,6 +148,7 @@ Every entry is a self-contained, versioned unit consumed — with thin adaptors 
 | [`hermes-agent`](skills/autonomous-ai-agents/hermes-agent/SKILL.md) | Configure, extend, or contribute to Hermes Agent. |
 | [`opencode`](skills/autonomous-ai-agents/opencode/SKILL.md) | Delegate coding to OpenCode CLI (features, PR review). |
 | [`rag-local-lancedb`](skills/autonomous-ai-agents/rag-local-lancedb/SKILL.md) | Build, query, and manage local vector embeddings and semantic search pipelines using LanceDB and HuggingFace/SentenceTransformers embeddings without cloud dependencies. |
+| [`watermarks-remover`](skills/autonomous-ai-agents/watermarks-remover/SKILL.md) | Strip multi-vendor AI provenance marks, invisible Unicode characters (ZWSP, ZWNJ, Bidi, variation selectors), statistical text watermarks, and C2PA/EXIF/XMP metadata from files... |
 | [`yuanbao`](skills/autonomous-ai-agents/yuanbao/SKILL.md) | Yuanbao (元宝) groups: @mention users, query info/members. |
 
 ### content-i18n
