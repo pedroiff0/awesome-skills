@@ -2,7 +2,7 @@
 name: awesome-skills-master
 description: "Master catalog orchestrator and autonomous installer for AI agents. Use when exploring, cloning, discovering, or installing skills, plugins, or MCP servers from awesome-skills without using interactive CLI tools. Guides environment detection, rule adaptation (.mdc/CLAUDE.md), MCP configuration, and strict author attribution."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: awesome-skills Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
@@ -141,7 +141,7 @@ Every skill, plugin, and MCP definition in this repository must rigorously prese
    - Skills originated from **Nous Research** must state `author: Nous Research (Hermes Agent)`.
    - Skills originated from **Matt Pocock / skills.sh** must state `author: Matt Pocock`.
    - Skills originated from **Guillaume Meyer** must state `author: Guillaume Meyer`.
-   - Skills originated from **Pedro Henrique Rocha de Andrade** must state `author: Pedro Henrique Rocha de Andrade`.
+   - Skills originated from **Open Source Repositories** must state their respective creator, maintainer, or upstream project name.
 3. **No Secret Leaks & API Purity**:
    - Never embed personal tokens, active keys, or private endpoints in any installed script or skill file.
 

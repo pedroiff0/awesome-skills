@@ -1,6 +1,7 @@
 ---
 name: github-profile-readme
 description: Build or rewrite a GitHub profile README (the username/username special repo) with a personalized theme — animated SVG banner, stats cards, contribution snake, tech badges, project/research tables. Includes the git conflict pitfall when the local clone is stale vs GitHub web edits, and the PyYAML `on:` quirk for workflow verification.
+author: GitHub Community
 ---
 
 # GitHub Profile README (astronomy × computing theme)

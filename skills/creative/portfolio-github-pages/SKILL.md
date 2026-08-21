@@ -1,6 +1,7 @@
 ---
 name: portfolio-github-pages
 description: Build and deploy a personal/academic PORTFOLIO as a single-page STATIC site (no build step) to GitHub Pages via the gh CLI. Use when the user asks for a portfolio, landing page, "pagina de portfólio", professional site, or "site estatico pro GitHub Pages", especially with a theme (astronomy/space is a known good pattern) and with sections revealed on click (accordions/cards). Covers scanning their real repos for truthful content, the single-page anchor layout, the space/glassmorphism design ingredients, and the gh CLI Pages activation gotchas (public-repo requirement, unarchiving, REST API enable).
+author: Open Source Community
 ---
 
 # Portfolio → GitHub Pages (static, single-page)

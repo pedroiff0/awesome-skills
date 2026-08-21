@@ -1,6 +1,7 @@
 ---
 name: express-csp-runtime-config
 description: "How to pass server-side runtime config (API prefix, feature flags, user id, CSRF token) from an Express/EJS app to client JS when a strict Content-Security-Policy is in force (helmet default scriptSrc self, with no unsafe-inline). Use this whenever you need to inject a value the browser JS must read at runtime, but adding a script tag triggers a silent CSP block."
+author: Express.js Community
 ---
 
 # Express + strict CSP: injecting runtime config to the client

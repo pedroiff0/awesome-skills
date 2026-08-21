@@ -1,6 +1,7 @@
 ---
 name: gpu-debian-setup
 description: Install and verify NVIDIA proprietary GPU drivers on Debian (including trixie/13) so local LLM tools (Ollama, llama.cpp, vLLM) can use the GPU. Covers nouveau blacklist, initramfs, the trixie nvidia-smi transitional-dummy gotcha and its official .run extraction fix, and verifying Ollama actually uses VRAM. Use whenever a user wants to enable GPU acceleration for local models, install the NVIDIA driver on Debian, or debug "nvidia-smi command not found" after a driver install.
+author: Debian / NVIDIA Community
 ---
 
 # GPU driver setup on Debian for local LLM inference

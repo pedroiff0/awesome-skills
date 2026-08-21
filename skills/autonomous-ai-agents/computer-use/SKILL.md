@@ -13,6 +13,7 @@ metadata:
     tags: [computer-use, desktop, automation, gui, cross-platform]
     category: desktop
     related_skills: [browser]
+author: Anthropic / Open Source Community
 ---
 
 # Computer Use (universal, any-model, cross-platform)

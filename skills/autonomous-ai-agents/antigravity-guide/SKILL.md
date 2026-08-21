@@ -2,7 +2,7 @@
 name: antigravity-guide
 description: "Provides a comprehensive guide, architecture reference, and quick-access sitemap for Google Antigravity (AGY), including CLI, Antigravity 2.0, IDE extensions, Python SDK, slash commands, keybindings, and customization hooks."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Google Antigravity / AGY Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

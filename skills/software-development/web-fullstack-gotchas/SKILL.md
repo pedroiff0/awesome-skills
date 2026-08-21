@@ -1,6 +1,7 @@
 ---
 name: web-fullstack-gotchas
 description: Armadilhas recorrentes em apps fullstack Node/Express + EJS + CSS + jest + Docker (padrão do projeto financas-app, mas aplicável a qualquer stack similar). USE quando esbarrar em HTML escapado na view, testes jest flaky/verdes-antes-vermelhos-agora, middleware de autologin que vaza ou quebra a landing, ports Docker que não "colam", CSS que não atualiza no browser, "reiniciei e não surtiu efeito" (imagem Docker bakeada sem bind mount), ou pedido de "faça igual ao projeto X" (reproduza o padrão, não improvise). Carrega antes de mexer em views EJS, serviços com cache, rotas de auth, docker-compose ou de copiar o design de outro repo.
+author: Fullstack Community
 ---
 
 # Web fullstack gotchas (Node / Express / EJS / jest / Docker)

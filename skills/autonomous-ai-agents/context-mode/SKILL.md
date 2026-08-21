@@ -2,7 +2,7 @@
 name: context-mode
 description: "Context optimization and compression routing rules for AI agents exploring large codebases, reading massive logs, searching symbols, and batching tool executions."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Context-Mode Team
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

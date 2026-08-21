@@ -4,6 +4,6 @@
   "command": "node",
   "args": ["/home/pedro/.gemini/config/plugins/context-mode/dist/index.js"],
   "env": {},
-  "attribution": "Pedro Henrique Rocha de Andrade & Antigravity Community",
+  "attribution": "Context-Mode Team & Open Source Community",
   "license": "MIT"
 }

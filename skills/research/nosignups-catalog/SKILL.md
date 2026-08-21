@@ -2,7 +2,7 @@
 name: nosignups-catalog
 description: "Catálogo curado de ferramentas open source sem signup (NoSignups.net). 234 tools organizadas por categoria e relevância para DevOps/self-hosted/operations. Use para encontrar alternativas open source a ferramentas SaaS, especialmente focado em self-hosted, privacidade e automação."
 version: 1.0.0
-author: Pedro (pedroiff0)
+author: NoSignups Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

@@ -36,7 +36,7 @@ def main(root: Path = ROOT) -> int:
             cat = rel.parts[0]
             fm = front_matter(skill)
             name = fm.get("name") or rel.parts[1]
-            author = fm.get("author") or "Pedro Henrique Rocha de Andrade"
+            author = fm.get("author") or "Open Source Community"
             desc = fm.get("description", "").replace("|", "\\|").replace("\n", " ")
             if len(desc) > 170:
                 desc = desc[:167].rstrip() + "..."
@@ -83,7 +83,7 @@ def main(root: Path = ROOT) -> int:
         "Install skills interactively with a terminal TUI menu, skill-by-skill live browser, author credits, and curated packs:",
         "",
         "```bash",
-        "# Run directly via curl (Interactive TUI)",
+        "# Run directly via curl (Interactive Cosmic TUI)",
         "curl -fsSL https://raw.githubusercontent.com/pedroiff0/awesome-skills/main/install.sh | bash",
         "",
         "# Or clone and run locally",
@@ -205,7 +205,8 @@ def main(root: Path = ROOT) -> int:
         "- **Matt Pocock**: `grill-me`, `grill-with-docs` requirement interview architectures.",
         "- **Vercel Labs**: `skills.sh` registry and discovery patterns.",
         "- **Guillaume Meyer**: `watermarks-remover` AI provenance hygiene tooling.",
-        "- **Pedro Henrique Rocha de Andrade**: Architecture, catalog curation, Antigravity ecosystem, multi-agent installer, and DevOps skills.",
+        "- **Open Source Community**: Open-source tools, Playwright, Pandas, Next.js, Docker, LaTeX, and Linux ecosystem skills.",
+        "- **Pedro Henrique Rocha de Andrade**: Repository architecture, catalog curation, and universal multi-agent installer.",
         "",
         "---",
         "",
@@ -215,7 +216,7 @@ def main(root: Path = ROOT) -> int:
         "",
         "---",
         "",
-        "## 👨‍💻 Author & Maintainer",
+        "## 👨‍💻 Maintainer & Curator",
         "",
         "<div align=\"center\">",
         "",
@@ -227,7 +228,7 @@ def main(root: Path = ROOT) -> int:
         "",
         "**2026 Awesome Skills**",
         "",
-        "Made with ☕, code and ☄️ by **Pedro Henrique Rocha de Andrade**",
+        "Curated with ☕, code and ☄️ by **Pedro Henrique Rocha de Andrade**",
         "",
         "[![GitHub](https://img.shields.io/badge/GitHub-pedroiff0-181717?logo=github&logoColor=white)](https://github.com/pedroiff0)",
         "[![Site Oficial](https://img.shields.io/badge/Site-Oficial-22c55e?logo=googlechrome&logoColor=white)](https://phrandrade.com/)",

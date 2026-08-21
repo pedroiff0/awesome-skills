@@ -2,7 +2,7 @@
 name: security-sast-audit
 description: "Perform static application security testing (SAST), secret scanning, dependency vulnerability audits (OWASP Top 10, bandit, semgrep, trivy, pip-audit, npm audit)."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: OWASP / Security Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

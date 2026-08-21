@@ -1,6 +1,7 @@
 ---
 name: github-pages-portfolio
 description: Build, update, and verify a single-page static portfolio / intro site on GitHub Pages (pure HTML+CSS+JS, no build step). Covers sourcing content read-only from the user's existing GitHub repos (public AND private), the free-tier public-repo requirement, anchor+accordion single-page design (hidden content revealed on click), and an ad-hoc verification recipe. Use when the user asks for a portfolio, personal/landing/intro/"short resumé" page, or to publish/refresh a static site on GitHub Pages.
+author: GitHub Pages Community
 ---
 
 # GitHub Pages Portfolio

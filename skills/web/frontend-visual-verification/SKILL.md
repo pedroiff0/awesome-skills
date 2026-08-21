@@ -7,6 +7,7 @@ metadata:
   hermes:
     tags: [frontend, css, verification, browser, qa, visual]
     related_skills: [dogfood]
+author: Web Dev Community
 ---
 
 # Frontend Visual Verification (beating stale browser cache)

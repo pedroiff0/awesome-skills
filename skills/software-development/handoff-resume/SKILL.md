@@ -1,6 +1,7 @@
 ---
 name: handoff-resume
 description: Resume in-progress coding work across sessions from a HANDOFF.md and a dirty git working tree. Use when a task says "continue from HANDOFF.md", "retomar o processamento", or when picking up a repo mid-change with uncommitted edits and an open PR. Covers reading continuity docs, reconciling the real tree, decoding repo jargon, verifying rendered UI without a trusted screenshot, and committing to the existing branch to update the PR.
+author: Hermes Agent Community
 ---
 
 # Handoff Resume

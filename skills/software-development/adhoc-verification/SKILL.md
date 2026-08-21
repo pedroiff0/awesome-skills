@@ -1,6 +1,7 @@
 ---
 name: adhoc-verification
 description: Produce fresh, focused, local verification evidence for a code change without relying on the full test suite. Use when a system reminder (or the user) demands ad-hoc verification after an edit, or when you want to prove one behavior in isolation. Covers the correct way to write a throwaway supertest/harness script against a Jest-coupled app, and the pitfalls that silently give false passes.
+author: Hermes Agent Community
 ---
 
 # Ad-hoc local verification harness

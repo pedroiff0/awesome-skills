@@ -9,7 +9,6 @@ platforms: [linux, macos]
 metadata:
   hermes:
     tags: [Evaluation, LM Evaluation Harness, Benchmarking, MMLU, HumanEval, GSM8K, EleutherAI, Model Quality, Academic Benchmarks, Industry Standard]
-
 ---
 
 # lm-evaluation-harness - LLM Benchmarking

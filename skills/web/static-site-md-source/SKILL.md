@@ -1,6 +1,7 @@
 ---
 name: static-site-md-source
 description: Turn an EXISTING static site (HTML/CSS/JS) into a Markdown-editable source WITHOUT changing its rendered output. Use when the user likes the current site ("muito bom, não mexa no HTML") but wants to edit content in Obsidian/Markdown and have commit+push republish the same look. Covers the data-object extraction pattern, a JS serializer (YAML/JSON does NOT produce valid JS), semantic deep-equal verification (not byte-equal), and a pre-commit hook that regenerates the compiled asset.
+author: Static Site Community
 ---
 
 # Static site → Markdown source (render-identical)

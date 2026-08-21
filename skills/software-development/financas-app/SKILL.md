@@ -1,6 +1,7 @@
 ---
 name: financas-app
 description: Corrigir, estender e validar o app de finanças pessoais (Node/Express + EJS + MongoDB + Docker). Cobre a arquitetura de porta única 4460 com demo via /demo, o fluxo de correção de UI (rebuild de AMBOS os containers + ASSET_VERSION), validação por browser headless no IP docker, verificação ad-hoc e o padrão Editar/Excluir via modal. Use quando o usuário pedir ajustes de UI, correção de bugs, edição de registros, ou versionamento/issues no repo pedroiff0/financas-app.
+author: Fullstack Community
 ---
 
 # financas-app — correção e extensão

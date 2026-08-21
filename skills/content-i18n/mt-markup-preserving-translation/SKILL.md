@@ -1,6 +1,7 @@
 ---
 name: mt-markup-preserving-translation
 description: Translate Markdown/Obsidian/Quartz content with LibreTranslate while preserving wikilinks, embeds, URLs, tables, HTML blocks, proper nouns, and canonical section titles. Use for any "translate this vault/site" task.
+author: Open Source Translation Community
 ---
 
 # Markup-preserving MT translation

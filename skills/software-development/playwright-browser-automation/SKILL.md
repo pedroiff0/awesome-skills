@@ -2,7 +2,7 @@
 name: playwright-browser-automation
 description: "Run automated headless browser testing, scrape dynamic SPAs, capture high-resolution full-page screenshots, and perform visual regression testing with Playwright."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Microsoft Playwright / OSS Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

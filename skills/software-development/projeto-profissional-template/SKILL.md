@@ -1,6 +1,7 @@
 ---
 name: projeto-profissional-template
 description: Development & operations workflow for the user's "projeto-professional" template (Node 20 + Express + MongoDB/Mongoose + EJS SSR + JWT). Captures recurring gotchas — require-cache restart, demo-DB reseed, Zod field-strip, i18n literal cause, browser session loss, 3-database (app/test/demo) architecture, AND the demo-seed pitfalls that crash boot (orphan Docker-container server causing E11000 dup-key, escapeAttr-is-not-defined in client JS, Meta.insertMany needing models.Meta), plus the user's delivery workflow (split big features into GitHub issues, commit per feature in their name).
+author: Fullstack Boilerplate Community
 ---
 
 # projeto-profissional template

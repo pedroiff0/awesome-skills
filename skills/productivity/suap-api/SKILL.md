@@ -1,6 +1,7 @@
 ---
 name: suap-api
 description: Consume the SUAP (Sistema Unificado de Administração Pública) REST API v2 used by Brazilian federal institutes (IFRN, IFF, IFS, etc.) — obtain a JWT via /api/v2/autenticacao/token/, discover real endpoints via /api/openapi.json, and pull student data (boletim, períodos letivos, dados do aluno). Covers the WAF User-Agent gotcha, the username/password JSON body format (NOT Basic Auth), the /api/ensino/ path layout, and the scope limits of the simple token. Use whenever a user wants to script/automate access to SUAP academic data with matrícula + senha, or debug a 403/422/400 from the SUAP token endpoint.
+author: SUAP Community
 ---
 
 # SUAP API (v2) access

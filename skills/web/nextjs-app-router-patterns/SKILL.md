@@ -2,7 +2,7 @@
 name: nextjs-app-router-patterns
 description: "Architect and implement modern Next.js App Router applications with Server Components (RSC), Server Actions, Parallel/Intercepting Routes, and Streaming SSR."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Vercel / Next.js Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

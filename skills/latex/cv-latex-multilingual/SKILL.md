@@ -1,6 +1,7 @@
 ---
 name: cv-latex-multilingual
 description: Manter o CV LaTeX multilíngue do usuário (classe altacv) em ~/Repositorios/pessoal/cv — PT (fonte), EN (espelho), ES/FR (gerados do EN via translate_cv.py). Abrange correções de conteúdo, build via Makefile, bugs do gerador e verificação de PDFs.
+author: LaTeX Community
 ---
 
 # CV LaTeX Multilíngue (altacv)

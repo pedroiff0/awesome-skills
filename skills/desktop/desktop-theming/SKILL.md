@@ -1,6 +1,7 @@
 ---
 name: desktop-theming
 description: Make a Linux desktop (XFCE/GNOME/KDE) look like macOS or otherwise "rice" it — WhiteSur GTK/icon/cursor themes, Plank dock, San-Francisco-like fonts, xfconf config. Use when a user asks for a macOS-style / Windows-style / themed / prettier desktop on Linux, or wants to customize their DE's look.
+author: Linux / Desktop Theming Community
 ---
 
 # Desktop theming / ricing on Linux (macOS look via WhiteSur)

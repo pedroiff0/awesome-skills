@@ -1,6 +1,7 @@
 ---
 name: markdown-static-site-source
 description: Make a data-driven static site (content lives in a JS/JSON object consumed by a render script) editable from Markdown/Obsidian. Generate the data file from a YAML-frontmatter MD source and verify fidelity with SEMANTIC deep-equal (not byte comparison), keeping the HTML/CSS/render engine untouched so the site renders identically.
+author: Static Site Community
 ---
 
 # Markdown as the source of truth for a JS-data-driven static site

@@ -1,6 +1,7 @@
 ---
 name: docker-single-port-multi-instance
 description: "Consolidate multiple Docker Compose app instances (production / test / demo) behind ONE host port using an nginx reverse proxy that routes by URL path prefix (e.g. /demo). Use when a user wants 'one port, several apps/banks' or a demo reachable simultaneously from the main landing page with its own database."
+author: Docker / DevOps Community
 ---
 
 # One port, many instances: nginx reverse proxy by path prefix

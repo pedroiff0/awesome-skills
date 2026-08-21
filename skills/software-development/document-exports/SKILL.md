@@ -1,6 +1,7 @@
 ---
 name: document-exports
 description: Generate and TEST downloadable document exports (PDF/CSV) from a Node/Express backend — pdfkit streaming, CSV BOM, cents formatting, and the supertest/pdfkit pitfalls that silently break tests.
+author: Pandoc / Document Tools Community
 ---
 
 # Document Exports (PDF / CSV) for Node + Express

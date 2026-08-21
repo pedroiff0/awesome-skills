@@ -1,6 +1,7 @@
 ---
 name: libretranslate-markdown-i18n
 description: Machine-translate Markdown / Obsidian / Quartz content into other languages using a self-hosted LibreTranslate instance, preserving frontmatter, headings, emojis, bold/italic, wikilinks (![[...]]/[[...]]) and internal links. Use whenever a user wants to auto-translate a Markdown vault, Obsidian notes, or a Quartz/static-site content tree into other languages, especially pt-br -> en/es/fr. Covers the Docker setup, the markup-protection technique that prevents MT from corrupting the source, and the placeholder pitfalls that silently leak in some target languages.
+author: LibreTranslate / Community
 ---
 
 # LibreTranslate Markdown i18n

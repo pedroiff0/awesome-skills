@@ -2,7 +2,7 @@
   "name": "auto-git-checkpoint",
   "description": "Automatic pre/post task git checkpoint hooks and atomic commit generator",
   "version": "1.0.0",
-  "author": "Pedro Henrique Rocha de Andrade",
+  "author": "awesome-skills Community",
   "license": "MIT",
   "hooks": {
     "post_task": "scripts/checkpoint.sh"

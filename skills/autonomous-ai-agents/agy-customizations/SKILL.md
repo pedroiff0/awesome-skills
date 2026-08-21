@@ -2,7 +2,7 @@
 name: agy-customizations
 description: "Comprehensive guide and reference for the Antigravity Customization System. Use to author skills, contextual rules, plugins, hooks, and MCP servers with correct priority loading."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Google Antigravity / AGY Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

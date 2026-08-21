@@ -2,7 +2,7 @@
 name: rag-local-lancedb
 description: "Build, query, and manage local vector embeddings and semantic search pipelines using LanceDB and HuggingFace/SentenceTransformers embeddings without cloud dependencies."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: LanceDB / OSS Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

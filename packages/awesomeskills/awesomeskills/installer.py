@@ -836,7 +836,7 @@ def run_interactive():
     for cat, sks in catalog.items():
         for name, path in sks.items():
             fm = parse_frontmatter(path / "SKILL.md")
-            author = fm.get("author") or "Pedro Henrique Rocha de Andrade"
+            author = fm.get("author") or "Open Source Community"
             desc = fm.get("description") or f"Reusable {name} skill"
             all_skills_flat.append({
                 "name": name,
@@ -1080,7 +1080,7 @@ def main():
             print(f"\n{BOLD}{PURPLE}=== {cat} ({len(sks)} skills) ==={RESET}")
             for name, path in sorted(sks.items()):
                 fm = parse_frontmatter(path / "SKILL.md")
-                author = fm.get("author", "Pedro Henrique Rocha de Andrade")
+                author = fm.get("author", "Open Source Community")
                 desc = fm.get("description", "")
                 print(f"  • {BOLD}{name}{RESET} (by {author}): {desc[:80]}{'...' if len(desc)>80 else ''}")
         return

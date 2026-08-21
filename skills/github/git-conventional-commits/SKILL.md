@@ -2,7 +2,7 @@
 name: git-conventional-commits
 description: "Author standardized conventional commit messages (feat, fix, docs, refactor, chore), generate automated semver releases, and format pull request descriptions."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Conventional Commits Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

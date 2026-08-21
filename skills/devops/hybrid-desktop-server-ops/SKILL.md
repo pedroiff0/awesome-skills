@@ -1,6 +1,7 @@
 ---
 name: hybrid-desktop-server-ops
 description: "Comprehensive runbook and operational architecture for running a single Linux machine as both a daily development desktop and a 24/7 home/cloud server (Debian/Ubuntu, GNOME, Docker, Caddy, Cloudflare Tunnels, ZeroTier/Tailscale, AdGuard Home, and CLI utilities)."
+author: DevOps / Linux Community
 ---
 
 # Hybrid Desktop + 24/7 Server Architecture & Operations

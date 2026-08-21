@@ -2,7 +2,7 @@
 name: docx-analysis-conversion
 description: "Extract, analyze, edit, and convert Microsoft Word (.docx) documents to structured Markdown, JSON, or clean text preserving tables, headers, and bullet lists."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Open Source Python Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

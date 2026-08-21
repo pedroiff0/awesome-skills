@@ -1,6 +1,7 @@
 ---
 name: markdown-site-source-pipeline
 description: Keep a static HTML/JS site's content in an editable Markdown source file; generate the data artifact (JS/JSON) the site consumes; guarantee identical render via semantic deep-equal verification. Use when a user wants to edit a static site (portfolio, docs) in Markdown/Obsidian instead of hand-editing generated data files, OR when building a "write in MD, publish identical HTML" workflow.
+author: Static Site Community
 ---
 
 # Markdown → Static Site Source Pipeline

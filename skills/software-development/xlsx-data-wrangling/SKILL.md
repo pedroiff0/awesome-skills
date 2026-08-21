@@ -2,7 +2,7 @@
 name: xlsx-data-wrangling
 description: "Query, validate, clean, and manipulate Excel (.xlsx/.xls) spreadsheets programmatically without GUI using pandas, openpyxl, and polars."
 version: 1.0.0
-author: Pedro Henrique Rocha de Andrade
+author: Open Source Python Community
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

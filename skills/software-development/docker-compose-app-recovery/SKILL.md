@@ -1,6 +1,7 @@
 ---
 name: docker-compose-app-recovery
 description: Recover or reset credentials and directly operate the database of an app running under docker-compose (lost admin password, one-time seed password, locked out, read/write app DB). Covers running one-off scripts inside the app container, mongosh pitfalls, and verifying via the live API.
+author: DevOps Community
 ---
 
 # docker-compose-app-recovery

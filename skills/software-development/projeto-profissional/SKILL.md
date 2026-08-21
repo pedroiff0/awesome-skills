@@ -1,6 +1,7 @@
 ---
 name: projeto-profissional
 description: Bootstrap a new professional repo from Pedro's hardened Node/Express+MongoDB+EJS base template (JWT auth, admin/user roles, admin-controlled registration, security defaults, full root markdown set), and maintain it — dual prod/test Docker stacks, k6 load testing, Jest suite. Use whenever Pedro asks to start a new project/repo, "criar um projeto novo", "primeiro commit", a base/modelo/template for GitHub, to add login+admin to a fresh app, or to load-test / dockerize / benchmark one of these projects.
+author: Fullstack Boilerplate Community
 ---
 
 # Projeto Profissional — base template for new repos

@@ -8,6 +8,7 @@ metadata:
     tags: [desktop, plugins, ui, extension]
     category: productivity
     related_skills: []
+author: Hermes Agent Community
 ---
 
 # Hermes Desktop Plugins Skill

@@ -1,6 +1,7 @@
 ---
 name: suap-iff-api
 description: Authenticate to and consume the SUAP IFF (Instituto Federal Fluminense) API v2 from the CLI — obtain the JWT access/refresh token via matricula+senha, then fetch student data (periodos letivos, dados do aluno, boletim). Use when the user has a suap.iff.edu.br matricula+senha and wants to extract academic data, integrate with the SUAP IFF API, or reference suap.iff.edu.br/api endpoints.
+author: IFF Community
 ---
 
 # SUAP IFF API (v2 / django-ninja)

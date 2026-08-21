@@ -2,7 +2,7 @@
 name: watermarks-remover
 description: "Strip multi-vendor AI provenance marks, invisible Unicode characters (ZWSP, ZWNJ, Bidi, variation selectors), statistical text watermarks, and C2PA/EXIF/XMP metadata from files (PNG, JPEG, PDF, DOCX, MD, TXT)."
 version: 1.0.0
-author: Guillaume Meyer & Pedro Henrique Rocha de Andrade
+author: Guillaume Meyer
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
