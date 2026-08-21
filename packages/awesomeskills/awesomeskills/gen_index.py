@@ -1,19 +1,22 @@
+#!/usr/bin/env python3
 """Generate a professional README.md from skills/**/SKILL.md.
 
-Usage (as module): awesomeskills.index.main(root=".")  ->  writes README.md
+Produces: hero (badges + tagline), why-multi-tool table, interactive installer guide,
+per-agent installation commands, curated packs, repo structure, and a per-category index.
 """
-from __future__ import annotations
 from pathlib import Path
-import re
-import sys
+import re, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+SKILLS = ROOT / "skills"
 
 
 def front_matter(path: Path) -> dict:
     txt = path.read_text(encoding="utf-8", errors="replace")
     m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
-    data: dict = {}
     if not m:
-        return data
+        return {}
+    data = {}
     for line in m.group(1).splitlines():
         mm = re.match(r"^([a-zA-Z_]+):\s*(.*)$", line)
         if mm:
@@ -21,27 +24,24 @@ def front_matter(path: Path) -> dict:
     return data
 
 
-def main(root: str = ".") -> int:
-    ROOT = Path(root).resolve()
-    SKILLS = ROOT / "skills"
-    if not SKILLS.exists():
-        print(f"SKILLS dir not found in {ROOT}")
-        return 1
-
+def main(root: Path = ROOT) -> int:
+    skills_dir = root / "skills"
     cats: dict[str, list[tuple[str, str, str]]] = {}
-    for skill in sorted(SKILLS.rglob("SKILL.md")):
-        rel = skill.relative_to(SKILLS)
-        cat = str(rel.parent.parent) if len(rel.parts) > 2 else "geral"
-        fm = front_matter(skill)
-        name = fm.get("name") or rel.parent.name
-        desc = fm.get("description", "").replace("|", "\\|")
-        if len(desc) > 200:
-            desc = desc[:197].rstrip() + "..."
-        cats.setdefault(cat, []).append((name, desc, str(rel)))
+    for skill in sorted(skills_dir.rglob("SKILL.md")):
+        rel = skill.relative_to(skills_dir)
+        if len(rel.parts) >= 2:
+            cat = rel.parts[0]
+            fm = front_matter(skill)
+            name = fm.get("name") or rel.parts[1]
+            desc = fm.get("description", "").replace("|", "\\|").replace("\n", " ")
+            if len(desc) > 180:
+                desc = desc[:177].rstrip() + "..."
+            cats.setdefault(cat, []).append((name, desc, str(rel)))
 
     total = sum(len(v) for v in cats.values())
 
     out = []
+    # ---- HERO ----
     out += [
         "<div align=\"center\">",
         "",
@@ -51,68 +51,128 @@ def main(root: str = ".") -> int:
         f"![Skills](https://img.shields.io/badge/skills-{total}-blue.svg)",
         f"![Categories](https://img.shields.io/badge/categories-{len(cats)}-blue.svg)",
         "![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)",
-        "![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)",
+        "![Multi-Agent](https://img.shields.io/badge/Multi--Agent-AGY%20|%20Claude%20|%20Hermes%20|%20Cursor-8a2be2.svg)",
         "",
-        "**Enterprise-grade library of reusable Skills, Agents & Plugins for AI agents.**",
+        "**Universal multi-agent library of reusable Skills, Agents & Rules.**",
         "",
-        "*Write once in `SKILL.md` — run everywhere.*",
+        "*Write once in `SKILL.md` — run on Google Antigravity, Claude Code, Hermes Agent, Cursor, Windsurf & Cline.*",
+        "",
         "</div>",
         "",
         "---",
         "",
-        "## Why multi-tool?",
+        "## ⚡ Quick Start: Interactive Installer (Caveman-style)",
         "",
-        "Every entry is a self-contained, versioned unit consumed — with thin",
-        "adaptors — by the major agent runtimes:",
+        "Install skills interactively with a TUI menu, fuzzy search, agent selector, and curated packs:",
         "",
-        "| Runtime | Loads |",
-        "|---|---|",
-        "| **Hermes Agent** | `SKILL.md` → `~/.hermes/skills/` |",
-        "| **Claude Code / Claude.ai** | `SKILL.md` / `CLAUDE.md` |",
-        "| **Cursor** | `.cursor/rules/*.mdc` |",
-        "| **Windsurf** | `.windsurfrules` / `skills/*.md` |",
-        "| **OpenClaw / Roo / Cline / AGY** | `SKILL.md` / `manifest.json` |",
+        "```bash",
+        "# Run directly via curl (Interactive TUI)",
+        "curl -fsSL https://raw.githubusercontent.com/pedroiff0/awesome-skills/main/install.sh | bash",
+        "",
+        "# Or clone and run locally",
+        "git clone https://github.com/pedroiff0/awesome-skills.git",
+        "cd awesome-skills",
+        "./install.sh",
+        "```",
+        "",
+        "---",
+        "",
+        "## 🤖 Installation by Agent (Direct 1-Liners)",
+        "",
+        "Select your AI agent or IDE below for ready-to-run setup commands:",
+        "",
+        "### 🪐 Google Antigravity (AGY)",
+        "",
+        "```bash",
+        "# Global User Skills (available in all workspaces)",
+        "mkdir -p ~/.gemini/antigravity-cli/skills",
+        "cp -r skills/*/* ~/.gemini/antigravity-cli/skills/",
+        "",
+        "# Or install into current workspace",
+        "mkdir -p .agent/skills",
+        "cp -r skills/<category>/<skill> .agent/skills/",
+        "```",
+        "",
+        "### 🏛️ Hermes Agent (Nous Research)",
+        "",
+        "```bash",
+        "# Global installation into Hermes catalog",
+        "mkdir -p ~/.hermes/skills",
+        "cp -r skills/* ~/.hermes/skills/",
+        "",
+        "# Install single category",
+        "cp -r skills/devops ~/.hermes/skills/",
+        "```",
+        "",
+        "### ⚡ Claude Code (Anthropic CLI)",
+        "",
+        "```bash",
+        "# Global installation for Claude Code CLI",
+        "mkdir -p ~/.claude/skills",
+        "cp -r skills/*/* ~/.claude/skills/",
+        "",
+        "# Workspace installation",
+        "mkdir -p .claude/skills",
+        "cp -r skills/<category>/<skill> .claude/skills/",
+        "```",
+        "",
+        "### 🎯 Cursor IDE (.mdc Rules)",
+        "",
+        "```bash",
+        "# Automatically convert & install skills as Cursor rules (.cursor/rules/*.mdc)",
+        "./install.sh --agent cursor --scope local --pack fullstack",
+        "```",
+        "",
+        "### 🌊 Windsurf & Roo Code / Cline",
+        "",
+        "```bash",
+        "# Windsurf Workspace Skills",
+        "mkdir -p .windsurf/skills && cp -r skills/*/* .windsurf/skills/",
+        "",
+        "# Roo Code / Cline Skills",
+        "mkdir -p ~/.roo/skills && cp -r skills/*/* ~/.roo/skills/",
+        "```",
+        "",
+        "---",
+        "",
+        "## 📦 Curated Packs",
+        "",
+        "| Pack | Focus | Key Categories | Install Command |",
+        "| :--- | :--- | :--- | :--- |",
+        "| **🚀 Full-Stack Dev** | Web, APIs, Testing, Refactoring | `software-development`, `web`, `github` | `./install.sh --pack fullstack` |",
+        "| **⚡ DevOps & Cloud** | Containers, Caddy, Cloudflare, CI/CD | `devops`, `github` | `./install.sh --pack devops` |",
+        "| **🧠 Autonomous AI & MLOps** | Multi-Agent topologies, RAG, Token ops | `autonomous-ai-agents`, `mlops` | `./install.sh --pack ai` |",
+        "| **📚 Academic & LaTeX** | Paper writing, LaTeX CVs, arXiv, i18n | `latex`, `research`, `content-i18n` | `./install.sh --pack academic` |",
+        "| **🎨 Creative & Media** | Architecture diagrams, ASCII, Audio | `creative`, `media`, `desktop` | `./install.sh --pack creative` |",
+        "| **📦 Complete Catalog** | All 118+ skills across 19 categories | All categories | `./install.sh --pack all` |",
+        "",
+        "---",
+        "",
+        "## 🌐 Multi-Agent Architecture",
+        "",
+        "Every entry is a self-contained, versioned unit consumed — with thin adaptors — by the major agent runtimes:",
+        "",
+        "| Runtime | Loads From | Format |",
+        "| :--- | :--- | :--- |",
+        "| **Google Antigravity (AGY)** | `~/.gemini/antigravity-cli/skills/` or `.agent/skills/` | `SKILL.md` (native) |",
+        "| **Hermes Agent** | `~/.hermes/skills/<cat>/<skill>/` | `SKILL.md` (native) |",
+        "| **Claude Code** | `~/.claude/skills/<skill>/` | `SKILL.md` / `CLAUDE.md` |",
+        "| **Cursor** | `.cursor/rules/<skill>.mdc` | MDC Rule with frontmatter |",
+        "| **Windsurf** | `.windsurfrules` or `.windsurf/skills/` | Markdown Context |",
+        "| **Roo Code / Cline** | `~/.roomodes` / `~/.roo/skills/` | `SKILL.md` (native) |",
+        "| **OpenCode / Codex** | `~/.config/opencode/skills/` | Markdown Rule |",
         "",
         "> See [`templates/`](templates/) for starter kits (skill / agent / plugin).",
         "",
-        "## Quick start",
+        "---",
         "",
-        "```bash",
-        "git clone https://github.com/pedroiff0/awesome-skills.git",
+        "## 🗂️ Skills Catalog Index",
         "",
-        "# install the whole catalog into Hermes",
-        "cp -r awesome-skills/skills/* ~/.hermes/skills/",
-        "",
-        "# or just one skill",
-        "cp -r awesome-skills/skills/<category>/<skill> ~/.hermes/skills/<category>/",
-        "```",
-        "",
-        "## Repository structure",
-        "",
-        "```",
-        "awesome-skills/",
-        "  skills/<category>/<name>/   # SKILL.md + references/ + scripts/",
-        "  templates/                  # starter kits: skill / agent / plugin",
-        "  docs/CODE_REVIEW.md         # review standard",
-        "  tools/gen_index.py          # regenerates this index",
-        "  .github/                    # ISSUE_TEMPLATE + PULL_REQUEST_TEMPLATE",
-        "  CONTRIBUTING.md  SECURITY.md  CODE_OF_CONDUCT.md  LICENSE",
-        "```",
-        "",
-        "## Standard workflow",
-        "",
-        "Every issue & PR uses the **seven standard assignment fields**",
-        "(Assignee, Reviewer, Labels, Project, Milestone, Development, Relationship)",
-        "via the templates in `.github/`. Reviews follow",
-        "[`docs/CODE_REVIEW.md`](docs/CODE_REVIEW.md). Full standard in",
-        "[`CONTRIBUTING.md`](CONTRIBUTING.md).",
-        "",
-        "## Index",
-        "",
-        f"> **{total} skills** across **{len(cats)} categories**.",
+        f"> **{total} skills** organized across **{len(cats)} categories**.",
         "",
     ]
 
+    # ---- INDEX BY CATEGORY ----
     for cat in sorted(cats):
         out.append(f"### {cat}")
         out.append("")
@@ -122,26 +182,59 @@ def main(root: str = ".") -> int:
             out.append(f"| [`{name}`](skills/{rel}) | {desc} |")
         out.append("")
 
+    # ---- REPO STRUCTURE ----
     out += [
         "---",
         "",
-        "## Contributing",
+        "## 📂 Repository Structure",
         "",
-        "1. Branch from `main` (`feat/...`, `fix/...`, `docs/...`, `chore/...`).",
-        "2. Build with `templates/` (multi-tool compatible).",
-        "3. Verify: `python3 tools/gen_index.py` + lint the `SKILL.md` frontmatter.",
-        "4. Open a PR with all assignments; review per `docs/CODE_REVIEW.md`.",
+        "```",
+        "awesome-skills/",
+        "  ├── skills/<category>/<name>/   # Canonical SKILL.md + references/ + scripts/",
+        "  ├── install.sh                  # Universal interactive installer (Caveman-style)",
+        "  ├── tools/",
+        "  │   ├── installer.py            # TUI & CLI installation engine",
+        "  │   └── gen_index.py            # Regenerates README catalog index",
+        "  ├── templates/                  # Starter kits: skill / agent / plugin",
+        "  ├── packages/awesomeskills/     # Python package CLI (`awesomeskills install`)",
+        "  ├── docs/CODE_REVIEW.md         # Review standard",
+        "  └── .github/                    # Issue & PR templates + CI workflow",
+        "```",
         "",
-        "See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md),",
-        "and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).",
+        "---",
         "",
-        "<sub>README generated automatically by `tools/gen_index.py` — do not hand-edit",
-        "above the Index/Contributing sections.</sub>",
+        "## 📊 RepoActivity",
+        "",
+        "[![Star History Chart](https://api.star-history.com/svg?repos=pedroiff0/awesome-skills&type=Date)](https://www.star-history.com/#pedroiff0/awesome-skills&type=Date)",
+        "",
+        "---",
+        "",
+        "## 👨‍💻 Author",
+        "",
+        "<div align=\"center\">",
+        "",
+        "<img src=\"https://raw.githubusercontent.com/pedroiff0/pedroiff0/main/assets/pedroiff0.gif\" alt=\"pedroiff0\" width=\"900\"/>",
+        "",
+        "</div>",
+        "",
+        "<div align=\"center\">",
+        "",
+        "**2026 Awesome Skills**",
+        "",
+        "Made with ☕, code and ☄️ by **Pedro Henrique Rocha de Andrade**",
+        "",
+        "[![GitHub](https://img.shields.io/badge/GitHub-pedroiff0-181717?logo=github&logoColor=white)](https://github.com/pedroiff0)",
+        "[![Site Oficial](https://img.shields.io/badge/Site-Oficial-22c55e?logo=googlechrome&logoColor=white)](https://phrandrade.com/)",
+        "[![Portfólio](https://img.shields.io/badge/Portfólio-2563eb?logo=github&logoColor=white)](https://pedroiff0.github.io/webpage/)",
+        "[![LinkedIn](https://img.shields.io/badge/LinkedIn-Pedro_Rocha-0077b5?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pedro-rocha-de-andrade)",
+        "",
+        "</div>",
         "",
     ]
 
-    (ROOT / "README.md").write_text("\n".join(out), encoding="utf-8")
-    print(f"README.md gerado: {total} skills, {len(cats)} categorias")
+    readme_path = root / "README.md"
+    readme_path.write_text("\n".join(out), encoding="utf-8")
+    print(f"Generated {readme_path} with {total} skills across {len(cats)} categories.")
     return 0
 
 
