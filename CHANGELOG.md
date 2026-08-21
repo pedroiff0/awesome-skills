@@ -4,21 +4,30 @@ All notable changes to this project are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.0.0] - 2026-08-21
 
 ### Added
-- `readme-template` skill added to catalog (106 skills total).
+- **Universal Multi-Agent Interactive Installer** (`install.sh` + `tools/installer.py` + `awesomeskills install`) inspired by Caveman/modern CLI package managers.
+- **Dedicated Agent 1-Liners** in README for Google Antigravity (AGY), Hermes Agent, Claude Code, Cursor IDE, Windsurf, and Roo Code / Cline.
+- **10 New High-Value Skills** from major AI agent ecosystems:
+  - `antigravity-guide`, `agy-customizations`, `context-mode` (Google Antigravity / AGY)
+  - `docx-analysis-conversion`, `xlsx-data-wrangling`, `playwright-browser-automation`, `security-sast-audit` (Claude Code / Anthropic)
+  - `rag-local-lancedb` (Local RAG & Vector search)
+  - `nextjs-app-router-patterns`, `git-conventional-commits` (Cursor / Modern Full-Stack)
+- **Multi-Agent Documentation Guide** (`docs/MULTI_AGENT_INSTALLER_GUIDE.md`).
+- **Curated Skill Packs**: Full-Stack Dev, DevOps & Cloud, Autonomous AI & MLOps, Academic & LaTeX, Creative & Design, and All Catalog.
 
 ### Changed
-- Star History URL fixed to `api.star-history.com` (working).
-- README footer translated to English.
+- **Reorganized & Standardized Catalog Hierarchy**: Reorganized 13 orphaned skills to canonical 2-level directory structure (`skills/<category>/<name>/SKILL.md`) across 19 standard categories.
+- Total catalog expanded to **118 skills** across **19 categories**.
+- Updated `tools/gen_index.py` to support multi-agent badges, per-agent installation tables, and dynamic category indexing.
 
 ## [1.1.0] - 2026-08-16
 
 ### Added
 - **RepoActivity** section with Star History chart + Author (GIF + badges) in README.
 - **Sponsor** button (`.github/FUNDING.yml` with GitHub Sponsors).
-- **Wiki** content (`docs/Wiki-Home.md`) — requires first web-UI edit to provision.
+- **Wiki** content (`docs/Wiki-Home.md`).
 - **Discussions** with labels: announcement, idea, qa, showcase, general.
 - **Issue templates** (bug, feature, task) with 7 standard assignments.
 - **PR template** with self-review checklist.
@@ -26,7 +35,7 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 
 ### Changed
 - README footer translated to English ("Made with ☕, code and ☄️").
-- Star History URL corrected (old `star-history.dera.page` returned 404).
+- Star History URL corrected.
 
 ## [1.0.0] - 2026-08-14
 
@@ -37,5 +46,6 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 - `tools/gen_index.py` to regenerate the README index.
 - 14 repository topics + professional description.
 
-[Unreleased]: https://github.com/pedroiff0/awesome-skills/compare/v1.0.0...HEAD
+[2.0.0]: https://github.com/pedroiff0/awesome-skills/releases/tag/v2.0.0
+[1.1.0]: https://github.com/pedroiff0/awesome-skills/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/pedroiff0/awesome-skills/releases/tag/v1.0.0
