@@ -2,12 +2,13 @@
 """Universal Multi-Agent Skills Installer for awesome-skills (Cosmic Purple Dev Edition).
 
 Features:
-- Terminal Clickable Hyperlinks (OSC 8 + explicit URLs) for Skills, GitHub Repos, and Ollama Models.
-- Full Step-by-Step Back Navigation (press 'b', '←' Left Arrow, or 'Backspace' to go back and modify).
-- Enriched Open Source Repositories Catalog curated via OpenCurious (17,000+ repos directory).
-- Tiered Ollama Models Hub (1.5B to 70B+) with direct links to ollama.com/library.
+- Standardized Checkbox Selection Pattern [✔] across ALL steps.
+- Arrow Key Step Navigation: '←' (Left Arrow / b) to GO BACK, '→' (Right Arrow / Enter) to ADVANCE.
+- 4-Tier Local AI Models Registry (Leve, Intermediário, Pesado, DataCenter) with direct ollama.com links.
+- 6-Category Open-Source Repositories Hub curated via OpenCurious (17,000+ repos directory).
+- Clickable Terminal Hyperlinks (OSC 8 + explicit URLs) for Skills, Repositories, and Ollama Models.
 - Aesthetic Purple, Astronomy & Developer Theme with Cosmic Coffee intro ☕ 🪐 🌌.
-- Step 0: Quick Install (with verification), Custom Manual Setup, Uninstall, Open-Source Hub, and Ollama Hub.
+- Step 0: Quick Install, Custom Manual Setup, Uninstall, Open-Source Hub, and Ollama Hub.
 - Strict selection validation: Users CANNOT proceed with 0 items selected.
 - Multi-agent targeting: Google Antigravity, Hermes Agent, Claude Code, Cursor (.mdc), Windsurf, Roo/Cline, OpenCode.
 """
@@ -137,63 +138,131 @@ PACKS = {
     },
 }
 
-# Enriched Open Source Repositories (Curated with OpenCurious & GitHub Stars)
-OPEN_SOURCE_REPOS = [
-    {"repo": "openclaw/openclaw", "url": "https://github.com/openclaw/openclaw", "stars": "100k+", "cat": "AI Agents", "desc": "Personal AI assistant for any OS & platform (The lobster way 🦞)"},
-    {"repo": "ollama/ollama", "url": "https://github.com/ollama/ollama", "stars": "110k+", "cat": "Local LLMs", "desc": "Run Llama 3, DeepSeek, Qwen 2.5 locally on CPU & GPU"},
-    {"repo": "Significant-Gravitas/AutoGPT", "url": "https://github.com/Significant-Gravitas/AutoGPT", "stars": "170k+", "cat": "AI Agents", "desc": "Vision of accessible autonomous AI agents for everyone"},
-    {"repo": "huggingface/transformers", "url": "https://github.com/huggingface/transformers", "stars": "135k+", "cat": "AI Models", "desc": "State-of-the-art ML framework for PyTorch, JAX & TensorFlow"},
-    {"repo": "NousResearch/hermes-agent", "url": "https://github.com/NousResearch/hermes-agent", "stars": "25k+", "cat": "AI Agents", "desc": "The open agent that grows with you & runs canonical skills"},
-    {"repo": "anthropics/claude-code", "url": "https://github.com/anthropics/claude-code", "stars": "45k+", "cat": "Coding Agent", "desc": "Agentic coding CLI tool living in your terminal"},
-    {"repo": "anomalyco/opencode", "url": "https://github.com/anomalyco/opencode", "stars": "20k+", "cat": "Coding Agent", "desc": "Terminal-native open-source coding agent"},
-    {"repo": "obra/superpowers", "url": "https://github.com/obra/superpowers", "stars": "30k+", "cat": "Agent Skills", "desc": "Agentic skills framework & software development methodology"},
-    {"repo": "langflow-ai/langflow", "url": "https://github.com/langflow-ai/langflow", "stars": "55k+", "cat": "Visual AI", "desc": "Visual IDE for building & orchestrating AI workflows"},
-    {"repo": "langgenius/dify", "url": "https://github.com/langgenius/dify", "stars": "65k+", "cat": "AI Workflows", "desc": "Production-ready LLM application & agent platform"},
-    {"repo": "open-webui/open-webui", "url": "https://github.com/open-webui/open-webui", "stars": "75k+", "cat": "AI Interface", "desc": "User-friendly AI web UI supporting Ollama and OpenAI APIs"},
-    {"repo": "firecrawl/firecrawl", "url": "https://github.com/firecrawl/firecrawl", "stars": "25k+", "cat": "Web Scraping", "desc": "Turn websites into clean LLM-ready markdown for RAG"},
-    {"repo": "langchain-ai/langchain", "url": "https://github.com/langchain-ai/langchain", "stars": "95k+", "cat": "AI Framework", "desc": "The agent engineering and context orchestration platform"},
-    {"repo": "ggml-org/llama.cpp", "url": "https://github.com/ggml-org/llama.cpp", "stars": "70k+", "cat": "Inference Engine", "desc": "Port of LLMs in pure C/C++ with GPU acceleration"},
-    {"repo": "AUTOMATIC1111/stable-diffusion-webui", "url": "https://github.com/AUTOMATIC1111/stable-diffusion-webui", "stars": "140k+", "cat": "Diffusion AI", "desc": "Browser interface for Stable Diffusion image generation"},
-    {"repo": "Comfy-Org/ComfyUI", "url": "https://github.com/Comfy-Org/ComfyUI", "stars": "60k+", "cat": "Visual AI", "desc": "Modular node graph UI for Stable Diffusion and Flux"},
-    {"repo": "codecrafters-io/build-your-own-x", "url": "https://github.com/codecrafters-io/build-your-own-x", "stars": "320k+", "cat": "Learning", "desc": "Master programming by recreating tech from scratch"},
-    {"repo": "sindresorhus/awesome", "url": "https://github.com/sindresorhus/awesome", "stars": "340k+", "cat": "Awesome Lists", "desc": "Curated awesome lists about all kinds of interesting topics"},
-    {"repo": "donnemartin/system-design-primer", "url": "https://github.com/donnemartin/system-design-primer", "stars": "280k+", "cat": "Architecture", "desc": "Design large-scale systems & tech interview prep"},
-    {"repo": "trimstray/the-book-of-secret-knowledge", "url": "https://github.com/trimstray/the-book-of-secret-knowledge", "stars": "150k+", "cat": "Security", "desc": "CLI tools, one-liners, security cheatsheets and hacks"},
-    {"repo": "microsoft/vscode", "url": "https://github.com/microsoft/vscode", "stars": "165k+", "cat": "IDE & Editor", "desc": "Visual Studio Code editor engine"},
-    {"repo": "ohmyzsh/ohmyzsh", "url": "https://github.com/ohmyzsh/ohmyzsh", "stars": "175k+", "cat": "CLI Tools", "desc": "Community-driven framework for managing Zsh configs"},
-    {"repo": "n8n-io/n8n", "url": "https://github.com/n8n-io/n8n", "stars": "55k+", "cat": "Automation", "desc": "Workflow automation platform with native AI integrations"},
-    {"repo": "excalidraw/excalidraw", "url": "https://github.com/excalidraw/excalidraw", "stars": "85k+", "cat": "Diagrams", "desc": "Virtual collaborative whiteboard for sketching hand-drawn diagrams"},
-    {"repo": "shadcn-ui/ui", "url": "https://github.com/shadcn-ui/ui", "stars": "75k+", "cat": "UI Components", "desc": "Accessible React & Tailwind CSS component primitives"},
-    {"repo": "vercel/next.js", "url": "https://github.com/vercel/next.js", "stars": "125k+", "cat": "Web Framework", "desc": "The React Framework for the Web with App Router & SSR"},
-    {"repo": "kubernetes/kubernetes", "url": "https://github.com/kubernetes/kubernetes", "stars": "110k+", "cat": "DevOps & Cloud", "desc": "Production-grade container scheduling & management"},
-    {"repo": "rustdesk/rustdesk", "url": "https://github.com/rustdesk/rustdesk", "stars": "78k+", "cat": "Remote Desktop", "desc": "Open-source self-hosted remote desktop software"},
-]
+# Categorized Open Source Repositories Hub (Curated via OpenCurious)
+REPO_CATEGORIES = {
+    "AI & Autonomous Agents": [
+        {"repo": "openclaw/openclaw", "url": "https://github.com/openclaw/openclaw", "stars": "100k+", "desc": "Personal AI assistant for any OS & platform (The lobster way 🦞)"},
+        {"repo": "ollama/ollama", "url": "https://github.com/ollama/ollama", "stars": "110k+", "desc": "Run Llama 3, DeepSeek, Qwen 2.5 locally on CPU & GPU"},
+        {"repo": "Significant-Gravitas/AutoGPT", "url": "https://github.com/Significant-Gravitas/AutoGPT", "stars": "170k+", "desc": "Vision of accessible autonomous AI agents for everyone"},
+        {"repo": "huggingface/transformers", "url": "https://github.com/huggingface/transformers", "stars": "135k+", "desc": "State-of-the-art ML framework for PyTorch, JAX & TensorFlow"},
+        {"repo": "NousResearch/hermes-agent", "url": "https://github.com/NousResearch/hermes-agent", "stars": "25k+", "desc": "The open agent that grows with you & runs canonical skills"},
+        {"repo": "anthropics/claude-code", "url": "https://github.com/anthropics/claude-code", "stars": "45k+", "desc": "Agentic coding CLI tool living in your terminal"},
+        {"repo": "anomalyco/opencode", "url": "https://github.com/anomalyco/opencode", "stars": "20k+", "desc": "Terminal-native open-source coding agent"},
+        {"repo": "obra/superpowers", "url": "https://github.com/obra/superpowers", "stars": "30k+", "desc": "Agentic skills framework & software development methodology"},
+        {"repo": "langflow-ai/langflow", "url": "https://github.com/langflow-ai/langflow", "stars": "55k+", "desc": "Visual IDE for building & orchestrating AI workflows"},
+        {"repo": "langgenius/dify", "url": "https://github.com/langgenius/dify", "stars": "65k+", "desc": "Production-ready LLM application & agent platform"},
+        {"repo": "open-webui/open-webui", "url": "https://github.com/open-webui/open-webui", "stars": "75k+", "desc": "User-friendly AI web UI supporting Ollama and OpenAI APIs"},
+        {"repo": "firecrawl/firecrawl", "url": "https://github.com/firecrawl/firecrawl", "stars": "25k+", "desc": "Turn websites into clean LLM-ready markdown for RAG"},
+        {"repo": "langchain-ai/langchain", "url": "https://github.com/langchain-ai/langchain", "stars": "95k+", "desc": "The agent engineering and context orchestration platform"},
+        {"repo": "ggml-org/llama.cpp", "url": "https://github.com/ggml-org/llama.cpp", "stars": "70k+", "desc": "Port of LLMs in pure C/C++ with GPU acceleration"},
+        {"repo": "AUTOMATIC1111/stable-diffusion-webui", "url": "https://github.com/AUTOMATIC1111/stable-diffusion-webui", "stars": "140k+", "desc": "Browser interface for Stable Diffusion image generation"},
+        {"repo": "Comfy-Org/ComfyUI", "url": "https://github.com/Comfy-Org/ComfyUI", "stars": "60k+", "desc": "Modular node graph UI for Stable Diffusion and Flux"},
+    ],
+    "Developer Tools & Architecture": [
+        {"repo": "codecrafters-io/build-your-own-x", "url": "https://github.com/codecrafters-io/build-your-own-x", "stars": "320k+", "desc": "Master programming by recreating tech from scratch"},
+        {"repo": "donnemartin/system-design-primer", "url": "https://github.com/donnemartin/system-design-primer", "stars": "280k+", "desc": "Design large-scale systems & tech interview prep"},
+        {"repo": "trimstray/the-book-of-secret-knowledge", "url": "https://github.com/trimstray/the-book-of-secret-knowledge", "stars": "150k+", "desc": "CLI tools, one-liners, security cheatsheets and hacks"},
+        {"repo": "microsoft/vscode", "url": "https://github.com/microsoft/vscode", "stars": "165k+", "desc": "Visual Studio Code editor engine"},
+        {"repo": "ohmyzsh/ohmyzsh", "url": "https://github.com/ohmyzsh/ohmyzsh", "stars": "175k+", "desc": "Community-driven framework for managing Zsh configs"},
+        {"repo": "n8n-io/n8n", "url": "https://github.com/n8n-io/n8n", "stars": "55k+", "desc": "Workflow automation platform with native AI integrations"},
+        {"repo": "excalidraw/excalidraw", "url": "https://github.com/excalidraw/excalidraw", "stars": "85k+", "desc": "Virtual collaborative whiteboard for sketching hand-drawn diagrams"},
+        {"repo": "microsoft/markitdown", "url": "https://github.com/microsoft/markitdown", "stars": "35k+", "desc": "Python tool for converting office documents & PDFs to Markdown"},
+    ],
+    "Web Frontend & UI Systems": [
+        {"repo": "shadcn-ui/ui", "url": "https://github.com/shadcn-ui/ui", "stars": "75k+", "desc": "Accessible React & Tailwind CSS component primitives"},
+        {"repo": "vercel/next.js", "url": "https://github.com/vercel/next.js", "stars": "125k+", "desc": "The React Framework for the Web with App Router & SSR"},
+        {"repo": "facebook/react", "url": "https://github.com/facebook/react", "stars": "230k+", "desc": "The library for web and native user interfaces"},
+        {"repo": "vuejs/vue", "url": "https://github.com/vuejs/vue", "stars": "207k+", "desc": "Progressive JavaScript framework for building UIs"},
+        {"repo": "mrdoob/three.js", "url": "https://github.com/mrdoob/three.js", "stars": "102k+", "desc": "JavaScript 3D WebGL library"},
+        {"repo": "electron/electron", "url": "https://github.com/electron/electron", "stars": "115k+", "desc": "Build cross-platform desktop apps with JS, HTML, and CSS"},
+    ],
+    "Backend, Cloud & DevOps": [
+        {"repo": "kubernetes/kubernetes", "url": "https://github.com/kubernetes/kubernetes", "stars": "110k+", "desc": "Production-grade container scheduling & management"},
+        {"repo": "torvalds/linux", "url": "https://github.com/torvalds/linux", "stars": "180k+", "desc": "Linux kernel source tree"},
+        {"repo": "rustdesk/rustdesk", "url": "https://github.com/rustdesk/rustdesk", "stars": "78k+", "desc": "Open-source self-hosted remote desktop software"},
+        {"repo": "tauri-apps/tauri", "url": "https://github.com/tauri-apps/tauri", "stars": "85k+", "desc": "Build smaller, faster desktop & mobile apps with Rust"},
+        {"repo": "denoland/deno", "url": "https://github.com/denoland/deno", "stars": "95k+", "desc": "Modern JavaScript and TypeScript runtime"},
+        {"repo": "public-apis/public-apis", "url": "https://github.com/public-apis/public-apis", "stars": "310k+", "desc": "Collective list of free APIs for software development"},
+    ],
+    "Learning, Roadmaps & CS": [
+        {"repo": "sindresorhus/awesome", "url": "https://github.com/sindresorhus/awesome", "stars": "340k+", "desc": "Curated awesome lists about all kinds of interesting topics"},
+        {"repo": "nilbuild/developer-roadmap", "url": "https://github.com/nilbuild/developer-roadmap", "stars": "290k+", "desc": "Interactive roadmaps & career guides for developers"},
+        {"repo": "jwasham/coding-interview-university", "url": "https://github.com/jwasham/coding-interview-university", "stars": "300k+", "desc": "Complete computer science study plan to become a software engineer"},
+        {"repo": "EbookFoundation/free-programming-books", "url": "https://github.com/EbookFoundation/free-programming-books", "stars": "330k+", "desc": "Freely available programming books in all languages"},
+        {"repo": "freeCodeCamp/freeCodeCamp", "url": "https://github.com/freeCodeCamp/freeCodeCamp", "stars": "400k+", "desc": "Learn to code for free with interactive curriculum"},
+    ],
+    "Mobile & Low-Level Systems": [
+        {"repo": "flutter/flutter", "url": "https://github.com/flutter/flutter", "stars": "165k+", "desc": "Build multi-platform applications from a single codebase"},
+        {"repo": "facebook/react-native", "url": "https://github.com/facebook/react-native", "stars": "120k+", "desc": "Framework for building native mobile apps using React"},
+        {"repo": "Genymobile/scrcpy", "url": "https://github.com/Genymobile/scrcpy", "stars": "115k+", "desc": "Display and control Android devices over USB/TCP"},
+    ],
+}
 
-# Enriched Ollama Models Hub (with Direct Official Links)
-OLLAMA_MODELS = [
-    # Tier 1: Ultra-Lightweight (1B - 3B)
-    {"tag": "qwen2.5:1.5b", "url": "https://ollama.com/library/qwen2.5", "size": "1.5B", "tier": "🪶 Ultra-Light", "vram": "~1.5 GB", "desc": "Ultra-fast, JSON parsing and background workers"},
-    {"tag": "deepseek-r1:1.5b", "url": "https://ollama.com/library/deepseek-r1", "size": "1.5B", "tier": "🪶 Ultra-Light", "vram": "~1.8 GB", "desc": "Lightweight reasoning and math on pure CPU"},
-    {"tag": "llama3.2:1b", "url": "https://ollama.com/library/llama3.2", "size": "1.2B", "tier": "🪶 Ultra-Light", "vram": "~1.3 GB", "desc": "Instant text classification and fast routing"},
-    {"tag": "llama3.2:3b", "url": "https://ollama.com/library/llama3.2", "size": "3.2B", "tier": "🪶 Ultra-Light", "vram": "~2.8 GB", "desc": "Best lightweight balance for daily chat"},
-    {"tag": "phi3.5:3.8b", "url": "https://ollama.com/library/phi3.5", "size": "3.8B", "tier": "🪶 Ultra-Light", "vram": "~3.2 GB", "desc": "Microsoft Phi-3.5 Mini - high instruction accuracy"},
-    # Tier 2: Balanced & Daily Coding (7B - 9B)
-    {"tag": "qwen2.5-coder:7b", "url": "https://ollama.com/library/qwen2.5-coder", "size": "7.6B", "tier": "⚡ Balanced", "vram": "~5.5 GB", "desc": "🏆 Top tier for code generation & refactoring"},
-    {"tag": "deepseek-r1:7b", "url": "https://ollama.com/library/deepseek-r1", "size": "7.6B", "tier": "⚡ Balanced", "vram": "~6.0 GB", "desc": "Step-by-step reasoning and debugging with <think>"},
-    {"tag": "llama3.1:8b", "url": "https://ollama.com/library/llama3.1", "size": "8.0B", "tier": "⚡ Balanced", "vram": "~6.2 GB", "desc": "Solid general model for diverse tasks"},
-    {"tag": "gemma2:9b", "url": "https://ollama.com/library/gemma2", "size": "9.2B", "tier": "⚡ Balanced", "vram": "~7.5 GB", "desc": "Google Gemma 2 - high synthesis quality & prose"},
-    {"tag": "mistral:7b", "url": "https://ollama.com/library/mistral", "size": "7.2B", "tier": "⚡ Balanced", "vram": "~5.8 GB", "desc": "Fast and direct for structured prompts"},
-    # Tier 3: Advanced & Pro Coding (14B - 35B)
-    {"tag": "qwen2.5-coder:14b", "url": "https://ollama.com/library/qwen2.5-coder", "size": "14.7B", "tier": "🚀 Advanced", "vram": "~10.5 GB", "desc": "Quality matching proprietary models"},
-    {"tag": "deepseek-r1:14b", "url": "https://ollama.com/library/deepseek-r1", "size": "14.7B", "tier": "🚀 Advanced", "vram": "~11.0 GB", "desc": "Deep mathematical & algorithmic reasoning"},
-    {"tag": "qwen2.5-coder:32b", "url": "https://ollama.com/library/qwen2.5-coder", "size": "32.5B", "tier": "🚀 Advanced", "vram": "~20.0 GB", "desc": "👑 State-of-the-art in software engineering"},
-    {"tag": "deepseek-r1:32b", "url": "https://ollama.com/library/deepseek-r1", "size": "32.5B", "tier": "🚀 Advanced", "vram": "~21.0 GB", "desc": "Extreme logical reasoning for complex bugs"},
-    {"tag": "command-r:35b", "url": "https://ollama.com/library/command-r", "size": "35.0B", "tier": "🚀 Advanced", "vram": "~22.0 GB", "desc": "Master in Tool Use function calling and RAG"},
-    # Tier 4: Heavyweights & Servers (70B+)
-    {"tag": "deepseek-r1:70b", "url": "https://ollama.com/library/deepseek-r1", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "🧠 Absolute top reasoning in code and logic"},
-    {"tag": "llama3.3:70b", "url": "https://ollama.com/library/llama3.3", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "Meta flagship general open source model"},
-    {"tag": "qwen2.5:72b", "url": "https://ollama.com/library/qwen2.5", "size": "72B", "tier": "🧠 Heavyweight", "vram": "~44.0 GB", "desc": "Maximum performance in global benchmarks"},
-]
+# Flattened list of all repos
+ALL_OPEN_SOURCE_REPOS = []
+for cat_name, repos in REPO_CATEGORIES.items():
+    for r in repos:
+        ALL_OPEN_SOURCE_REPOS.append({**r, "cat": cat_name})
+
+# 4-Tier Categorized Local Ollama Models Registry
+OLLAMA_TIERS = {
+    "🪶 Leve (0.5B - 3.8B)": [
+        {"tag": "qwen2.5:0.5b", "url": "https://ollama.com/library/qwen2.5", "size": "0.5B", "vram": "~0.8 GB", "desc": "Microscopic footprint, instant text classification & stubs"},
+        {"tag": "qwen2.5:1.5b", "url": "https://ollama.com/library/qwen2.5", "size": "1.5B", "vram": "~1.5 GB", "desc": "Ultra-fast JSON parsing, fast routing, and background tasks"},
+        {"tag": "deepseek-r1:1.5b", "url": "https://ollama.com/library/deepseek-r1", "size": "1.5B", "vram": "~1.8 GB", "desc": "Step-by-step mathematical reasoning and logic on pure CPU"},
+        {"tag": "llama3.2:1b", "url": "https://ollama.com/library/llama3.2", "size": "1.2B", "vram": "~1.3 GB", "desc": "Instant text classification and lightweight instruction filtering"},
+        {"tag": "llama3.2:3b", "url": "https://ollama.com/library/llama3.2", "size": "3.2B", "vram": "~2.8 GB", "desc": "Best lightweight balance for daily conversational chat"},
+        {"tag": "phi3.5:3.8b", "url": "https://ollama.com/library/phi3.5", "size": "3.8B", "vram": "~3.2 GB", "desc": "Microsoft Phi-3.5 Mini - high instruction accuracy & reasoning"},
+        {"tag": "smollm2:135m", "url": "https://ollama.com/library/smollm2", "size": "135M", "vram": "~0.3 GB", "desc": "Ultra-compact edge intelligence for micro-controllers"},
+        {"tag": "smollm2:1.7b", "url": "https://ollama.com/library/smollm2", "size": "1.7B", "vram": "~1.6 GB", "desc": "Top quality on consumer laptops without discrete GPU"},
+        {"tag": "tinyllama:1.1b", "url": "https://ollama.com/library/tinyllama", "size": "1.1B", "vram": "~1.1 GB", "desc": "Classic lightweight pre-trained model"},
+        {"tag": "granite3-dense:2b", "url": "https://ollama.com/library/granite3-dense", "size": "2.0B", "vram": "~1.9 GB", "desc": "IBM enterprise-grade small model for code & tabular data"},
+        {"tag": "moondream:1.8b", "url": "https://ollama.com/library/moondream", "size": "1.8B", "vram": "~2.0 GB", "desc": "Lightweight multimodal vision model for image inspection"},
+    ],
+    "⚡ Intermediário (7B - 9B)": [
+        {"tag": "qwen2.5-coder:7b", "url": "https://ollama.com/library/qwen2.5-coder", "size": "7.6B", "vram": "~5.5 GB", "desc": "🏆 Gold standard for local code generation, refactoring & AST fixes"},
+        {"tag": "deepseek-r1:7b", "url": "https://ollama.com/library/deepseek-r1", "size": "7.6B", "vram": "~6.0 GB", "desc": "Step-by-step reasoning with transparent <think> traces"},
+        {"tag": "llama3.1:8b", "url": "https://ollama.com/library/llama3.1", "size": "8.0B", "vram": "~6.2 GB", "desc": "Meta flagship 8B general instruction & tool-calling model"},
+        {"tag": "gemma2:9b", "url": "https://ollama.com/library/gemma2", "size": "9.2B", "vram": "~7.5 GB", "desc": "Google Gemma 2 - highest synthesis quality & docstrings"},
+        {"tag": "mistral:7b", "url": "https://ollama.com/library/mistral", "size": "7.2B", "vram": "~5.8 GB", "desc": "Fast, deterministic JSON outputs and structured task parsing"},
+        {"tag": "hermes3:8b", "url": "https://ollama.com/library/hermes3", "size": "8.0B", "vram": "~6.2 GB", "desc": "Nous Research uncensored model optimized for agent skills"},
+        {"tag": "codellama:7b", "url": "https://ollama.com/library/codellama", "size": "7.0B", "vram": "~5.5 GB", "desc": "Specialized code completion and infilling"},
+        {"tag": "starcoder2:7b", "url": "https://ollama.com/library/starcoder2", "size": "7.0B", "vram": "~5.5 GB", "desc": "Multi-language code completion trained on 600+ languages"},
+        {"tag": "deepseek-coder-v2:16b", "url": "https://ollama.com/library/deepseek-coder-v2", "size": "16B", "vram": "~9.0 GB", "desc": "Efficient MoE (2.4B active) coding model"},
+        {"tag": "granite3-dense:8b", "url": "https://ollama.com/library/granite3-dense", "size": "8.0B", "vram": "~6.2 GB", "desc": "IBM enterprise tabular, code and RAG workflows"},
+        {"tag": "llava:7b", "url": "https://ollama.com/library/llava", "size": "7.0B", "vram": "~6.5 GB", "desc": "Visual question answering, chart reading, and UI analysis"},
+        {"tag": "nomic-embed-text", "url": "https://ollama.com/library/nomic-embed-text", "size": "137M", "vram": "~0.5 GB", "desc": "8192 context text embeddings for vector RAG"},
+        {"tag": "bge-m3", "url": "https://ollama.com/library/bge-m3", "size": "567M", "vram": "~1.2 GB", "desc": "Multilingual multi-granularity dense/sparse embedding"},
+    ],
+    "🚀 Pesado (14B - 35B)": [
+        {"tag": "qwen2.5-coder:14b", "url": "https://ollama.com/library/qwen2.5-coder", "size": "14.7B", "vram": "~10.5 GB", "desc": "Enterprise-grade coding matching proprietary model quality"},
+        {"tag": "deepseek-r1:14b", "url": "https://ollama.com/library/deepseek-r1", "size": "14.7B", "vram": "~11.0 GB", "desc": "Deep mathematical, algorithmic, and concurrency reasoning"},
+        {"tag": "qwen2.5-coder:32b", "url": "https://ollama.com/library/qwen2.5-coder", "size": "32.5B", "vram": "~20.0 GB", "desc": "👑 State-of-the-art open-source software engineer (Top coding eval)"},
+        {"tag": "deepseek-r1:32b", "url": "https://ollama.com/library/deepseek-r1", "size": "32.5B", "vram": "~21.0 GB", "desc": "Extreme logical reasoning for complex architectural bugs"},
+        {"tag": "qwen2.5:14b", "url": "https://ollama.com/library/qwen2.5", "size": "14.7B", "vram": "~10.5 GB", "desc": "Balanced 14B general model with 128k context support"},
+        {"tag": "qwen2.5:32b", "url": "https://ollama.com/library/qwen2.5", "size": "32.5B", "vram": "~20.0 GB", "desc": "High-capacity reasoning without requiring a 70B setup"},
+        {"tag": "command-r:35b", "url": "https://ollama.com/library/command-r", "size": "35.0B", "vram": "~22.0 GB", "desc": "Cohere Command-R - specialized for Tool Use and massive RAG"},
+        {"tag": "gemma2:27b", "url": "https://ollama.com/library/gemma2", "size": "27.2B", "vram": "~17.5 GB", "desc": "High-throughput 27B model rivaling previous 70B class models"},
+        {"tag": "codellama:34b", "url": "https://ollama.com/library/codellama", "size": "34.0B", "vram": "~22.0 GB", "desc": "High-precision Python/C++/Rust code synthesis"},
+        {"tag": "starcoder2:15b", "url": "https://ollama.com/library/starcoder2", "size": "15.0B", "vram": "~11.5 GB", "desc": "Multi-language code repository comprehension"},
+        {"tag": "mixtral:8x7b", "url": "https://ollama.com/library/mixtral", "size": "47B", "vram": "~26.0 GB", "desc": "Sparse MoE with 13B active parameters per token"},
+        {"tag": "deepseek-coder:33b", "url": "https://ollama.com/library/deepseek-coder", "size": "33.0B", "vram": "~21.5 GB", "desc": "Established high-performance code completion engine"},
+    ],
+    "🏢 DataCenter (70B - 405B)": [
+        {"tag": "deepseek-r1:70b", "url": "https://ollama.com/library/deepseek-r1", "size": "70B", "vram": "~42.0 GB", "desc": "🧠 Absolute pinnacle in open mathematical and coding reasoning"},
+        {"tag": "llama3.3:70b", "url": "https://ollama.com/library/llama3.3", "size": "70B", "vram": "~42.0 GB", "desc": "Meta flagship 70B with full tool calling & 128k context fidelity"},
+        {"tag": "qwen2.5:72b", "url": "https://ollama.com/library/qwen2.5", "size": "72.7B", "vram": "~44.0 GB", "desc": "Benchmark champion across MMLU, GSM8k, HumanEval"},
+        {"tag": "mixtral:8x22b", "url": "https://ollama.com/library/mixtral", "size": "141B", "vram": "~80.0 GB", "desc": "Massive MoE (39B active) with high math & multilingual prowess"},
+        {"tag": "command-r-plus:104b", "url": "https://ollama.com/library/command-r-plus", "size": "104B", "vram": "~65.0 GB", "desc": "Enterprise RAG, multilingual routing and business intelligence"},
+        {"tag": "llama3.1:70b", "url": "https://ollama.com/library/llama3.1", "size": "70B", "vram": "~42.0 GB", "desc": "Proven flagship open weights foundation model"},
+    ],
+}
+
+# Flattened list of all Ollama models
+ALL_OLLAMA_MODELS = []
+for tier_name, models in OLLAMA_TIERS.items():
+    for m in models:
+        ALL_OLLAMA_MODELS.append({**m, "tier": tier_name})
 
 # ANSI Styling (Purple / Cosmic Astronomy & Dev Theme)
 ESC = "\033["
@@ -350,91 +419,22 @@ def parse_frontmatter(skill_md: Path) -> dict[str, str]:
     return data
 
 
-def tui_single_select(
-    title: str,
-    options: list[tuple[str, str, str]],  # (key, label, subtitle)
-    default_idx: int = 0,
-    allow_back: bool = False,
-) -> str:
-    """Interactive single-choice menu with cosmic purple aesthetics and Back support."""
-    if not sys.stdin.isatty():
-        return options[default_idx][0]
-
-    sys.stdout.write(HIDE_CURSOR)
-    sys.stdout.flush()
-
-    cursor = default_idx
-    num_opts = len(options)
-    lines_rendered = 0
-
-    def render():
-        nonlocal lines_rendered
-        buf = []
-        if lines_rendered > 0:
-            buf.append(f"{ESC}{lines_rendered}F")
-
-        buf.append(f"{BOLD}{PURPLE}┌── 🪐 {title} {RESET}\n")
-        lines = 1
-
-        for idx, (key, label, sub) in enumerate(options):
-            is_active = idx == cursor
-            radio = f"{MAGENTA}(•){RESET}" if is_active else f"{DIM}( ){RESET}"
-            ptr = f"{MAGENTA}❯{RESET}" if is_active else " "
-            sub_text = f" {DIM}— {sub}{RESET}" if sub else ""
-
-            if is_active:
-                buf.append(f"  {ptr} {radio} {BOLD}{NEBULA}{label}{RESET}{sub_text}{ESC}K\n")
-            else:
-                buf.append(f"  {ptr} {radio} {WHITE}{label}{RESET}{sub_text}{ESC}K\n")
-            lines += 1
-
-        back_hint = " | b/←: Back" if allow_back else ""
-        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Enter: Confirm{back_hint} | Esc/q: Abort]{RESET}"
-        buf.append(f"{footer}{ESC}K\n")
-        lines += 1
-
-        lines_rendered = lines
-        sys.stdout.write("".join(buf))
-        sys.stdout.flush()
-
-    try:
-        while True:
-            render()
-            key = getch()
-            if key in ("UP", "k"):
-                cursor = (cursor - 1) % num_opts
-            elif key in ("DOWN", "j"):
-                cursor = (cursor + 1) % num_opts
-            elif key in ("ENTER", "SPACE"):
-                break
-            elif allow_back and key in ("b", "B", "LEFT", "BACKSPACE"):
-                print()
-                return "__BACK__"
-            elif key in ("ESC", "q", "Q", "EOF"):
-                cancel_and_exit()
-    finally:
-        sys.stdout.write(SHOW_CURSOR)
-        sys.stdout.flush()
-
-    print()
-    return options[cursor][0]
-
-
 def tui_multiselect(
     title: str,
     options: list[tuple[str, str, str]],  # (key, label, subtitle)
     default_selected: list[str] | None = None,
     allow_empty: bool = False,
     allow_back: bool = False,
+    single_choice: bool = False,
 ) -> list[str] | str:
-    """Interactive multi-select menu with STRICT selection validation, Back support & purple styling."""
+    """Standardized Checkbox Selection Interface [✔] across ALL steps with Left/Right arrow navigation."""
     if not sys.stdin.isatty():
         return [opt[0] for opt in options] if default_selected is None else default_selected
 
     sys.stdout.write(HIDE_CURSOR)
     sys.stdout.flush()
 
-    selected = set(default_selected if default_selected is not None else [options[0][0]])
+    selected = set(default_selected if default_selected is not None else ([options[0][0]] if not allow_empty else []))
     cursor = 0
     num_opts = len(options)
     lines_rendered = 0
@@ -466,8 +466,9 @@ def tui_multiselect(
             buf.append(f"  {GOLD_STAR}⚠️  {warning_msg}{RESET}{ESC}K\n")
             lines += 1
 
-        back_hint = " | b/←: Back" if allow_back else ""
-        footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | Enter: Confirm{back_hint} | Esc/q: Abort]{RESET}"
+        back_hint = " | ←/b: Back" if allow_back else ""
+        all_hint = " | a: All" if not single_choice else ""
+        footer = f"{DIM}└── [↑/↓: Move | Space: Toggle{all_hint} | →/Enter: Next{back_hint} | Esc: Abort]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -486,18 +487,22 @@ def tui_multiselect(
                 cursor = (cursor + 1) % num_opts
             elif key == "SPACE":
                 cur_key = options[cursor][0]
-                if cur_key in selected:
-                    selected.remove(cur_key)
-                else:
+                if single_choice:
+                    selected.clear()
                     selected.add(cur_key)
-            elif key in ("a", "A"):
+                else:
+                    if cur_key in selected:
+                        selected.remove(cur_key)
+                    else:
+                        selected.add(cur_key)
+            elif key in ("a", "A") and not single_choice:
                 if len(selected) == num_opts:
                     selected.clear()
                 else:
                     selected = set(opt[0] for opt in options)
-            elif key == "ENTER":
+            elif key in ("ENTER", "RIGHT"):
                 if not selected and not allow_empty:
-                    warning_msg = "Mission Check Required: Please select at least one item using [Space] before launching!"
+                    warning_msg = "Please check at least one item using [Space] before advancing!"
                 elif selected or allow_empty:
                     break
             elif allow_back and key in ("b", "B", "LEFT", "BACKSPACE"):
@@ -518,7 +523,7 @@ def tui_skill_browser(
     default_selected_names: set[str] | None = None,
     allow_back: bool = True,
 ) -> list[tuple[str, str, Path]] | str:
-    """Interactive Skill-by-Skill browser with viewport scrolling, search, hyperlinks, and Back support."""
+    """Interactive Skill-by-Skill browser with viewport scrolling, search, hyperlinks, and Left/Right arrow navigation."""
     if not sys.stdin.isatty():
         return [(s["category"], s["name"], s["path"]) for s in all_skills]
 
@@ -614,8 +619,8 @@ def tui_skill_browser(
             buf.append(f"{BOLD}{VIOLET}└────────────────────────────────────────────────────────────────────{RESET}{ESC}K\n")
             lines += 7
 
-            back_hint = " | b/←: Back" if allow_back else ""
-            footer = f"{DIM}└── [↑/↓/j/k: Orbit | Space: Toggle | a: All | /: Search | s: Sort | Enter: Confirm{back_hint} | Esc: Abort]{RESET}"
+            back_hint = " | ←/b: Back" if allow_back else ""
+            footer = f"{DIM}└── [↑/↓: Move | Space: Toggle | a: All | /: Search | s: Sort | →/Enter: Next{back_hint} | Esc: Abort]{RESET}"
             buf.append(f"{footer}{ESC}K\n")
             lines += 1
 
@@ -653,7 +658,7 @@ def tui_skill_browser(
                 cursor = 0
                 lines_rendered = 0
                 sys.stdout.write(HIDE_CURSOR)
-            elif key == "ENTER":
+            elif key in ("ENTER", "RIGHT"):
                 if not selected_names:
                     warning_msg = "Please check at least one skill using [Space] before confirming!"
                 else:
@@ -696,11 +701,11 @@ def run_uninstaller():
                 ("global", "Global User Profile (~)", "Scans ~/.<agent>/skills/ and ~/.cursor/rules/"),
                 ("local", "Local Workspace Repository (.)", "Scans .agent/skills/, .cursor/rules/, .claude/skills/"),
             ]
-            res = tui_single_select("Choose Uninstallation Scope", scope_opts, default_idx=0 if scope_choice == "global" else 1, allow_back=True)
+            res = tui_multiselect("Choose Uninstallation Scope", scope_opts, default_selected=[scope_choice], allow_back=True, single_choice=True)
             if res == "__BACK__":
                 step = 1
                 continue
-            scope_choice = res
+            scope_choice = res[0]
             step = 3
             continue
 
@@ -765,19 +770,42 @@ def run_uninstaller():
 
 
 def run_open_source_cloner():
-    """Interactive Open Source Repositories Cloner Hub with Clickable Links and Back support."""
+    """Interactive Open Source Repositories Cloner Hub with Subcategories & Clickable Links."""
     ensure_tty()
-    print(f"\n{BOLD}{PURPLE}┌── 🌐 Open Source Repositories Hub (Curated via OpenCurious & GitHub Stars) {RESET}")
-    print(f"{DIM}Select repositories to clone locally to your workspace. Clickable links enabled:{RESET}\n")
+    step = 1
+    selected_subcat = "ALL"
+    selected_repos = []
 
-    repo_opts = [
-        (r["repo"], f"{r['repo']:<35} ⭐ {r['stars']:<7} [{r['cat']}]", f"Link: {r['url']} — {r['desc']}")
-        for r in OPEN_SOURCE_REPOS
-    ]
-    selected_repos = tui_multiselect("Select Open Source Repositories to Clone", repo_opts, default_selected=[repo_opts[0][0]], allow_back=True)
+    while True:
+        if step == 1:
+            cat_opts = [("ALL", "🌐 All Open Source Repositories", f"{len(ALL_OPEN_SOURCE_REPOS)} projects")]
+            for cat_name, repos in REPO_CATEGORIES.items():
+                cat_opts.append((cat_name, f"📁 {cat_name}", f"{len(repos)} repositories"))
 
-    if selected_repos == "__BACK__" or not selected_repos:
-        return
+            res = tui_multiselect("Open Source Hub - Step 1/2: Choose Repository Subcategory", cat_opts, default_selected=[selected_subcat], allow_back=True, single_choice=True)
+            if res == "__BACK__":
+                return
+            selected_subcat = res[0]
+            step = 2
+            continue
+
+        elif step == 2:
+            repos_pool = ALL_OPEN_SOURCE_REPOS if selected_subcat == "ALL" else [r for r in ALL_OPEN_SOURCE_REPOS if r["cat"] == selected_subcat]
+            repo_opts = [
+                (r["repo"], f"{r['repo']:<35} ⭐ {r['stars']:<7} [{r['cat']}]", f"Link: {r['url']} — {r['desc']}")
+                for r in repos_pool
+            ]
+            res = tui_multiselect(
+                f"Open Source Hub - Step 2/2: Select Repositories to Clone [{selected_subcat}]",
+                repo_opts,
+                default_selected=[repo_opts[0][0]],
+                allow_back=True,
+            )
+            if res == "__BACK__":
+                step = 1
+                continue
+            selected_repos = res
+            break
 
     try:
         dest_dir_input = input(f"{GOLD_STAR}Target destination directory [default: ./open-source] (b to back): {RESET}").strip()
@@ -792,7 +820,7 @@ def run_open_source_cloner():
 
     print(f"\n{BOLD}{PURPLE}Cloning {len(selected_repos)} repository(ies) to {dest_base}...{RESET}\n")
     for r_name in selected_repos:
-        r_info = next(item for item in OPEN_SOURCE_REPOS if item["repo"] == r_name)
+        r_info = next(item for item in ALL_OPEN_SOURCE_REPOS if item["repo"] == r_name)
         repo_short = r_name.split("/")[1]
         target_path = dest_base / repo_short
         repo_link = hyperlink(r_info["url"], r_name)
@@ -809,26 +837,49 @@ def run_open_source_cloner():
 
 
 def run_ollama_manager():
-    """Interactive Ollama Open Source Models Manager with Clickable Links and Back support."""
+    """Interactive Ollama Open Source Models Hub with Hardware Tiers (Leve, Intermediário, Pesado, DataCenter)."""
     ensure_tty()
-    print(f"\n{BOLD}{PURPLE}┌── 🦙 Ollama Open Source Models Catalog (Lightweight to Heavyweight) {RESET}")
-    print(f"{DIM}High-performance local LLMs for coding, refactoring, and deep reasoning:{RESET}\n")
+    step = 1
+    selected_tier = "ALL"
+    selected_models = []
 
-    model_opts = [
-        (m["tag"], f"{m['tag']:<24} {m['tier']:<16} ({m['size']}, VRAM {m['vram']})", f"Library: {m['url']} — {m['desc']}")
-        for m in OLLAMA_MODELS
-    ]
-    selected_models = tui_multiselect("Select Ollama Models to Download / Pull", model_opts, default_selected=["qwen2.5-coder:7b", "deepseek-r1:1.5b"], allow_back=True)
+    while True:
+        if step == 1:
+            tier_opts = [("ALL", "🦙 All Local Ollama Models", f"{len(ALL_OLLAMA_MODELS)} models across 4 tiers")]
+            for tier_name, models in OLLAMA_TIERS.items():
+                tier_opts.append((tier_name, f"⚡ {tier_name}", f"{len(models)} local models"))
 
-    if selected_models == "__BACK__" or not selected_models:
-        return
+            res = tui_multiselect("Ollama Hub - Step 1/2: Choose Hardware / Capacity Tier", tier_opts, default_selected=[selected_tier], allow_back=True, single_choice=True)
+            if res == "__BACK__":
+                return
+            selected_tier = res[0]
+            step = 2
+            continue
+
+        elif step == 2:
+            models_pool = ALL_OLLAMA_MODELS if selected_tier == "ALL" else [m for m in ALL_OLLAMA_MODELS if m["tier"] == selected_tier]
+            model_opts = [
+                (m["tag"], f"{m['tag']:<24} {m['tier']:<22} ({m['size']}, VRAM {m['vram']})", f"Library: {m['url']} — {m['desc']}")
+                for m in models_pool
+            ]
+            res = tui_multiselect(
+                f"Ollama Hub - Step 2/2: Select Models to Download / Pull [{selected_tier}]",
+                model_opts,
+                default_selected=[model_opts[0][0]],
+                allow_back=True,
+            )
+            if res == "__BACK__":
+                step = 1
+                continue
+            selected_models = res
+            break
 
     has_ollama = shutil.which("ollama") is not None
 
     if has_ollama:
         print(f"\n{BOLD}{PURPLE}🚀 Pulling {len(selected_models)} model(s) via Ollama...{RESET}\n")
         for tag in selected_models:
-            m_info = next(item for item in OLLAMA_MODELS if item["tag"] == tag)
+            m_info = next(item for item in ALL_OLLAMA_MODELS if item["tag"] == tag)
             model_link = hyperlink(m_info["url"], tag)
             print(f"  {BOLD}Running:{RESET} {GOLD_STAR}ollama pull {tag}{RESET} ({model_link})")
             subprocess.run(["ollama", "pull", tag])
@@ -839,7 +890,7 @@ def run_ollama_manager():
         print(f"To install Ollama, visit: {NEBULA}{install_link}{RESET}\n")
         print(f"{BOLD}Commands to run once Ollama is installed:{RESET}")
         for tag in selected_models:
-            m_info = next(item for item in OLLAMA_MODELS if item["tag"] == tag)
+            m_info = next(item for item in ALL_OLLAMA_MODELS if item["tag"] == tag)
             model_link = hyperlink(m_info["url"], tag)
             print(f"  {NEBULA}ollama run {tag}{RESET}  (Details: {model_link})")
         print()
@@ -998,7 +1049,7 @@ def run_interactive():
 
     # State variables for Back navigation
     step = 0
-    step0_idx = 0
+    step0_choice = "quick"
     selected_agents = ["agy", "claude", "hermes"]
     selected_scope = "global"
     selected_mode = "skill_by_skill"
@@ -1009,18 +1060,18 @@ def run_interactive():
 
     while True:
         # =====================================================================
-        # STEP 0: Workflow Selection
+        # STEP 0: Workflow Selection (Consistent Checkbox Pattern)
         # =====================================================================
         if step == 0:
             step0_opts = [
                 ("quick", "🚀 Quick Install (Curated Elite Pack)", "Verify and install top 13 starred essential skills & MCPs for selected agents"),
                 ("manual", "⚙️  Custom / Manual Setup (Interactive Wizard)", "Choose agents, scope, skill-by-skill, categories, plugins & packs"),
                 ("uninstall", "🗑️  Uninstall / Clean Installed Skills", "Scan and safely remove installed skills/rules across agents"),
-                ("open_source", "🌐 Explore & Clone Open-Source Repositories", "Curated top-starred GitHub repos via OpenCurious"),
-                ("ollama", "🦙 Open-Source Models for Ollama", "Local models from ultra-lightweight (1.5B) to heavy reasoning (70B+)"),
+                ("open_source", "🌐 Explore & Clone Open-Source Repositories", f"Curated {len(ALL_OPEN_SOURCE_REPOS)} top-starred GitHub repos across 6 categories"),
+                ("ollama", "🦙 Open-Source Models for Ollama", f"Local models from {len(ALL_OLLAMA_MODELS)} registry items across 4 tiers"),
             ]
-            step0_choice = tui_single_select("Step 0: Choose Installation Workflow", step0_opts, default_idx=step0_idx, allow_back=False)
-            step0_idx = [opt[0] for opt in step0_opts].index(step0_choice)
+            res = tui_multiselect("Step 0: Choose Installation Workflow", step0_opts, default_selected=[step0_choice], allow_back=False, single_choice=True)
+            step0_choice = res[0]
 
             if step0_choice == "uninstall":
                 run_uninstaller()
@@ -1032,8 +1083,8 @@ def run_interactive():
                 run_ollama_manager()
                 continue
             elif step0_choice == "quick":
-                res = run_quick_install_flow(catalog, all_skills_flat, AGENTS)
-                if res == "__BACK__":
+                quick_res = run_quick_install_flow(catalog, all_skills_flat, AGENTS)
+                if quick_res == "__BACK__":
                     continue
                 return
             elif step0_choice == "manual":
@@ -1066,12 +1117,11 @@ def run_interactive():
                 ("global", "Global User Profile", "Installed in ~/.<agent> — available across all projects"),
                 ("local", "Local Workspace Repository", "Installed in .agent/ or .cursor/ — scoped to current project"),
             ]
-            default_scope_idx = 0 if selected_scope == "global" else 1
-            res = tui_single_select("Step 2: Choose Installation Scope", scope_opts, default_idx=default_scope_idx, allow_back=True)
+            res = tui_multiselect("Step 2: Choose Installation Scope", scope_opts, default_selected=[selected_scope], allow_back=True, single_choice=True)
             if res == "__BACK__":
                 step = 1
                 continue
-            selected_scope = res
+            selected_scope = res[0]
             step = 3
             continue
 
@@ -1089,13 +1139,11 @@ def run_interactive():
                 ("pack_all", PACKS["all"]["title"], f"All {total_skills} skills across {total_cats} categories"),
                 ("categories", "🗂️  Select by Category", "Choose entire categories from a list"),
             ]
-            mode_keys = [m[0] for m in mode_opts]
-            default_mode_idx = mode_keys.index(selected_mode) if selected_mode in mode_keys else 0
-            res = tui_single_select("Step 3: Which Skills would you like to install?", mode_opts, default_idx=default_mode_idx, allow_back=True)
+            res = tui_multiselect("Step 3: Which Skills would you like to install?", mode_opts, default_selected=[selected_mode], allow_back=True, single_choice=True)
             if res == "__BACK__":
                 step = 2
                 continue
-            selected_mode = res
+            selected_mode = res[0]
 
             if selected_mode == "skill_by_skill":
                 browser_res = tui_skill_browser(all_skills_flat, default_selected_names=selected_skill_names_set, allow_back=True)
@@ -1140,12 +1188,11 @@ def run_interactive():
                 ("symlink", "Symlink (Dynamic Link)", "Auto-updates dynamically on git pull"),
                 ("copy", "Direct File Copy", "Independent snapshot clone"),
             ]
-            default_method_idx = 0 if selected_method == "symlink" else 1
-            res = tui_single_select("Step 4: Choose Installation Method", method_opts, default_idx=default_method_idx, allow_back=True)
+            res = tui_multiselect("Step 4: Choose Installation Method", method_opts, default_selected=[selected_method], allow_back=True, single_choice=True)
             if res == "__BACK__":
                 step = 3
                 continue
-            selected_method = res
+            selected_method = res[0]
             use_symlink = selected_method == "symlink"
             break
 
@@ -1239,7 +1286,7 @@ def main():
     parser.add_argument(
         "--ollama",
         action="store_true",
-        help="List curated Ollama open-source models",
+        help="List curated Ollama open-source models across 4 tiers",
     )
 
     args = parser.parse_args()
@@ -1251,18 +1298,20 @@ def main():
 
     if args.repos:
         print_banner()
-        print(f"{BOLD}{PURPLE}=== Featured Open Source Repositories (via OpenCurious & GitHub Stars) ==={RESET}\n")
-        for r in OPEN_SOURCE_REPOS:
-            r_link = hyperlink(r["url"], r["repo"])
-            print(f"  • {BOLD}{r_link:<35}{RESET} ⭐ {r['stars']:<7} [{r['cat']}] — {r['desc']}\n    {DIM}URL:{RESET} {STARLIGHT}{r['url']}{RESET}")
+        for cat_name, repos in REPO_CATEGORIES.items():
+            print(f"\n{BOLD}{PURPLE}=== {cat_name} ({len(repos)} repositories) ==={RESET}")
+            for r in repos:
+                r_link = hyperlink(r["url"], r["repo"])
+                print(f"  • {BOLD}{r_link:<35}{RESET} ⭐ {r['stars']:<7} — {r['desc']}\n    {DIM}URL:{RESET} {STARLIGHT}{r['url']}{RESET}")
         return
 
     if args.ollama:
         print_banner()
-        print(f"{BOLD}{PURPLE}=== Open Source Ollama Models Catalog (Lightweight to Heavyweight) ==={RESET}\n")
-        for m in OLLAMA_MODELS:
-            m_link = hyperlink(m["url"], m["tag"])
-            print(f"  • {BOLD}{m_link:<24}{RESET} {m['tier']:<16} ({m['size']}, VRAM {m['vram']}) — {m['desc']}\n    {DIM}Library:{RESET} {STARLIGHT}{m['url']}{RESET}")
+        for tier_name, models in OLLAMA_TIERS.items():
+            print(f"\n{BOLD}{PURPLE}=== {tier_name} ({len(models)} models) ==={RESET}")
+            for m in models:
+                m_link = hyperlink(m["url"], m["tag"])
+                print(f"  • {BOLD}{m_link:<24}{RESET} ({m['size']}, VRAM {m['vram']}) — {m['desc']}\n    {DIM}Library:{RESET} {STARLIGHT}{m['url']}{RESET}")
         return
 
     if args.list:
