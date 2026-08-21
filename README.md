@@ -3,7 +3,7 @@
 # awesome-skills
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Skills](https://img.shields.io/badge/skills-107-blue.svg)
+![Skills](https://img.shields.io/badge/skills-108-blue.svg)
 ![Categories](https://img.shields.io/badge/categories-23-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)
@@ -64,7 +64,7 @@ via the templates in `.github/`. Reviews follow
 
 ## Index
 
-> **107 skills** across **23 categories**.
+> **108 skills** across **23 categories**.
 
 ### apple
 
@@ -130,6 +130,7 @@ via the templates in `.github/`. Reviews follow
 | Skill | Description |
 |---|---|
 | [`docker-single-port-multi-instance`](skills/devops/docker-single-port-multi-instance/SKILL.md) | Consolidate multiple Docker Compose app instances (production / test / demo) behind ONE host port using an nginx reverse proxy that routes by URL path prefix (e.g. /demo). Use when a user wants 'on... |
+| [`hybrid-desktop-server-ops`](skills/devops/hybrid-desktop-server-ops/SKILL.md) | Comprehensive runbook and operational architecture for running a single Linux machine as both a daily development desktop and a 24/7 home/cloud server (Debian/Ubuntu, GNOME, Docker, Caddy, Cloudfla... |
 
 ### email
 
