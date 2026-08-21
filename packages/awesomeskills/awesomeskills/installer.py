@@ -3,9 +3,11 @@
 
 Features:
 - Beautiful monospace terminal TUI with arrow navigation, spacebar toggle, and enter confirm.
-- Re-attaches /dev/tty for direct curl | bash execution.
+- Skill-by-skill browsing with live metadata, author, GitHub links, stars, and descriptions.
+- Instant ESC key cancellation at any step.
+- Scrollable viewport with pagination and search/sort support.
 - Multi-agent targeting: Google Antigravity, Hermes Agent, Claude Code, Cursor (.mdc), Windsurf, Roo/Cline, OpenCode.
-- Curated skill packs, category selection, fuzzy search, and full catalog installation.
+- Curated skill packs, category selection, and full catalog installation.
 """
 from __future__ import annotations
 
@@ -13,6 +15,7 @@ import argparse
 import atexit
 import os
 import re
+import select
 import shutil
 import sys
 from pathlib import Path
@@ -21,6 +24,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
 SKILLS_DIR = REPO_ROOT / "skills"
+GITHUB_BASE_URL = "https://github.com/pedroiff0/awesome-skills/tree/main/skills"
 
 # Supported Agents & Target Paths
 AGENTS = {
@@ -124,18 +128,25 @@ BLUE = f"{ESC}34m"
 BRIGHT_BLUE = f"{ESC}94m"
 MAGENTA = f"{ESC}35m"
 WHITE = f"{ESC}37m"
-BG_BLUE = f"{ESC}44m"
-BG_GRAY = f"{ESC}100m"
 HIDE_CURSOR = f"{ESC}?25l"
 SHOW_CURSOR = f"{ESC}?25h"
 
 
 def restore_cursor():
-    sys.stdout.write(SHOW_CURSOR)
-    sys.stdout.flush()
+    try:
+        sys.stdout.write(SHOW_CURSOR)
+        sys.stdout.flush()
+    except Exception:
+        pass
 
 
 atexit.register(restore_cursor)
+
+
+def cancel_and_exit():
+    restore_cursor()
+    print(f"\n{BRIGHT_YELLOW}🟡 Operação cancelada pelo usuário (ESC/Ctrl+C).{RESET}\n")
+    sys.exit(0)
 
 
 def ensure_tty():
@@ -162,6 +173,8 @@ def getch() -> str:
                 return "LEFT"
             if ch2 == b"M":
                 return "RIGHT"
+        if ch == b"\x1b":
+            return "ESC"
         if ch == b"\r":
             return "ENTER"
         if ch == b" ":
@@ -178,20 +191,24 @@ def getch() -> str:
         tty.setraw(fd)
         ch = sys.stdin.read(1)
         if ch == "\x1b":
-            # Possible escape sequence
-            seq = sys.stdin.read(2)
-            if seq == "[A":
-                return "UP"
-            elif seq == "[B":
-                return "DOWN"
-            elif seq == "[C":
-                return "RIGHT"
-            elif seq == "[D":
-                return "LEFT"
-            elif seq.startswith("["):
-                # Extended escape sequence like [1~
-                _ = sys.stdin.read(1)
-                return "ESC"
+            # Check if there are more characters arriving immediately (arrow keys)
+            r, _, _ = select.select([sys.stdin], [], [], 0.05)
+            if not r:
+                return "ESC"  # Standalone ESC key pressed!
+            seq1 = sys.stdin.read(1)
+            if seq1 == "[":
+                r2, _, _ = select.select([sys.stdin], [], [], 0.05)
+                if not r2:
+                    return "ESC"
+                seq2 = sys.stdin.read(1)
+                if seq2 == "A":
+                    return "UP"
+                elif seq2 == "B":
+                    return "DOWN"
+                elif seq2 == "C":
+                    return "RIGHT"
+                elif seq2 == "D":
+                    return "LEFT"
             return "ESC"
         elif ch in ("\r", "\n"):
             return "ENTER"
@@ -252,9 +269,8 @@ def tui_multiselect(
     options: list[tuple[str, str, str]],  # (key, label, subtitle)
     default_selected: list[str] | None = None,
 ) -> list[str]:
-    """Interactive multi-select menu with arrow keys and spacebar."""
+    """Interactive multi-select menu with arrow keys, spacebar, and ESC support."""
     if not sys.stdin.isatty():
-        # Non-interactive fallback
         return [opt[0] for opt in options] if default_selected is None else default_selected
 
     sys.stdout.write(HIDE_CURSOR)
@@ -268,7 +284,6 @@ def tui_multiselect(
     def render():
         nonlocal lines_rendered
         buf = []
-        # Clear previous render
         if lines_rendered > 0:
             buf.append(f"{ESC}{lines_rendered}F")
 
@@ -288,7 +303,7 @@ def tui_multiselect(
                 buf.append(f"  {ptr} {box} {label}{sub_text}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Navigate | Space: Toggle | a: Toggle All | Enter: Confirm | q: Quit]{RESET}"
+        footer = f"{DIM}└── [↑/↓/j/k: Mover | Espaço: Marcar | a: Todos | Enter: Confirmar | Esc/q: Cancelar]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -319,9 +334,8 @@ def tui_multiselect(
                 if not selected:
                     selected.add(options[cursor][0])
                 break
-            elif key in ("q", "Q", "EOF"):
-                print(f"\n{YELLOW}Installation cancelled by user.{RESET}")
-                sys.exit(0)
+            elif key in ("ESC", "q", "Q", "EOF"):
+                cancel_and_exit()
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
@@ -335,7 +349,7 @@ def tui_single_select(
     options: list[tuple[str, str, str]],  # (key, label, subtitle)
     default_idx: int = 0,
 ) -> str:
-    """Interactive single-choice menu with arrow keys."""
+    """Interactive single-choice menu with arrow keys and ESC support."""
     if not sys.stdin.isatty():
         return options[default_idx][0]
 
@@ -367,7 +381,7 @@ def tui_single_select(
                 buf.append(f"  {ptr} {radio} {label}{sub_text}{ESC}K\n")
             lines += 1
 
-        footer = f"{DIM}└── [↑/↓/j/k: Navigate | Enter: Confirm | q: Quit]{RESET}"
+        footer = f"{DIM}└── [↑/↓/j/k: Mover | Enter: Confirmar | Esc/q: Cancelar]{RESET}"
         buf.append(f"{footer}{ESC}K\n")
         lines += 1
 
@@ -385,15 +399,162 @@ def tui_single_select(
                 cursor = (cursor + 1) % num_opts
             elif key in ("ENTER", "SPACE"):
                 break
-            elif key in ("q", "Q", "EOF"):
-                print(f"\n{YELLOW}Installation cancelled by user.{RESET}")
-                sys.exit(0)
+            elif key in ("ESC", "q", "Q", "EOF"):
+                cancel_and_exit()
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
 
     print()
     return options[cursor][0]
+
+
+def tui_skill_browser(
+    all_skills: list[dict],  # dict with name, category, path, author, desc, github_url
+) -> list[tuple[str, str, Path]]:
+    """Interactive Skill-by-Skill browser with viewport scrolling, details box, search, and sort."""
+    if not sys.stdin.isatty():
+        return [(s["category"], s["name"], s["path"]) for s in all_skills]
+
+    sys.stdout.write(HIDE_CURSOR)
+    sys.stdout.flush()
+
+    sort_modes = ["name", "category", "author"]
+    sort_idx = 0
+    search_query = ""
+
+    def get_filtered_skills():
+        items = all_skills
+        if search_query:
+            q = search_query.lower()
+            items = [
+                s for s in items
+                if q in s["name"].lower() or q in s["category"].lower() or q in s["author"].lower() or q in s["desc"].lower()
+            ]
+        sm = sort_modes[sort_idx]
+        if sm == "name":
+            return sorted(items, key=lambda x: x["name"])
+        elif sm == "category":
+            return sorted(items, key=lambda x: (x["category"], x["name"]))
+        elif sm == "author":
+            return sorted(items, key=lambda x: (x["author"], x["name"]))
+        return items
+
+    selected_names = set()
+    cursor = 0
+    page_size = 10
+    lines_rendered = 0
+
+    try:
+        while True:
+            items = get_filtered_skills()
+            if not items:
+                items = all_skills
+                search_query = ""
+
+            num_items = len(items)
+            cursor = max(0, min(cursor, num_items - 1))
+
+            # Calculate scroll window
+            start_idx = max(0, min(cursor - page_size // 2, num_items - page_size))
+            end_idx = min(start_idx + page_size, num_items)
+            visible_items = items[start_idx:end_idx]
+
+            focused = items[cursor]
+
+            buf = []
+            if lines_rendered > 0:
+                buf.append(f"{ESC}{lines_rendered}F")
+
+            header = f"{BOLD}{WHITE}┌── 🎯 Seleção Skill por Skill [Selecionadas: {len(selected_names)}/{len(all_skills)}] {RESET}"
+            if search_query:
+                header += f" {BRIGHT_YELLOW}(Filtro: '{search_query}'){RESET}"
+            buf.append(f"{header}{ESC}K\n")
+            lines = 1
+
+            for rel_i, item in enumerate(visible_items):
+                abs_i = start_idx + rel_i
+                is_active = abs_i == cursor
+                is_checked = item["name"] in selected_names
+
+                box = f"{BRIGHT_GREEN}[✔]{RESET}" if is_checked else f"{DIM}[ ]{RESET}"
+                ptr = f"{BRIGHT_CYAN}❯{RESET}" if is_active else " "
+
+                name_fmt = f"{BOLD}{BRIGHT_CYAN}{item['name']:<28}{RESET}" if is_active else f"{item['name']:<28}"
+                cat_fmt = f"{DIM}[{item['category']}]{RESET}"
+                author_fmt = f"{DIM}by {item['author'][:18]}{RESET}"
+
+                buf.append(f"  {ptr} {box} {name_fmt} {cat_fmt:<32} {author_fmt}{ESC}K\n")
+                lines += 1
+
+            # Viewport scroll indicator
+            sort_label = f"Sort: {sort_modes[sort_idx].capitalize()}"
+            scroll_info = f"Exibindo {start_idx+1}-{end_idx} de {num_items} skills [{sort_label}]"
+            buf.append(f"  {DIM}── {scroll_info} ──{RESET}{ESC}K\n")
+            lines += 1
+
+            # Detailed metadata box for focused skill
+            desc_wrapped = focused["desc"][:160] + "..." if len(focused["desc"]) > 160 else focused["desc"]
+            buf.append(f"{BOLD}{WHITE}┌─ 🔍 Detalhes da Skill Selecionada ─────────────────────────────────{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Nome:{RESET}        {BRIGHT_CYAN}{focused['name']}{RESET} ({focused['category']}){ESC}K\n")
+            buf.append(f"│ {BOLD}Autor:{RESET}       {WHITE}{focused['author']}{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Descrição:{RESET}   {DIM}{desc_wrapped}{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}GitHub URL:{RESET}  {BLUE}{focused['github_url']}{RESET}{ESC}K\n")
+            buf.append(f"│ {BOLD}Repositório:{RESET} ⭐ {BRIGHT_YELLOW}pedroiff0/awesome-skills{RESET} | MIT License{ESC}K\n")
+            buf.append(f"{BOLD}{WHITE}└────────────────────────────────────────────────────────────────────{RESET}{ESC}K\n")
+            lines += 7
+
+            # Controls footer
+            footer = f"{DIM}└── [↑/↓/j/k: Navegar | Espaço: Marcar | a: Todos | /: Filtrar | s: Ordenar | Enter: Confirmar | Esc: Cancelar]{RESET}"
+            buf.append(f"{footer}{ESC}K\n")
+            lines += 1
+
+            lines_rendered = lines
+            sys.stdout.write("".join(buf))
+            sys.stdout.flush()
+
+            key = getch()
+            if key in ("UP", "k"):
+                cursor = (cursor - 1) % num_items
+            elif key in ("DOWN", "j"):
+                cursor = (cursor + 1) % num_items
+            elif key == "SPACE":
+                cur_name = items[cursor]["name"]
+                if cur_name in selected_names:
+                    selected_names.remove(cur_name)
+                else:
+                    selected_names.add(cur_name)
+            elif key in ("a", "A"):
+                if len(selected_names) == len(all_skills):
+                    selected_names.clear()
+                else:
+                    selected_names = set(s["name"] for s in all_skills)
+            elif key == "s":
+                sort_idx = (sort_idx + 1) % len(sort_modes)
+            elif key == "/":
+                restore_cursor()
+                sys.stdout.write(f"\n{BOLD}{BRIGHT_YELLOW}Filtrar skills por texto (Enter para limpar): {RESET}")
+                sys.stdout.flush()
+                try:
+                    search_query = input().strip()
+                except (EOFError, KeyboardInterrupt):
+                    search_query = ""
+                cursor = 0
+                lines_rendered = 0  # Redraw cleanly
+                sys.stdout.write(HIDE_CURSOR)
+            elif key == "ENTER":
+                if not selected_names and items:
+                    selected_names.add(items[cursor]["name"])
+                break
+            elif key in ("ESC", "q", "Q", "EOF"):
+                cancel_and_exit()
+
+    finally:
+        sys.stdout.write(SHOW_CURSOR)
+        sys.stdout.flush()
+
+    print()
+    return [(s["category"], s["name"], s["path"]) for s in all_skills if s["name"] in selected_names]
 
 
 def convert_skill_to_cursor_mdc(skill_path: Path, target_dir: Path, skill_name: str):
@@ -468,39 +629,58 @@ def run_interactive():
     total_skills = sum(len(s) for s in catalog.values())
     total_cats = len(catalog)
 
-    print(f"  {BOLD}Catalog Status:{RESET} {BRIGHT_GREEN}{total_skills} skills{RESET} across {BRIGHT_CYAN}{total_cats} categories{RESET}.\n")
+    # Build rich skill metadata list
+    all_skills_flat = []
+    for cat, sks in catalog.items():
+        for name, path in sks.items():
+            fm = parse_frontmatter(path / "SKILL.md")
+            author = fm.get("author") or "Pedro Henrique Rocha de Andrade"
+            desc = fm.get("description") or f"Reusable {name} skill"
+            all_skills_flat.append({
+                "name": name,
+                "category": cat,
+                "path": path,
+                "author": author,
+                "desc": desc,
+                "github_url": f"{GITHUB_BASE_URL}/{cat}/{name}",
+            })
+
+    print(f"  {BOLD}Catálogo:{RESET} {BRIGHT_GREEN}{total_skills} skills{RESET} em {BRIGHT_CYAN}{total_cats} categorias{RESET}.\n")
 
     # Step 1: Select Target Agents
     agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
     selected_agents = tui_multiselect(
-        "Step 1: Select Target Agent(s) to Equip",
+        "Passo 1: Selecione os Agentes de IA Alvo",
         agent_opts,
         default_selected=["agy", "claude", "hermes"],
     )
 
     # Step 2: Scope
     scope_opts = [
-        ("global", "Global User Profile", "Installed in ~/.<agent> — available across all projects"),
-        ("local", "Local Workspace Repository", "Installed in .agent/ or .cursor/ — scoped to current project"),
+        ("global", "Perfil Global do Usuário", "Instalado em ~/.<agente> — disponível em todos os projetos"),
+        ("local", "Repositório Local (Workspace)", "Instalado em .agent/ ou .cursor/ — restrito a este projeto"),
     ]
-    selected_scope = tui_single_select("Step 2: Choose Installation Scope", scope_opts, default_idx=0)
+    selected_scope = tui_single_select("Passo 2: Escolha o Escopo de Instalação", scope_opts, default_idx=0)
 
     # Step 3: Selection Mode
     mode_opts = [
+        ("skill_by_skill", "🎯 Selecionar Skill por Skill (Navegação Completa)", "Ver detalhes, autor, GitHub, stars e escolher individualmente"),
         ("pack_fullstack", PACKS["fullstack"]["title"], PACKS["fullstack"]["description"]),
         ("pack_devops", PACKS["devops"]["title"], PACKS["devops"]["description"]),
         ("pack_ai", PACKS["ai"]["title"], PACKS["ai"]["description"]),
         ("pack_academic", PACKS["academic"]["title"], PACKS["academic"]["description"]),
         ("pack_creative", PACKS["creative"]["title"], PACKS["creative"]["description"]),
-        ("pack_all", PACKS["all"]["title"], f"All {total_skills} skills across {total_cats} categories"),
-        ("categories", "🗂️  Select Categories Interactively", "Choose specific categories from a list"),
-        ("search", "🔍 Search & Select Individual Skills", "Fuzzy search by name or keyword"),
+        ("pack_all", PACKS["all"]["title"], f"Todas as {total_skills} skills em {total_cats} categorias"),
+        ("categories", "🗂️  Selecionar por Categoria", "Escolha categorias completas da lista"),
     ]
-    selected_mode = tui_single_select("Step 3: What Skills do you want to install?", mode_opts, default_idx=0)
+    selected_mode = tui_single_select("Passo 3: Quais Skills você deseja instalar?", mode_opts, default_idx=0)
 
     skills_to_install: list[tuple[str, str, Path]] = []
 
-    if selected_mode.startswith("pack_"):
+    if selected_mode == "skill_by_skill":
+        skills_to_install = tui_skill_browser(all_skills_flat)
+
+    elif selected_mode.startswith("pack_"):
         pack_key = selected_mode.replace("pack_", "")
         pack_cats = PACKS[pack_key]["categories"]
         if pack_cats == "ALL":
@@ -515,60 +695,39 @@ def run_interactive():
 
     elif selected_mode == "categories":
         cat_opts = [(cat, cat, f"{len(sks)} skills") for cat, sks in sorted(catalog.items())]
-        chosen_cats = tui_multiselect("Select Categories to Install", cat_opts, default_selected=[cat_opts[0][0]])
+        chosen_cats = tui_multiselect("Selecione as Categorias Desejadas", cat_opts, default_selected=[cat_opts[0][0]])
         for cat in chosen_cats:
             for name, path in catalog[cat].items():
                 skills_to_install.append((cat, name, path))
 
-    elif selected_mode == "search":
-        print(f"{BOLD}{WHITE}Type search keyword (or press Enter to list all):{RESET}")
-        try:
-            query = input(f"{BRIGHT_YELLOW}Search: {RESET}").strip().lower()
-        except (EOFError, KeyboardInterrupt):
-            query = ""
-        matched = []
-        for cat, sks in catalog.items():
-            for name, path in sks.items():
-                if not query or query in name.lower() or query in cat.lower():
-                    matched.append((name, f"[{cat}] {name}", str(path.relative_to(REPO_ROOT)), cat, path))
-        if not matched:
-            print(f"{YELLOW}No matches found for '{query}'. Loading full catalog.{RESET}")
-            for cat, sks in catalog.items():
-                for name, path in sks.items():
-                    skills_to_install.append((cat, name, path))
-        else:
-            opts = [(m[0], m[1], m[2]) for m in matched]
-            chosen = tui_multiselect(f"Select Skills to Install ({len(matched)} matches)", opts, default_selected=[opts[0][0]])
-            for m_name in chosen:
-                for item in matched:
-                    if item[0] == m_name:
-                        skills_to_install.append((item[3], item[0], item[4]))
-                        break
-
     # Step 4: Installation Method
     method_opts = [
-        ("symlink", "Symlink (Dynamic Link)", "Auto-updates instantly whenever repository is pulled"),
-        ("copy", "Direct File Copy", "Independent snapshot clone"),
+        ("symlink", "Link Simbólico (Symlink Dinâmico)", "Atualiza automaticamente ao rodar git pull"),
+        ("copy", "Cópia Direta de Arquivos", "Snapshot independente e isolado"),
     ]
-    selected_method = tui_single_select("Step 4: Choose Installation Mode", method_opts, default_idx=0)
+    selected_method = tui_single_select("Passo 4: Escolha o Modo de Instalação", method_opts, default_idx=0)
     use_symlink = selected_method == "symlink"
 
+    if not skills_to_install:
+        print(f"\n{YELLOW}Nenhuma skill selecionada para instalação.{RESET}")
+        return
+
     # Step 5: Execute
-    print(f"{BOLD}{BRIGHT_CYAN}🚀 Installing {len(skills_to_install)} skill(s) across {len(selected_agents)} agent(s)...{RESET}\n")
+    print(f"\n{BOLD}{BRIGHT_CYAN}🚀 Instalando {len(skills_to_install)} skill(s) em {len(selected_agents)} agente(s)...{RESET}\n")
 
     for agent_key in selected_agents:
         agent_info = AGENTS[agent_key]
         target_dir = agent_info["global_dir"] if selected_scope == "global" else agent_info["local_dir"]
-        print(f"  {BOLD}Installing to {agent_info['name']}{RESET} -> {DIM}{target_dir}{RESET}")
+        print(f"  {BOLD}Instalando em {agent_info['name']}{RESET} -> {DIM}{target_dir}{RESET}")
         installed_count = 0
         for cat, name, path in skills_to_install:
             if install_skill_to_target(path, cat, name, agent_key, target_dir, use_symlink=use_symlink):
                 installed_count += 1
-        print(f"  {BRIGHT_GREEN}✔ Installed {installed_count} skills in {agent_info['name']}{RESET}\n")
+        print(f"  {BRIGHT_GREEN}✔ {installed_count} skill(s) instalada(s) em {agent_info['name']}{RESET}\n")
 
     print(f"{BRIGHT_GREEN}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}")
-    print(f"  {BRIGHT_GREEN}{BOLD}🎉 Installation Complete!{RESET}")
-    print(f"  {WHITE}Skills are active and ready for prompt triggers in your chosen runtimes.{RESET}")
+    print(f"  {BRIGHT_GREEN}{BOLD}🎉 Instalação Concluída com Sucesso!{RESET}")
+    print(f"  {WHITE}As skills estão prontas para serem acionadas nos seus agentes de IA.{RESET}")
     print(f"{BRIGHT_GREEN}{BOLD}══════════════════════════════════════════════════════════════════════{RESET}\n")
 
 
@@ -626,8 +785,9 @@ def main():
             print(f"\n{BOLD}{BRIGHT_CYAN}=== {cat} ({len(sks)} skills) ==={RESET}")
             for name, path in sorted(sks.items()):
                 fm = parse_frontmatter(path / "SKILL.md")
+                author = fm.get("author", "Pedro Henrique Rocha de Andrade")
                 desc = fm.get("description", "")
-                print(f"  • {BOLD}{name}{RESET}: {desc[:90]}{'...' if len(desc)>90 else ''}")
+                print(f"  • {BOLD}{name}{RESET} (by {author}): {desc[:80]}{'...' if len(desc)>80 else ''}")
         return
 
     if args.agent or args.pack or args.category or args.skills:
@@ -680,9 +840,13 @@ def main():
     try:
         run_interactive()
     except (KeyboardInterrupt, EOFError):
-        print(f"\n{YELLOW}Installation cancelled by user.{RESET}")
-        sys.exit(0)
+        cancel_and_exit()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BrokenPipeError:
+        devnull = os.open(os.devnull, os.O_WRONLY)
+        os.dup2(devnull, sys.stdout.fileno())
+        sys.exit(0)
