@@ -19,6 +19,7 @@ def main(argv: list[str] | None = None) -> int:
 
     p_inst = sub.add_parser("install", help="Interactive multi-agent skill installer")
     p_inst.add_argument("--quick", action="store_true", help="Quick install elite pack")
+    p_inst.add_argument("--uninstall", action="store_true", help="Uninstall / clean installed skills")
     p_inst.add_argument("--agent", help="Target agent(s) comma-separated (agy, hermes, claude, cursor, windsurf, roo, opencode, all)")
     p_inst.add_argument("--scope", choices=["global", "local"], default="global", help="Installation scope")
     p_inst.add_argument("--pack", choices=["fullstack", "devops", "ai", "academic", "creative", "all"], help="Install curated pack")

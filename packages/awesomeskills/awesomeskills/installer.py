@@ -2,12 +2,11 @@
 """Universal Multi-Agent Skills Installer for awesome-skills (English Interface).
 
 Features:
-- Robust key handling: Left/Right arrows do not cancel; standalone ESC cancels instantly.
-- Validation: Mandatory selection across all steps (cannot proceed with 0 items selected).
-- Step 0: Quick Install (1-Click elite pack) vs Custom Manual Setup vs Open-Source Hub vs Ollama Models.
-- Skill-by-skill live browser with viewport scrolling, metadata, author credits, and GitHub links.
-- Open Source Repositories Hub (curated with OpenCurious & GitHub stars).
-- Ollama Models Hub (tiered from lightweight 1.5B to heavyweight 70B reasoning).
+- Step 0: Quick Install (with verification of agents & skills), Custom Manual Setup, Uninstall / Clean, Open-Source Hub, and Ollama Hub.
+- Strict selection validation: Users CANNOT proceed with 0 items selected (requires explicit [Space] check).
+- Uninstaller module: Safely scans, selects, and removes installed skills/rules across agents.
+- Robust key handling: Arrow keys never cancel; standalone ESC cancels immediately.
+- Live Skill-by-Skill browser with viewport scrolling, metadata, author credits, and GitHub links.
 - Multi-agent targeting: Google Antigravity, Hermes Agent, Claude Code, Cursor (.mdc), Windsurf, Roo/Cline, OpenCode.
 """
 from __future__ import annotations
@@ -153,27 +152,23 @@ OPEN_SOURCE_REPOS = [
     {"repo": "rustdesk/rustdesk", "stars": "78k+", "cat": "Remote Desktop", "desc": "Open-source self-hosted remote desktop alternative"},
 ]
 
-# Ollama Models Hub (Tiered from Lightweight to Heavyweight Reasoning)
+# Ollama Models Hub
 OLLAMA_MODELS = [
-    # Tier 1: Ultra-Lightweight (1B - 3B)
     {"tag": "qwen2.5:1.5b", "size": "1.5B", "tier": "🪶 Ultra-Light", "vram": "~1.5 GB", "desc": "Ultra-fast, JSON parsing and background workers"},
     {"tag": "deepseek-r1:1.5b", "size": "1.5B", "tier": "🪶 Ultra-Light", "vram": "~1.8 GB", "desc": "Lightweight reasoning and math on pure CPU"},
     {"tag": "llama3.2:1b", "size": "1.2B", "tier": "🪶 Ultra-Light", "vram": "~1.3 GB", "desc": "Instant text classification and fast routing"},
     {"tag": "llama3.2:3b", "size": "3.2B", "tier": "🪶 Ultra-Light", "vram": "~2.8 GB", "desc": "Best lightweight balance for daily chat"},
     {"tag": "phi3.5:3.8b", "size": "3.8B", "tier": "🪶 Ultra-Light", "vram": "~3.2 GB", "desc": "Microsoft Phi-3.5 Mini - high instruction accuracy"},
-    # Tier 2: Balanced & Daily Coding (7B - 9B)
     {"tag": "qwen2.5-coder:7b", "size": "7.6B", "tier": "⚡ Balanced", "vram": "~5.5 GB", "desc": "🏆 Top tier for code generation & refactoring"},
     {"tag": "deepseek-r1:7b", "size": "7.6B", "tier": "⚡ Balanced", "vram": "~6.0 GB", "desc": "Step-by-step reasoning and debugging"},
     {"tag": "llama3.1:8b", "size": "8.0B", "tier": "⚡ Balanced", "vram": "~6.2 GB", "desc": "Solid general model for diverse tasks"},
     {"tag": "gemma2:9b", "size": "9.2B", "tier": "⚡ Balanced", "vram": "~7.5 GB", "desc": "Google Gemma 2 - high synthesis quality"},
     {"tag": "mistral:7b", "size": "7.2B", "tier": "⚡ Balanced", "vram": "~5.8 GB", "desc": "Fast and direct for structured prompts"},
-    # Tier 3: Advanced & Pro Coding (14B - 35B)
     {"tag": "qwen2.5-coder:14b", "size": "14.7B", "tier": "🚀 Advanced", "vram": "~10.5 GB", "desc": "Quality matching proprietary models"},
     {"tag": "deepseek-r1:14b", "size": "14.7B", "tier": "🚀 Advanced", "vram": "~11.0 GB", "desc": "Deep mathematical & algorithmic reasoning"},
     {"tag": "qwen2.5-coder:32b", "size": "32.5B", "tier": "🚀 Advanced", "vram": "~20.0 GB", "desc": "👑 State-of-the-art in software engineering"},
     {"tag": "deepseek-r1:32b", "size": "32.5B", "tier": "🚀 Advanced", "vram": "~21.0 GB", "desc": "Extreme logical reasoning for complex bugs"},
     {"tag": "command-r:35b", "size": "35.0B", "tier": "🚀 Advanced", "vram": "~22.0 GB", "desc": "Master in Tool Use function calling and RAG"},
-    # Tier 4: Heavyweights & Servers (70B+)
     {"tag": "deepseek-r1:70b", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "🧠 Absolute top reasoning in code and logic"},
     {"tag": "llama3.3:70b", "size": "70B", "tier": "🧠 Heavyweight", "vram": "~42.0 GB", "desc": "Meta flagship general open source model"},
     {"tag": "qwen2.5:72b", "size": "72B", "tier": "🧠 Heavyweight", "vram": "~44.0 GB", "desc": "Maximum performance in global benchmarks"},
@@ -211,7 +206,7 @@ atexit.register(restore_cursor)
 
 def cancel_and_exit():
     restore_cursor()
-    print(f"\n{BRIGHT_YELLOW}🟡 Installation cancelled by user (ESC/Ctrl+C).{RESET}\n")
+    print(f"\n{BRIGHT_YELLOW}🟡 Operation cancelled by user (ESC/Ctrl+C).{RESET}\n")
     sys.exit(0)
 
 
@@ -246,7 +241,6 @@ def getch() -> str:
         tty.setraw(fd)
         ch = sys.stdin.read(1)
         if ch == "\x1b":
-            # Set non-blocking temporarily to drain trailing escape sequence bytes
             old_flags = fcntl.fcntl(fd, fcntl.F_GETFL)
             fcntl.fcntl(fd, fcntl.F_SETFL, old_flags | os.O_NONBLOCK)
             try:
@@ -375,7 +369,6 @@ def tui_single_select(
                 break
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
-            # IGNORE, RIGHT, LEFT are safely ignored
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
@@ -390,7 +383,7 @@ def tui_multiselect(
     default_selected: list[str] | None = None,
     allow_empty: bool = False,
 ) -> list[str]:
-    """Interactive multi-select menu with mandatory selection validation."""
+    """Interactive multi-select menu with STRICT selection validation."""
     if not sys.stdin.isatty():
         return [opt[0] for opt in options] if default_selected is None else default_selected
 
@@ -459,15 +452,11 @@ def tui_multiselect(
                     selected = set(opt[0] for opt in options)
             elif key == "ENTER":
                 if not selected and not allow_empty:
-                    # Auto-select focused item or show warning
-                    selected.add(options[cursor][0])
-                if selected or allow_empty:
+                    warning_msg = "Selection Required: Please check at least one option using [Space] before pressing [Enter]!"
+                elif selected or allow_empty:
                     break
-                else:
-                    warning_msg = "Please select at least one option before proceeding."
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
-            # IGNORE, RIGHT, LEFT are safely ignored
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
@@ -477,7 +466,7 @@ def tui_multiselect(
 
 
 def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
-    """Interactive Skill-by-Skill browser with viewport scrolling, search, and details."""
+    """Interactive Skill-by-Skill browser with viewport scrolling, search, and strict selection."""
     if not sys.stdin.isatty():
         return [(s["category"], s["name"], s["path"]) for s in all_skills]
 
@@ -509,6 +498,7 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
     cursor = 0
     page_size = 10
     lines_rendered = 0
+    warning_msg = ""
 
     try:
         while True:
@@ -555,6 +545,10 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
             buf.append(f"  {DIM}── {scroll_info} ──{RESET}{ESC}K\n")
             lines += 1
 
+            if warning_msg:
+                buf.append(f"  {BRIGHT_YELLOW}⚠️  {warning_msg}{RESET}{ESC}K\n")
+                lines += 1
+
             desc_wrapped = focused["desc"][:160] + "..." if len(focused["desc"]) > 160 else focused["desc"]
             buf.append(f"{BOLD}{WHITE}┌─ 🔍 Selected Skill Details ────────────────────────────────────────{RESET}{ESC}K\n")
             buf.append(f"│ {BOLD}Name:{RESET}        {BRIGHT_CYAN}{focused['name']}{RESET} ({focused['category']}){ESC}K\n")
@@ -574,6 +568,7 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
             sys.stdout.flush()
 
             key = getch()
+            warning_msg = ""
             if key in ("UP", "k"):
                 cursor = (cursor - 1) % num_items
             elif key in ("DOWN", "j"):
@@ -603,19 +598,91 @@ def tui_skill_browser(all_skills: list[dict]) -> list[tuple[str, str, Path]]:
                 lines_rendered = 0
                 sys.stdout.write(HIDE_CURSOR)
             elif key == "ENTER":
-                if not selected_names and items:
-                    selected_names.add(items[cursor]["name"])
-                if selected_names:
+                if not selected_names:
+                    warning_msg = "Please check at least one skill using [Space] before confirming!"
+                else:
                     break
             elif key in ("ESC", "q", "Q", "EOF"):
                 cancel_and_exit()
-            # IGNORE, RIGHT, LEFT are safely ignored
     finally:
         sys.stdout.write(SHOW_CURSOR)
         sys.stdout.flush()
 
     print()
     return [(s["category"], s["name"], s["path"]) for s in all_skills if s["name"] in selected_names]
+
+
+def run_uninstaller():
+    """Interactive uninstaller to safely clean installed skills across agents."""
+    ensure_tty()
+    print(f"\n{BOLD}{WHITE}┌── 🗑️  Awesome Skills Uninstaller / Cleaner {RESET}")
+    print(f"{DIM}Select which agent environments you want to inspect and clean:{RESET}\n")
+
+    agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
+    target_agents = tui_multiselect("Select Agent(s) to Clean", agent_opts, default_selected=["agy", "claude", "hermes", "cursor"])
+
+    if not target_agents:
+        print(f"{YELLOW}No agents selected for uninstallation.{RESET}")
+        return
+
+    scope_opts = [
+        ("global", "Global User Profile (~)", "Scans ~/.<agent>/skills/ and ~/.cursor/rules/"),
+        ("local", "Local Workspace Repository (.)", "Scans .agent/skills/, .cursor/rules/, .claude/skills/"),
+    ]
+    scope_choice = tui_single_select("Choose Uninstallation Scope", scope_opts, default_idx=0)
+
+    # Scan for installed skills/rules
+    found_entries = []
+    for agent_key in target_agents:
+        agent_info = AGENTS[agent_key]
+        target_dir = agent_info["global_dir"] if scope_choice == "global" else agent_info["local_dir"]
+        if not target_dir.exists():
+            continue
+
+        if agent_info["format"] == "cursor_mdc":
+            for mdc in target_dir.glob("*.mdc"):
+                found_entries.append((f"{agent_key}:{mdc.name}", f"{mdc.name} ({agent_info['name']})", str(mdc), agent_key, mdc))
+        elif agent_info["format"] == "categorized_dir":
+            for skill_dir in target_dir.glob("*/*"):
+                if skill_dir.is_dir() or skill_dir.is_symlink():
+                    found_entries.append((f"{agent_key}:{skill_dir.name}", f"{skill_dir.name} [{skill_dir.parent.name}] ({agent_info['name']})", str(skill_dir), agent_key, skill_dir))
+        else:
+            for skill_dir in target_dir.glob("*"):
+                if skill_dir.is_dir() or skill_dir.is_symlink():
+                    found_entries.append((f"{agent_key}:{skill_dir.name}", f"{skill_dir.name} ({agent_info['name']})", str(skill_dir), agent_key, skill_dir))
+
+    if not found_entries:
+        print(f"\n{BRIGHT_GREEN}✔ No installed skills or rules found in the selected locations.{RESET}\n")
+        return
+
+    entry_opts = [(e[0], e[1], e[2]) for e in found_entries]
+    selected_keys = tui_multiselect(
+        f"Found {len(found_entries)} installed skill(s)/rule(s). Select items to REMOVE:",
+        entry_opts,
+        default_selected=[],
+    )
+
+    if not selected_keys:
+        print(f"{YELLOW}No items selected for removal.{RESET}")
+        return
+
+    print(f"\n{BOLD}{BRIGHT_YELLOW}⚠️  Removing {len(selected_keys)} item(s)...{RESET}\n")
+    removed_count = 0
+    for key in selected_keys:
+        for entry in found_entries:
+            if entry[0] == key:
+                path_obj: Path = entry[4]
+                try:
+                    if path_obj.is_symlink() or path_obj.is_file():
+                        path_obj.unlink()
+                    elif path_obj.is_dir():
+                        shutil.rmtree(path_obj)
+                    print(f"  {BRIGHT_GREEN}✔ Removed:{RESET} {path_obj}")
+                    removed_count += 1
+                except Exception as e:
+                    print(f"  {YELLOW}Error removing {path_obj}: {e}{RESET}")
+
+    print(f"\n{BRIGHT_GREEN}{BOLD}🎉 Uninstallation Complete! Removed {removed_count} skill(s)/rule(s).{RESET}\n")
 
 
 def run_open_source_cloner():
@@ -778,15 +845,20 @@ def run_interactive():
     print(f"  {BOLD}Active Catalog:{RESET} {BRIGHT_GREEN}{total_skills} skills{RESET} in {BRIGHT_CYAN}{total_cats} categories{RESET} • {MAGENTA}2 plugins{RESET} • {YELLOW}4 MCP servers{RESET}.\n")
 
     # =========================================================================
-    # STEP 0: Quick Install vs Custom Manual Setup vs Hubs
+    # STEP 0: Workflow Selection
     # =========================================================================
     step0_opts = [
-        ("quick", "🚀 Quick Install (Recommended - 1-Click)", "Auto-installs top 13 starred essential skills & MCPs for all detected agents"),
+        ("quick", "🚀 Quick Install (Curated Elite Pack)", "Verify and install top 13 starred essential skills & MCPs for selected agents"),
         ("manual", "⚙️  Custom / Manual Setup (Interactive Wizard)", "Choose agents, scope, skill-by-skill, categories, plugins & packs"),
+        ("uninstall", "🗑️  Uninstall / Clean Installed Skills", "Scan and safely remove installed skills/rules across agents"),
         ("open_source", "🌐 Explore & Clone Open-Source Repositories", "Curated top-starred GitHub repos via OpenCurious"),
         ("ollama", "🦙 Open-Source Models for Ollama", "Local models from ultra-lightweight (1.5B) to heavy reasoning (70B+)"),
     ]
     step0_choice = tui_single_select("Step 0: Choose Installation Workflow", step0_opts, default_idx=0)
+
+    if step0_choice == "uninstall":
+        run_uninstaller()
+        return
 
     if step0_choice == "open_source":
         run_open_source_cloner()
@@ -796,24 +868,41 @@ def run_interactive():
         run_ollama_manager()
         return
 
-    selected_agents = ["agy", "claude", "hermes", "cursor"]
-    selected_scope = "global"
-    use_symlink = True
     skills_to_install: list[tuple[str, str, Path]] = []
 
+    # =========================================================================
+    # QUICK INSTALL (WITH VERIFICATION)
+    # =========================================================================
     if step0_choice == "quick":
-        print(f"\n{BOLD}{BRIGHT_CYAN}⭐ Quick Install Mode Activated!{RESET}")
-        print(f"{DIM}Installing the {len(ELITE_SKILLS)} elite essential skills for all primary agents...{RESET}\n")
-        for cat, sks in catalog.items():
-            for name, path in sks.items():
-                if name in ELITE_SKILLS:
-                    skills_to_install.append((cat, name, path))
+        print(f"\n{BOLD}{BRIGHT_CYAN}⭐ Quick Install Verification{RESET}")
+        print(f"{DIM}Please verify the target agents and skills you want to install:{RESET}\n")
 
+        agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
+        selected_agents = tui_multiselect(
+            "Quick Install - Step 1/2: Verify Target Agent(s) to Equip",
+            agent_opts,
+            default_selected=["agy", "claude", "hermes", "cursor"],
+        )
+
+        elite_items = [s for s in all_skills_flat if s["name"] in ELITE_SKILLS]
+        elite_opts = [(s["name"], f"{s['name']:<30} [{s['category']}]", f"by {s['author']}") for s in elite_items]
+        selected_skill_names = tui_multiselect(
+            "Quick Install - Step 2/2: Verify Elite Skills to Install",
+            elite_opts,
+            default_selected=[s["name"] for s in elite_items],
+        )
+
+        for s in elite_items:
+            if s["name"] in selected_skill_names:
+                skills_to_install.append((s["category"], s["name"], s["path"]))
+
+        selected_scope = "global"
+        use_symlink = True
+
+    # =========================================================================
+    # MANUAL WIZARD
+    # =========================================================================
     else:
-        # =====================================================================
-        # MANUAL WIZARD
-        # =====================================================================
-        # Step 1: Target Agents
         agent_opts = [(k, v["name"], v["desc"]) for k, v in AGENTS.items()]
         selected_agents = tui_multiselect(
             "Step 1: Select Target Agent(s) to Equip",
@@ -821,14 +910,12 @@ def run_interactive():
             default_selected=["agy", "claude", "hermes"],
         )
 
-        # Step 2: Scope
         scope_opts = [
             ("global", "Global User Profile", "Installed in ~/.<agent> — available across all projects"),
             ("local", "Local Workspace Repository", "Installed in .agent/ or .cursor/ — scoped to current project"),
         ]
         selected_scope = tui_single_select("Step 2: Choose Installation Scope", scope_opts, default_idx=0)
 
-        # Step 3: Selection Mode
         mode_opts = [
             ("skill_by_skill", "🎯 Browse & Select Skill by Skill (Full Catalog)", "Inspect metadata, author, GitHub link, stars, and pick individually"),
             ("pack_fullstack", PACKS["fullstack"]["title"], PACKS["fullstack"]["description"]),
@@ -864,7 +951,6 @@ def run_interactive():
                 for name, path in catalog[cat].items():
                     skills_to_install.append((cat, name, path))
 
-        # Step 4: Method
         method_opts = [
             ("symlink", "Symlink (Dynamic Link)", "Auto-updates dynamically on git pull"),
             ("copy", "Direct File Copy", "Independent snapshot clone"),
@@ -906,6 +992,11 @@ def main():
         "--quick",
         action="store_true",
         help="Quick install elite pack for all detected agents",
+    )
+    parser.add_argument(
+        "--uninstall",
+        action="store_true",
+        help="Uninstall / clean installed skills across agents",
     )
     parser.add_argument(
         "--agent",
@@ -959,6 +1050,10 @@ def main():
 
     args = parser.parse_args()
     catalog = discover_skills()
+
+    if args.uninstall:
+        run_uninstaller()
+        return
 
     if args.repos:
         print_banner()
