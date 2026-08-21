@@ -631,9 +631,22 @@ def tui_multiselect(
                     selected.clear()
                 else:
                     selected = set(opt[0] for opt in options)
-            elif key in ("ENTER", "RIGHT"):
-                if not selected and not allow_empty:
-                    warning_msg = "Please check at least one item using [Space] before advancing!"
+            elif key == "RIGHT":
+                cur_key = options[cursor][0]
+                if single_choice:
+                    selected.clear()
+                selected.add(cur_key)
+                break
+            elif key == "ENTER":
+                if single_choice:
+                    cur_key = options[cursor][0]
+                    selected.clear()
+                    selected.add(cur_key)
+                    break
+                elif not selected and not allow_empty:
+                    cur_key = options[cursor][0]
+                    selected.add(cur_key)
+                    break
                 elif selected or allow_empty:
                     break
             elif allow_back and key in ("b", "B", "LEFT", "BACKSPACE"):
@@ -789,11 +802,15 @@ def tui_skill_browser(
                 cursor = 0
                 lines_rendered = 0
                 sys.stdout.write(HIDE_CURSOR)
-            elif key in ("ENTER", "RIGHT"):
+            elif key == "RIGHT":
+                cur_name = items[cursor]["name"]
+                selected_names.add(cur_name)
+                break
+            elif key == "ENTER":
                 if not selected_names:
-                    warning_msg = "Please check at least one skill using [Space] before confirming!"
-                else:
-                    break
+                    cur_name = items[cursor]["name"]
+                    selected_names.add(cur_name)
+                break
             elif allow_back and key in ("b", "B", "LEFT", "BACKSPACE"):
                 print()
                 return "__BACK__"
