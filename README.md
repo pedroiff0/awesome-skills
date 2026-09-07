@@ -6,7 +6,7 @@
 
 **The Universal, Community-Maintained Catalog of Procedural AI Agent Skills, MCP Servers & Plugins.**
 
-*Write once in canonical `SKILL.md` — Equip instantly across Google Antigravity, Hermes Agent, Claude Code, Cursor, Windsurf, Roo/Cline & OpenCode.*
+*Write once in canonical `SKILL.md` — Equip instantly across Google Antigravity, Hermes Agent, Claude Code, OpenAI Codex, Cursor, Windsurf, Roo/Cline & OpenCode.*
 
 [![CI](https://github.com/pedroiff0/awesome-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/awesome-skills/actions/workflows/ci.yml)
 ![Skills Count](https://img.shields.io/badge/Skills-124-blueviolet?style=flat-square&logo=speedtest&logoColor=white)
@@ -43,7 +43,7 @@ The installer automatically detects your operating system and dynamically config
 
 | Operating System | Tier / Support Status | Auto-Detection Mechanism | Target Paths Adapted |
 | :--- | :--- | :--- | :--- |
-| 🐧 **Linux (Ubuntu, Debian, Arch, Fedora, etc.)** | 🟢 **Tier 1 (Primary & Fully Verified)** | Native POSIX & Linux syscalls | `~/.gemini`, `~/.claude`, `~/.hermes`, `~/.cursor` |
+| 🐧 **Linux (Ubuntu, Debian, Arch, Fedora, etc.)** | 🟢 **Tier 1 (Primary & Fully Verified)** | Native POSIX & Linux syscalls | `~/.gemini`, `~/.claude`, `~/.codex`, `~/.hermes`, `~/.cursor` |
 | 🍎 **macOS (Darwin / Apple Silicon & Intel)** | 🟡 **Supported (Paths Adapted)** | `platform.system() == 'Darwin'` | `~/Library/Application Support/...` + dotfiles |
 | 🪟 **Windows (WSL / Native / PowerShell)** | 🟡 **Supported (Paths Adapted / WSL Recommended)** | Detects Windows/NT + `%APPDATA%` | `%USERPROFILE%\...`, `%APPDATA%\...` (copy fallback) |
 

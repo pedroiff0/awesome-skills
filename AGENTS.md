@@ -1,6 +1,6 @@
 # AGENTS.md — awesome-skills
 
-Guidance for AI agents (Hermes, Claude, Cursor, Windsurf, OpenClaw, AGY, …) that
+Guidance for AI agents (Hermes, Claude, Codex, Cursor, Windsurf, Roo/Cline, OpenCode, AGY, …) that
 work in this repository. Read this before editing.
 
 ## Purpose
