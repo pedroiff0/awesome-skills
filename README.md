@@ -154,4 +154,15 @@ Issues e pull requests são bem-vindos: veja [CONTRIBUTING.md](CONTRIBUTING.md),
 
 MIT. Veja [LICENSE](LICENSE). Cada skill mantém o crédito do autor original.
 
-Pedro Henrique Rocha de Andrade, 2026.
+---
+
+<div align="center">
+
+<img src="https://api.iconify.design/mdi/star-shooting.svg?color=%23c678dd" width="20" valign="middle" /> *"Keep looking up."*
+
+<br>
+
+<sub>© 2026 Pedro Rocha — Computer Engineering & Computational Astrophysics · IFF / PIBIC-CNPq, made with ☕, code and ☄️ by Pedro Henrique Rocha de Andrade</sub>
+
+</div>
+
