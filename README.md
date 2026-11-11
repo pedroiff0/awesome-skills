@@ -158,6 +158,8 @@ Dúvidas e pedidos de ajuda: veja [SUPPORT.md](SUPPORT.md).
 
 [![Commits por mês](https://img.shields.io/github/commit-activity/m/pedroiff0/awesome-skills?logo=github)](https://github.com/pedroiff0/awesome-skills/graphs/commit-activity) [![Último commit](https://img.shields.io/github/last-commit/pedroiff0/awesome-skills?logo=git&logoColor=white)](https://github.com/pedroiff0/awesome-skills/commits) [![Issues](https://img.shields.io/github/issues/pedroiff0/awesome-skills)](https://github.com/pedroiff0/awesome-skills/issues) [![Pull requests](https://img.shields.io/github/issues-pr/pedroiff0/awesome-skills)](https://github.com/pedroiff0/awesome-skills/pulls)
 
+<div align="center">
+
 ## Autor
 
 <table>
@@ -169,6 +171,8 @@ Dúvidas e pedidos de ajuda: veja [SUPPORT.md](SUPPORT.md).
 ### Contribuidores
 
 [![Contribuidores](https://contrib.rocks/image?repo=pedroiff0/awesome-skills)](https://github.com/pedroiff0/awesome-skills/graphs/contributors)
+
+</div>
 
 ## Licença
 
