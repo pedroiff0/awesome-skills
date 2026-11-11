@@ -18,7 +18,7 @@ Este projeto faz parte do [portfólio](https://portfolio.phrandrade.com/#awesome
 - [Trabalhando no projeto](#trabalhando-no-projeto)
 - [Status e próximos passos](#status-e-próximos-passos)
 - [Contribuindo e suporte](#contribuindo-e-suporte)
-- [Autores](#autores)
+- [Autor](#autor)
 - [Licença](#licença)
 
 ## Por que existe
@@ -131,7 +131,17 @@ Estado atual: **ativo**. Linux é a plataforma verificada; macOS e Windows têm 
 
 Issues e pull requests são bem-vindos: veja [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) e [SUPPORT.md](SUPPORT.md). Vulnerabilidades seguem [SECURITY.md](SECURITY.md).
 
-## Autores
+## Autor
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/pedroiff0"><img src="https://github.com/pedroiff0.png?size=120" width="96" height="96" alt="Pedro Henrique Rocha de Andrade" /><br /><sub><b>Pedro Henrique Rocha de Andrade</b></sub></a><br />Autor e mantenedor</td>
+  </tr>
+</table>
+
+### Contribuidores
+
+[![Contribuidores](https://contrib.rocks/image?repo=pedroiff0/awesome-skills)](https://github.com/pedroiff0/awesome-skills/graphs/contributors)
 
 ## Licença
 
