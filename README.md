@@ -18,6 +18,7 @@ Este projeto faz parte do [portfólio](https://portfolio.phrandrade.com/#awesome
 - [Trabalhando no projeto](#trabalhando-no-projeto)
 - [Status e próximos passos](#status-e-próximos-passos)
 - [Contribuindo e suporte](#contribuindo-e-suporte)
+- [Estrelas e atividade](#estrelas-e-atividade)
 - [Autor](#autor)
 - [Licença](#licença)
 
@@ -35,7 +36,7 @@ Cada agente guarda skills num diretório e num formato próprios, e manter as me
 
 ## Tecnologias
 
-## Tecnologias
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) ![Shell](https://img.shields.io/badge/Shell-4EAA25?style=flat&logo=gnubash&logoColor=white) ![Markdown](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat&logo=githubactions&logoColor=white)
 
 ## Instalação
 
@@ -130,6 +131,12 @@ Estado atual: **ativo**. Linux é a plataforma verificada; macOS e Windows têm 
 ## Contribuindo e suporte
 
 Issues e pull requests são bem-vindos: veja [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) e [SUPPORT.md](SUPPORT.md). Vulnerabilidades seguem [SECURITY.md](SECURITY.md).
+
+## Estrelas e atividade
+
+[![Histórico de estrelas](https://api.star-history.com/svg?repos=pedroiff0/awesome-skills&type=Date)](https://star-history.com/#pedroiff0/awesome-skills&Date)
+
+[![Commits por mês](https://img.shields.io/github/commit-activity/m/pedroiff0/awesome-skills?logo=github)](https://github.com/pedroiff0/awesome-skills/graphs/commit-activity) [![Último commit](https://img.shields.io/github/last-commit/pedroiff0/awesome-skills?logo=git&logoColor=white)](https://github.com/pedroiff0/awesome-skills/commits) [![Issues](https://img.shields.io/github/issues/pedroiff0/awesome-skills)](https://github.com/pedroiff0/awesome-skills/issues) [![Pull requests](https://img.shields.io/github/issues-pr/pedroiff0/awesome-skills)](https://github.com/pedroiff0/awesome-skills/pulls)
 
 ## Autor
 
